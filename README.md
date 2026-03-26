@@ -18,18 +18,48 @@
 ```
 shenlun-feedback-system/
 ├── backend/
-│   ├── app.py              # Flask 主应用
-│   ├── config.py           # 配置文件
-│   ├── models.py           # 数据库模型
-│   ├── init_admin.py       # 管理员初始化脚本
-│   ├── requirements.txt    # Python 依赖
-│   ├── shenlun_feedback.db # SQLite 数据库
-│   └── uploads/            # 上传文件目录
+│   ├── app.py                 # 应用入口
+│   ├── config.py              # 配置文件
+│   ├── models.py              # 数据库模型
+│   ├── init_admin.py          # 管理员初始化脚本
+│   │
+│   ├── routes/                # 路由层
+│   │   ├── public.py          # 公开接口
+│   │   ├── auth.py            # 认证接口
+│   │   ├── admin.py           # 管理后台接口
+│   │   ├── admin_manage.py    # 管理员管理接口
+│   │   └── upload.py          # 上传接口
+│   │
+│   ├── services/              # 业务逻辑层
+│   │   ├── auth_service.py    # 认证服务
+│   │   ├── user_service.py    # 用户服务
+│   │   ├── question_service.py# 题目服务
+│   │   ├── feedback_service.py# 反馈服务
+│   │   └── stats_service.py   # 统计服务
+│   │
+│   ├── repositories/          # 数据访问层
+│   │   ├── base.py            # 基础 Repository
+│   │   ├── user_repo.py       # 用户数据访问
+│   │   ├── admin_repo.py      # 管理员数据访问
+│   │   ├── question_repo.py   # 题目/答案/批改数据访问
+│   │   └── feedback_repo.py   # 反馈数据访问
+│   │
+│   ├── utils/                 # 工具函数
+│   │   ├── response.py        # 统一响应格式
+│   │   ├── db_session.py      # 数据库会话管理
+│   │   ├── exceptions.py      # 异常定义
+│   │   └── constants.py       # 常量定义
+│   │
+│   ├── uploads/               # 上传文件目录
+│   └── shenlun_feedback.db    # SQLite 数据库
+│
 ├── frontend/
-│   ├── index.html          # 主页面（批改对比）
-│   ├── admin.html          # 管理后台
-│   └── review-admin.html   # 批改配置页面
-├── start.bat               # Windows 启动脚本
+│   ├── index.html             # 主页面
+│   ├── admin.html             # 管理后台
+│   └── review-admin.html      # 批改配置页面
+│
+├── requirements.txt           # Python 依赖
+├── start.bat                  # Windows 启动脚本
 └── README.md
 ```
 
