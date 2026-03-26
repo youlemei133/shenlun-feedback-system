@@ -1,6 +1,7 @@
 # 基础 Repository
 from utils.db_session import get_db
 from typing import Type, TypeVar, List, Optional, Any, Dict
+from sqlalchemy import desc
 
 T = TypeVar('T')
 
@@ -17,15 +18,39 @@ class BaseRepository:
     
     @classmethod
     def get_all(cls, order_by=None, limit: int = None) -> List[Dict]:
-        """获取所有（返回 dict 列表）"""
+        """获取所有（返回 dict 列表）
+        
+        Args:
+            order_by: 排序字段，支持以下格式：
+                - None: 不排序
+                - 字符串 'field': 升序
+                - 字符串 'field.desc': 降序
+                - SQLAlchemy 列对象
+        """
         with get_db() as db:
             query = db.query(cls.model)
             if order_by is not None:
-                query = query.order_by(order_by)
+                order_clause = cls._parse_order_by(order_by)
+                if order_clause:
+                    query = query.order_by(order_clause)
             if limit:
                 query = query.limit(limit)
             instances = query.all()
             return [i.to_dict() for i in instances]
+    
+    @classmethod
+    def _parse_order_by(cls, order_by):
+        """解析 order_by 参数"""
+        if isinstance(order_by, str):
+            if order_by.endswith('.desc'):
+                field_name = order_by[:-5]
+                if hasattr(cls.model, field_name):
+                    return desc(getattr(cls.model, field_name))
+            else:
+                if hasattr(cls.model, order_by):
+                    return getattr(cls.model, order_by)
+            return None
+        return order_by
     
     @classmethod
     def get_all_objects(cls, order_by=None, limit: int = None) -> List[T]:
@@ -33,7 +58,9 @@ class BaseRepository:
         with get_db() as db:
             query = db.query(cls.model)
             if order_by is not None:
-                query = query.order_by(order_by)
+                order_clause = cls._parse_order_by(order_by)
+                if order_clause:
+                    query = query.order_by(order_clause)
             if limit:
                 query = query.limit(limit)
             instances = query.all()
