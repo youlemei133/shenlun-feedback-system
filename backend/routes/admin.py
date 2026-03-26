@@ -8,6 +8,7 @@ from repositories.user_repo import UserRepository
 from services.question_service import QuestionService, AnswerService, AnswerReviewService
 from services.feedback_service import FeedbackService
 from services.stats_service import StatsService
+from services.user_service import UserService
 
 admin_bp = Blueprint('admin', __name__, url_prefix='/api/admin')
 
