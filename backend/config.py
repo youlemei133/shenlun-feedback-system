@@ -14,7 +14,7 @@ SQLITE_DB_PATH = os.path.join(os.path.dirname(__file__), 'shenlun_feedback.db')
 # }
 
 # Flask 配置
-SECRET_KEY = os.urandom(24).hex()
+SECRET_KEY = 'shenlun-feedback-secret-key-2026-fixed'
 DEBUG = True
 
 # 文件上传配置

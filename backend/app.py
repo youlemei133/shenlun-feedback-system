@@ -12,14 +12,17 @@ def create_app():
     app = Flask(__name__, static_folder='../frontend', static_url_path='')
     app.secret_key = SECRET_KEY
     
+    # Session 配置
+    app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
+    app.config['SESSION_COOKIE_HTTPONLY'] = True
+    
     # CORS 配置
     CORS(app, supports_credentials=True)
     
     # Flask-Login 配置
     login_manager = LoginManager()
     login_manager.init_app(app)
-    login_manager.login_view = 'auth.login'
-    login_manager.session_protection = 'strong'
+    login_manager.login_view = 'admin'
     
     @login_manager.user_loader
     def load_user(user_id):
