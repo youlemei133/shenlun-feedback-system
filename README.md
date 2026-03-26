@@ -38,7 +38,7 @@ shenlun-feedback-system/
 ### 1. 安装依赖
 
 ```bash
-pip install -r backend/requirements.txt
+pip install -r requirements.txt
 ```
 
 ### 2. 创建管理员账号
