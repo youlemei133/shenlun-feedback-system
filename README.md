@@ -2,7 +2,18 @@
 
 收集用户对 AI 批改答案的反馈，帮助优化产品方向。
 
-## 📁 项目结构
+## 功能特性
+
+- 用户注册与反馈收集
+- A/B 答案对比评判
+- 批改详情配置（要点统计、遗漏分析、提升建议）
+- 管理后台认证登录
+- 多管理员支持
+- 数据统计与可视化图表
+- 答案图片上传
+- 反馈数据导出（CSV）
+
+## 项目结构
 
 ```
 shenlun-feedback-system/
@@ -10,140 +21,231 @@ shenlun-feedback-system/
 │   ├── app.py              # Flask 主应用
 │   ├── config.py           # 配置文件
 │   ├── models.py           # 数据库模型
-│   ── uploads/            # 上传文件目录
+│   ├── init_admin.py       # 管理员初始化脚本
+│   ├── requirements.txt    # Python 依赖
+│   ├── shenlun_feedback.db # SQLite 数据库
+│   └── uploads/            # 上传文件目录
 ├── frontend/
 │   ├── index.html          # 主页面（批改对比）
-│   ├── register.html       # 用户注册页面
 │   ├── admin.html          # 管理后台
-│   ├── css/                # 样式文件
-│   ├── js/                 # JavaScript 文件
-│   └── components/         # Vue 组件（预留）
-── requirements.txt        # Python 依赖
-└── README.md              # 本文件
+│   └── review-admin.html   # 批改配置页面
+├── start.bat               # Windows 启动脚本
+└── README.md
 ```
 
-## 🚀 快速开始
+## 快速开始
 
 ### 1. 安装依赖
 
 ```bash
-cd shenlun-feedback-system
-pip install -r requirements.txt
+pip install -r backend/requirements.txt
 ```
 
-### 2. 配置数据库
-
-编辑 `backend/config.py`，修改 MySQL 配置：
-
-```python
-MYSQL_CONFIG = {
-    'host': 'localhost',
-    'port': 3306,
-    'user': 'root',
-    'password': 'your_password',  # 修改为你的密码
-    'database': 'shenlun_feedback'
-}
-```
-
-### 3. 创建数据库
-
-```sql
-CREATE DATABASE shenlun_feedback CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-```
-
-### 4. 初始化数据库表
+### 2. 创建管理员账号
 
 ```bash
 cd backend
-python models.py
+python init_admin.py --username admin --password your_password
 ```
 
-### 5. 启动服务
+或交互式创建：
+
+```bash
+python init_admin.py
+```
+
+### 3. 启动服务
 
 ```bash
 cd backend
 python app.py
 ```
 
-访问：
+或使用启动脚本：
+
+```bash
+start.bat
+```
+
+### 4. 访问
+
 - **主页面**: http://localhost:5000
 - **管理后台**: http://localhost:5000/admin
 
-## 📱 页面说明
-
-### 用户注册页 (`/register`)
-- 收集用户昵称、手机号、申论分数
-- 注册后自动跳转到主页面
+## 页面说明
 
 ### 主页面 (`/`)
-- 显示随机题目和两个版本的答案（A/B）
-- 用户选择更认可的答案
-- 填写反馈原因和参与意愿
+
+- 用户注册弹窗（昵称、手机号、申论分数）
+- 显示题目、答案对比（A/B 版本）、批改详情
+- 用户选择偏好答案、填写反馈原因、参与意愿
 
 ### 管理后台 (`/admin`)
-- **统计概览**: 总反馈数、偏好分布、用户数
-- **题目管理**: 添加/编辑题目和答案
-- **反馈数据**: 查看所有用户反馈
 
-##  API 接口
+需登录后访问，功能包括：
+
+| 模块 | 功能 |
+|------|------|
+| 数据看板 | 关键指标、趋势图表、题目筛选 |
+| 题目管理 | 添加/编辑题目、答案、上传图片 |
+| 反馈数据 | 查看用户反馈、导出 CSV |
+| 用户管理 | 查看注册用户列表 |
+| 统计分析 | 答案偏好分布、分数段分布 |
+| 管理员管理 | 添加/删除管理员账号 |
+
+## API 接口
 
 ### 用户相关
-- `POST /api/register` - 用户注册
+
+| 接口 | 方法 | 说明 |
+|------|------|------|
+| `/api/register` | POST | 用户注册 |
 
 ### 题目相关
-- `GET /api/questions/active` - 获取激活的题目列表
-- `GET /api/question/<id>` - 获取单个题目及答案
+
+| 接口 | 方法 | 说明 |
+|------|------|------|
+| `/api/questions/active` | GET | 获取激活的题目列表 |
+| `/api/question/<id>` | GET | 获取单个题目及答案、批改详情 |
 
 ### 反馈相关
-- `POST /api/feedback` - 提交用户反馈
 
-### 管理后台
-- `GET /api/admin/questions` - 获取所有题目
-- `POST /api/admin/question` - 创建题目
-- `PUT /api/admin/question/<id>` - 更新题目
-- `POST /api/admin/answer` - 创建/更新答案
-- `GET /api/admin/feedbacks` - 获取反馈列表
-- `GET /api/admin/stats` - 获取统计数据
+| 接口 | 方法 | 说明 |
+|------|------|------|
+| `/api/feedback` | POST | 提交用户反馈 |
 
-##  数据库表结构
+### 管理后台（需登录）
+
+| 接口 | 方法 | 说明 |
+|------|------|------|
+| `/api/admin/login` | POST | 管理员登录 |
+| `/api/admin/logout` | POST | 管理员登出 |
+| `/api/admin/check-auth` | GET | 检查登录状态 |
+| `/api/admin/questions` | GET | 获取所有题目 |
+| `/api/admin/question` | POST | 创建题目 |
+| `/api/admin/question/<id>` | PUT | 更新题目 |
+| `/api/admin/answer` | POST | 创建/更新答案 |
+| `/api/admin/review` | POST | 创建/更新批改详情 |
+| `/api/admin/upload-answer-image/<id>` | POST | 上传答案图片 |
+| `/api/admin/feedbacks` | GET | 获取反馈列表 |
+| `/api/admin/users` | GET | 获取用户列表 |
+| `/api/admin/stats` | GET | 获取统计数据 |
+| `/api/admin/stats/detailed` | GET | 获取详细统计 |
+| `/api/admin/stats/trend` | GET | 获取趋势数据 |
+| `/api/admin/admins` | GET | 获取管理员列表 |
+| `/api/admin/admins` | POST | 新增管理员 |
+| `/api/admin/admins/<id>` | DELETE | 删除管理员 |
+
+## 数据库表结构
 
 ### users (用户表)
-- id, nickname, phone, score, created_at
+
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| id | Integer | 主键 |
+| nickname | String(50) | 昵称 |
+| phone | String(20) | 手机号（唯一） |
+| score | String(10) | 申论分数 |
+| created_at | DateTime | 创建时间 |
+
+### admins (管理员表)
+
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| id | Integer | 主键 |
+| username | String(50) | 用户名（唯一） |
+| password | String(100) | 密码 |
+| nickname | String(50) | 昵称 |
+| created_at | DateTime | 创建时间 |
 
 ### questions (题目表)
-- id, title, material, requirement, score, status, created_at, updated_at
+
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| id | Integer | 主键 |
+| title | String(200) | 题目名称 |
+| material | Text | 给定资料 |
+| requirement | Text | 作答要求 |
+| score | Integer | 分值 |
+| status | String(20) | 状态（active/inactive） |
+| answer_image | Text | 用户作答图片 URL |
+| created_at | DateTime | 创建时间 |
+| updated_at | DateTime | 更新时间 |
 
 ### answers (答案表)
-- id, question_id, version, content, created_at
+
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| id | Integer | 主键 |
+| question_id | Integer | 关联题目 ID |
+| version | String(10) | 版本（A/B） |
+| content | Text | 答案内容 |
+| source | String(50) | 来源（上岸仓/粉笔） |
+| created_at | DateTime | 创建时间 |
+
+### answer_reviews (批改详情表)
+
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| id | Integer | 主键 |
+| question_id | Integer | 关联题目 ID |
+| answer_version | String(10) | 答案版本（A/B） |
+| question_total_score | Integer | 题目总分 |
+| answer_total_score | Integer | 答案得分 |
+| key_points_stats | JSON | 要点统计 |
+| performance_summary | Text | 本次得分与表现 |
+| next_steps | Text | 下一步提升方向 |
+| missing_points | JSON | 遗漏要点列表 |
+| partial_points | JSON | 部分得分要点列表 |
+| logic_analysis | Text | 作答逻辑评价 |
 
 ### feedbacks (反馈表)
-- id, user_id, question_id, prefer, reasons, other_reason, willing_to_train, ip_address, created_at
 
-## 🎯 使用流程
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| id | Integer | 主键 |
+| user_id | Integer | 用户 ID |
+| question_id | Integer | 题目 ID |
+| prefer | String(10) | 最终偏好（A/B） |
+| answer_prefer | String(10) | 答案偏好 |
+| review_prefer | String(10) | 批改偏好 |
+| reasons | JSON | 选择原因列表 |
+| other_reason | Text | 其他原因 |
+| willing_to_train | String(20) | 参与意愿 |
+| ip_address | String(50) | IP 地址 |
+| answer_image | Text | 用户作答图片 URL |
+| created_at | DateTime | 创建时间 |
 
-1. **管理员**在后台添加题目和答案（A/B 两个版本）
-2. **用户**访问主页，注册后开始评判
-3. 用户选择更认可的答案并填写反馈
-4. **管理员**在后台查看统计数据，分析产品方向
+## 使用流程
 
-## 🛠️ 技术栈
+1. **管理员**登录后台，添加题目、答案（A/B）、批改详情
+2. **用户**访问主页，注册后查看题目并评判
+3. 用户选择偏好答案、填写反馈原因和参与意愿
+4. **管理员**查看统计数据，分析产品优化方向
 
-- **前端**: HTML5 + CSS3 + Vanilla JavaScript
-- **后端**: Python Flask
-- **数据库**: MySQL + SQLAlchemy
-- **部署**: 本地运行 / 云服务器
+## 技术栈
 
-## 📝 注意事项
+- **前端**: HTML5 + CSS3 + Vanilla JavaScript + Chart.js
+- **后端**: Python Flask + Flask-Login
+- **数据库**: SQLite + SQLAlchemy
 
-1. 首次使用前请确保 MySQL 服务已启动
-2. 管理后台没有登录验证，部署到公网时需添加认证
-3. 建议定期备份数据库
+## 注意事项
+
+1. 默认管理员账号需通过 `init_admin.py` 脚本创建
+2. 数据库文件 `shenlun_feedback.db` 首次运行自动创建
+3. 建议定期备份数据库文件
 4. 生产环境请关闭 Flask debug 模式
+5. 密码明文存储，生产环境建议加密
 
-## 🔄 后续优化
+## 管理员账号管理
 
-- [ ] 添加管理后台登录认证
-- [ ] 支持题目批量导入
-- [ ] 添加数据导出功能
-- [ ] 优化移动端体验
-- [ ] 添加更多统计图表
+```bash
+# 查看所有管理员
+python init_admin.py --list
+
+# 创建管理员
+python init_admin.py --username <用户名> --password <密码>
+
+# 交互式创建
+python init_admin.py
+```
