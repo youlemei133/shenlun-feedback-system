@@ -60,6 +60,17 @@ def get_active_questions():
     except AppException as e:
         return error(e.message)
 
+@public_bp.route('/api/question/next', methods=['GET'])
+def get_next_question():
+    """获取下一个题目（反馈数最少的激活题目）"""
+    try:
+        question = QuestionService.get_next_for_user()
+        if not question:
+            return error('暂无可用题目')
+        return success({'question': question})
+    except AppException as e:
+        return error(e.message)
+
 @public_bp.route('/api/question/<int:question_id>', methods=['GET'])
 def get_question(question_id):
     """获取题目详情"""

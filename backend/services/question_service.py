@@ -15,6 +15,11 @@ class QuestionService:
         return QuestionRepository.get_active()
     
     @staticmethod
+    def get_next_for_user():
+        """获取下一个应该下发给用户的题目（反馈数最少的激活题目）"""
+        return QuestionRepository.get_next_for_user()
+    
+    @staticmethod
     def get_with_answers(question_id: int):
         """获取题目及答案"""
         data = QuestionRepository.get_with_answers(question_id)

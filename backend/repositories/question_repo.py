@@ -1,8 +1,9 @@
 # 题目、答案、批改数据访问
-from models import Question, Answer, AnswerReview
+from models import Question, Answer, AnswerReview, Feedback
 from repositories.base import BaseRepository
 from utils.db_session import get_db
 from typing import Optional, List, Dict
+from sqlalchemy import func
 
 class QuestionRepository(BaseRepository):
     model = Question
@@ -15,6 +16,31 @@ class QuestionRepository(BaseRepository):
                 Question.status == 'active'
             ).order_by(Question.created_at.desc()).all()
             return [q.to_dict() for q in questions]
+    
+    @classmethod
+    def get_next_for_user(cls) -> Optional[Dict]:
+        """获取下一个应该下发给用户的题目（反馈数最少的激活题目）"""
+        with get_db() as db:
+            # 左连接统计每个题目的反馈数，按反馈数升序排序
+            result = db.query(
+                Question,
+                func.count(Feedback.id).label('feedback_count')
+            ).outerjoin(
+                Feedback, Question.id == Feedback.question_id
+            ).filter(
+                Question.status == 'active'
+            ).group_by(
+                Question.id
+            ).order_by(
+                func.count(Feedback.id).asc()
+            ).first()
+            
+            if result:
+                question, feedback_count = result
+                question_dict = question.to_dict()
+                question_dict['feedback_count'] = feedback_count
+                return question_dict
+            return None
     
     @classmethod
     def get_with_answers(cls, question_id: int) -> Optional[Dict]:

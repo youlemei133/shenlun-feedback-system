@@ -2423,16 +2423,14 @@
         return true;
     }
 
-    // 加载题目
+    // 加载题目（自动选择反馈数最少的题目）
     async function loadQuestion() {
         try {
-            const response = await fetch(`${API_BASE}/questions/active`);
+            const response = await fetch(`${API_BASE}/question/next`);
             const result = await response.json();
 
-            if (result.success && result.data.questions.length > 0) {
-                const randomIndex = Math.floor(Math.random() * result.data.questions.length);
-                const question = result.data.questions[randomIndex];
-                await loadQuestionDetail(question.id);
+            if (result.success && result.data.question) {
+                await loadQuestionDetail(result.data.question.id);
             }
         } catch (error) {
             console.error('Error:', error);
