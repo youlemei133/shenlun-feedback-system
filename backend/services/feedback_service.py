@@ -30,5 +30,4 @@ class FeedbackService:
     @staticmethod
     def get_recent(limit: int = 100):
         """获取最近反馈"""
-        feedbacks = FeedbackRepository.get_recent(limit)
-        return [f.to_dict() for f in feedbacks]
+        return FeedbackRepository.get_recent(limit)

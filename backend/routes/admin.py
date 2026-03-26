@@ -19,7 +19,7 @@ def get_questions():
     """获取所有题目"""
     try:
         questions = QuestionRepository.get_all(order_by='created_at.desc')
-        return success({'questions': [q.to_dict() for q in questions]})
+        return success({'questions': questions})
     except AppException as e:
         return error(e.message)
 
@@ -39,7 +39,7 @@ def create_question():
             score=data.get('score', 15),
             status=data.get('status', 'active')
         )
-        return success({'question': question.to_dict()})
+        return success({'question': question})
     except AppException as e:
         return error(e.message)
 
@@ -50,7 +50,7 @@ def update_question(question_id):
     data = request.json
     try:
         question = QuestionService.update(question_id, **data)
-        return success({'question': question.to_dict()})
+        return success({'question': question})
     except AppException as e:
         return error(e.message, e.code)
 
@@ -60,7 +60,7 @@ def toggle_question_status(question_id):
     """切换题目状态"""
     try:
         question = QuestionService.toggle_status(question_id)
-        return success({'question': question.to_dict()})
+        return success({'question': question})
     except AppException as e:
         return error(e.message, e.code)
 
@@ -81,7 +81,7 @@ def create_or_update_answer():
             content=data.get('content'),
             source=data.get('source', '')
         )
-        return success({'answer': answer.to_dict()})
+        return success({'answer': answer})
     except AppException as e:
         return error(e.message)
 
@@ -111,7 +111,7 @@ def create_or_update_review():
             answer_version=data.get('answer_version'),
             **data
         )
-        return success({'review': review.to_dict()})
+        return success({'review': review})
     except AppException as e:
         return error(e.message)
 

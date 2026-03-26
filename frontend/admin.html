@@ -1629,8 +1629,8 @@
                 const response = await fetch(`${API_BASE}/admin/check-auth`);
                 const result = await response.json();
                 
-                if (result.success && result.authenticated) {
-                    currentAdmin = result.admin;
+                if (result.success && result.data.authenticated) {
+                    currentAdmin = result.data.admin;
                     showApp();
                     return true;
                 } else {
@@ -1691,10 +1691,9 @@
                 
                 const result = await response.json();
                 
-                if (result.success) {
-                    currentAdmin = result.admin;
+if (result.success) {
+                    currentAdmin = result.data.admin;
                     showApp();
-                    initApp();
                 } else {
                     errorEl.textContent = result.message || '登录失败';
                     errorEl.classList.add('show');
@@ -1728,7 +1727,7 @@
                 const result = await response.json();
                 
                 if (result.success) {
-                    allAdmins = result.admins;
+                    allAdmins = result.data.admins;
                     renderAdminsTable(allAdmins);
                 }
             } catch (error) {
@@ -1919,7 +1918,7 @@
                 const result = await response.json();
                 
                 if (result.success) {
-                    detailedStats = result.stats;
+                    detailedStats = result.data.stats;
                     
                     animateNumber('statTotalFeedbacks', detailedStats.summary.total_feedbacks);
                     animateNumber('statTodayFeedbacks', detailedStats.summary.today_feedbacks);
@@ -1944,7 +1943,7 @@
                 const result = await response.json();
                 
                 if (result.success) {
-                    renderTrendChart(result.trend);
+                    renderTrendChart(result.data.trend);
                 }
             } catch (error) {
                 console.error('加载趋势数据失败:', error);
@@ -1962,7 +1961,7 @@
                     // 保留 "全部题目" 选项
                     filter.innerHTML = '<option value="all">全部题目</option>';
                     
-                    result.questions.forEach(q => {
+                    result.data.questions.forEach(q => {
                         const option = document.createElement('option');
                         option.value = q.id;
                         option.textContent = `[${q.id}] ${q.title.substring(0, 30)}${q.title.length > 30 ? '...' : ''}`;
@@ -2003,7 +2002,7 @@
                 const result = await response.json();
                 
                 if (result.success) {
-                    allQuestions = result.questions;
+                    allQuestions = result.data.questions;
                     document.getElementById('questionCount').textContent = allQuestions.length;
                     renderQuestionsTable(allQuestions);
                 }
@@ -2018,7 +2017,7 @@
                 const result = await response.json();
                 
                 if (result.success) {
-                    allFeedbacks = result.feedbacks;
+                    allFeedbacks = result.data.feedbacks;
                     renderFeedbacksTable(allFeedbacks);
                 }
             } catch (error) {
@@ -2036,7 +2035,7 @@
                 const result = await response.json();
                 
                 if (result.success) {
-                    allUsers = result.users;
+                    allUsers = result.data.users;
                     renderUsersTable(allUsers);
                 }
             } catch (error) {
@@ -2488,8 +2487,8 @@
                 
                 if (result.success) {
                     currentAnswers = {
-                        A: { content: result.answer_a?.content || '', source: result.answer_a?.source || '' },
-                        B: { content: result.answer_b?.content || '', source: result.answer_b?.source || '' }
+                        A: { content: result.data.answer_a?.content || '', source: result.data.answer_a?.source || '' },
+                        B: { content: result.data.answer_b?.content || '', source: result.data.answer_b?.source || '' }
                     };
                     
                     document.getElementById('answerVersion').value = 'A';
@@ -2631,7 +2630,7 @@
                 const result = await response.json();
                 
                 if (result.success) {
-                    const review = result.reviews.find(r => r.answer_version === currentReviewVersion);
+                    const review = result.data.reviews.find(r => r.answer_version === currentReviewVersion);
                     if (review) {
                         fillReviewData(review);
                     } else {

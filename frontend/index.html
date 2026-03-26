@@ -2429,9 +2429,9 @@
             const response = await fetch(`${API_BASE}/questions/active`);
             const result = await response.json();
 
-            if (result.success && result.questions.length > 0) {
-                const randomIndex = Math.floor(Math.random() * result.questions.length);
-                const question = result.questions[randomIndex];
+            if (result.success && result.data.questions.length > 0) {
+                const randomIndex = Math.floor(Math.random() * result.data.questions.length);
+                const question = result.data.questions[randomIndex];
                 await loadQuestionDetail(question.id);
             }
         } catch (error) {
@@ -2447,14 +2447,14 @@
             console.log('API 返回数据:', result);
 
             if (result.success) {
-                currentQuestion = result;
-                const q = result.question;
+                currentQuestion = result.data;
+                const q = result.data.question;
 
                 console.log('题目数据:', q);
-                console.log('答案 A:', result.answer_a);
-                console.log('答案 B:', result.answer_b);
-                console.log('批改 A:', result.review_a);
-                console.log('批改 B:', result.review_b);
+                console.log('答案 A:', result.data.answer_a);
+                console.log('答案 B:', result.data.answer_b);
+                console.log('批改 A:', result.data.review_a);
+                console.log('批改 B:', result.data.review_b);
 
                 document.getElementById('questionTitle').textContent = q.title;
                 document.getElementById('questionReq').innerHTML = q.requirement.split('\n').map(r => `<li>${r}</li>`).join('');
@@ -2464,17 +2464,17 @@
                 const answerAEl = document.getElementById('answerAContent');
                 const answerBEl = document.getElementById('answerBContent');
 
-                if (result.answer_a) {
-                    console.log('答案 A 内容:', result.answer_a.content);
-                    answerAEl.innerHTML = formatAnswer(result.answer_a.content);
+                if (result.data.answer_a) {
+                    console.log('答案 A 内容:', result.data.answer_a.content);
+                    answerAEl.innerHTML = formatAnswer(result.data.answer_a.content);
                 } else {
                     console.log('答案 A 不存在');
                     answerAEl.innerHTML = '<span style="color:#999">暂无答案 A</span>';
                 }
 
-                if (result.answer_b) {
-                    console.log('答案 B 内容:', result.answer_b.content);
-                    answerBEl.innerHTML = formatAnswer(result.answer_b.content);
+                if (result.data.answer_b) {
+                    console.log('答案 B 内容:', result.data.answer_b.content);
+                    answerBEl.innerHTML = formatAnswer(result.data.answer_b.content);
                 } else {
                     console.log('答案 B 不存在');
                     answerBEl.innerHTML = '<span style="color:#999">暂无答案 B</span>';
@@ -3264,8 +3264,8 @@ function closeModal() {
             const result = await response.json();
 
             if (result.success) {
-                localStorage.setItem('shenlun_user_id', result.user_id);
-                localStorage.setItem('shenlun_user', JSON.stringify(result.user));
+                localStorage.setItem('shenlun_user_id', result.data.user_id);
+                localStorage.setItem('shenlun_user', JSON.stringify(result.data.user));
 
                 // 重新加载参与人数（因为新增了一个用户）
                 loadParticipantCount();
@@ -3314,11 +3314,11 @@ function closeModal() {
     // 加载参与人数
     async function loadParticipantCount() {
         try {
-            const response = await fetch(`${API_BASE}/admin/stats`);
+            const response = await fetch(`${API_BASE}/stats`);
             const result = await response.json();
 
             if (result.success) {
-                const count = result.stats.total_users;
+                const count = result.data.stats.total_users;
                 // 更新封面页的参与人数
                 const participantEl = document.getElementById('participantCount');
                 if (participantEl) {

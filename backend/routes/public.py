@@ -5,6 +5,7 @@ from utils.exceptions import AppException
 from services.user_service import UserService
 from services.question_service import QuestionService
 from services.feedback_service import FeedbackService
+from services.stats_service import StatsService
 
 public_bp = Blueprint('public', __name__)
 
@@ -89,5 +90,14 @@ def submit_feedback():
             answer_image=data.get('answer_image')
         )
         return success({'feedback_id': feedback['id']})
+    except AppException as e:
+        return error(e.message)
+
+@public_bp.route('/api/stats', methods=['GET'])
+def get_public_stats():
+    """获取公开统计数据（主页使用）"""
+    try:
+        stats = StatsService.get_basic()
+        return success({'stats': stats})
     except AppException as e:
         return error(e.message)
