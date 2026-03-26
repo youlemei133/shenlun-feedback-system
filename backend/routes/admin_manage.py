@@ -1,8 +1,8 @@
 # 管理员管理路由
-from flask import Blueprint
+from flask import Blueprint, request
 from flask_login import login_required, current_user
 from utils.response import success, error
-from utils.exceptions import AppException, ValidationError
+from utils.exceptions import AppException
 from repositories.admin_repo import AdminRepository
 
 admin_manage_bp = Blueprint('admin_manage', __name__, url_prefix='/api/admin')
@@ -13,7 +13,7 @@ def get_admins():
     """获取管理员列表"""
     try:
         admins = AdminRepository.get_all(order_by='created_at.desc')
-        return success({'admins': [a.to_dict() for a in admins]})
+        return success({'admins': admins})
     except AppException as e:
         return error(e.message)
 
@@ -21,7 +21,6 @@ def get_admins():
 @login_required
 def create_admin():
     """创建管理员"""
-    from flask import request
     data = request.json
     if not data:
         return error('数据不能为空')
@@ -42,7 +41,7 @@ def create_admin():
             password=password,
             nickname=nickname or username
         )
-        return success({'admin': admin.to_dict()})
+        return success({'admin': admin})
     except AppException as e:
         return error(e.message)
 
