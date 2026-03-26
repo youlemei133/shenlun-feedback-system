@@ -31,7 +31,7 @@ class BaseRepository:
             query = db.query(cls.model)
             if order_by is not None:
                 order_clause = cls._parse_order_by(order_by)
-                if order_clause:
+                if order_clause is not None:
                     query = query.order_by(order_clause)
             if limit:
                 query = query.limit(limit)
@@ -59,7 +59,7 @@ class BaseRepository:
             query = db.query(cls.model)
             if order_by is not None:
                 order_clause = cls._parse_order_by(order_by)
-                if order_clause:
+                if order_clause is not None:
                     query = query.order_by(order_clause)
             if limit:
                 query = query.limit(limit)
