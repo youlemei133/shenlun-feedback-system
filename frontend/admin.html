@@ -1626,7 +1626,7 @@
         // ==================== 认证相关 ====================
         async function checkAuth() {
             try {
-                const response = await fetch(`${API_BASE}/admin/check-auth`);
+                const response = await fetch(`${API_BASE}/admin/check-auth`, { credentials: 'include' });
                 const result = await response.json();
                 
                 if (result.success && result.data.authenticated) {
@@ -1686,6 +1686,7 @@
                 const response = await fetch(`${API_BASE}/admin/login`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
                     body: JSON.stringify({ username, password })
                 });
                 
@@ -1711,7 +1712,7 @@ if (result.success) {
             if (!confirm('确定要退出登录吗？')) return;
             
             try {
-                await fetch(`${API_BASE}/admin/logout`, { method: 'POST' });
+                const response = await fetch(`${API_BASE}/admin/logout`, { method: 'POST', credentials: 'include' });
             } catch (error) {
                 console.error('登出失败:', error);
             }
@@ -1723,7 +1724,7 @@ if (result.success) {
         // ==================== 管理员管理 ====================
         async function loadAdmins() {
             try {
-                const response = await fetch(`${API_BASE}/admin/admins`);
+                const response = await fetch(`${API_BASE}/admin/admins`, { credentials: 'include' });
                 const result = await response.json();
                 
                 if (result.success) {
@@ -1781,6 +1782,7 @@ if (result.success) {
                 const response = await fetch(`${API_BASE}/admin/admins`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
                     body: JSON.stringify({ username, password, nickname })
                 });
                 
@@ -1803,7 +1805,8 @@ if (result.success) {
             
             try {
                 const response = await fetch(`${API_BASE}/admin/admins/${adminId}`, {
-                    method: 'DELETE'
+                    method: 'DELETE',
+                    credentials: 'include'
                 });
                 
                 const result = await response.json();
@@ -1914,7 +1917,7 @@ if (result.success) {
         async function loadDashboardData() {
             try {
                 const questionId = document.getElementById('questionFilter').value;
-                const response = await fetch(`${API_BASE}/admin/stats/detailed?question_id=${questionId}`);
+                const response = await fetch(`${API_BASE}/admin/stats/detailed?question_id=${questionId}`, { credentials: 'include' });
                 const result = await response.json();
                 
                 if (result.success) {
@@ -1939,7 +1942,7 @@ if (result.success) {
         async function loadTrendData() {
             try {
                 const questionId = document.getElementById('questionFilter').value;
-                const response = await fetch(`${API_BASE}/admin/stats/trend?question_id=${questionId}`);
+                const response = await fetch(`${API_BASE}/admin/stats/trend?question_id=${questionId}`, { credentials: 'include' });
                 const result = await response.json();
                 
                 if (result.success) {
@@ -1953,7 +1956,7 @@ if (result.success) {
         // 加载题目筛选器选项
         async function loadQuestionFilter() {
             try {
-                const response = await fetch(`${API_BASE}/admin/questions`);
+                const response = await fetch(`${API_BASE}/admin/questions`, { credentials: 'include' });
                 const result = await response.json();
                 
                 if (result.success) {
@@ -1998,7 +2001,7 @@ if (result.success) {
         
         async function loadQuestions() {
             try {
-                const response = await fetch(`${API_BASE}/admin/questions`);
+                const response = await fetch(`${API_BASE}/admin/questions`, { credentials: 'include' });
                 const result = await response.json();
                 
                 if (result.success) {
@@ -2013,7 +2016,7 @@ if (result.success) {
         
         async function loadFeedbacks() {
             try {
-                const response = await fetch(`${API_BASE}/admin/feedbacks`);
+                const response = await fetch(`${API_BASE}/admin/feedbacks`, { credentials: 'include' });
                 const result = await response.json();
                 
                 if (result.success) {
@@ -2027,7 +2030,7 @@ if (result.success) {
         
         async function loadUsers() {
             try {
-                const response = await fetch(`${API_BASE}/admin/users`);
+                const response = await fetch(`${API_BASE}/admin/users`, { credentials: 'include' });
                 if (!response.ok) {
                     document.getElementById('usersTable').innerHTML = '<tr><td colspan="6" class="empty-state"><div class="empty-icon">👥</div><div class="empty-text">暂无用户数据</div></td></tr>';
                     return;
@@ -2437,6 +2440,7 @@ if (result.success) {
                 const response = await fetch(`${API_BASE}/admin/question`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
                     body: JSON.stringify({ title, material, requirement, score, status })
                 });
                 
@@ -2461,6 +2465,7 @@ if (result.success) {
                 const response = await fetch(`${API_BASE}/admin/question/${questionId}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
                     body: JSON.stringify({ status: newStatus })
                 });
                 
@@ -2539,6 +2544,7 @@ if (result.success) {
                 const response = await fetch(`${API_BASE}/admin/answer`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
                     body: JSON.stringify({ question_id: parseInt(questionId), version, content, source })
                 });
                 
@@ -2586,6 +2592,7 @@ if (result.success) {
                 const response = await fetch(`${API_BASE}/admin/upload-answer-image/${currentUploadQuestionId}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
                     body: JSON.stringify({ image: currentImageBase64 })
                 });
                 
@@ -2626,7 +2633,7 @@ if (result.success) {
         
         async function loadReviewData(questionId) {
             try {
-                const response = await fetch(`${API_BASE}/admin/review/${questionId}`);
+                const response = await fetch(`${API_BASE}/admin/review/${questionId}`, { credentials: 'include' });
                 const result = await response.json();
                 
                 if (result.success) {
@@ -2789,6 +2796,7 @@ if (result.success) {
                 const response = await fetch(`${API_BASE}/admin/review`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
                     body: JSON.stringify(data)
                 });
                 
