@@ -1,36 +1,39 @@
 # 反馈数据访问
-from models import Feedback, User, Answer
+from models import Feedback
 from repositories.base import BaseRepository
 from utils.db_session import get_db
-from typing import List, Optional
+from typing import List, Optional, Dict
 from datetime import datetime, timedelta
 
 class FeedbackRepository(BaseRepository):
     model = Feedback
     
     @classmethod
-    def get_recent(cls, limit: int = 100) -> List[Feedback]:
-        """获取最近的反馈"""
+    def get_recent(cls, limit: int = 100) -> List[Dict]:
+        """获取最近的反馈（返回 dict 列表）"""
         with get_db() as db:
-            return db.query(Feedback).order_by(
+            feedbacks = db.query(Feedback).order_by(
                 Feedback.created_at.desc()
             ).limit(limit).all()
+            return [f.to_dict() for f in feedbacks]
     
     @classmethod
-    def get_by_user(cls, user_id: int) -> List[Feedback]:
-        """获取用户的反馈"""
+    def get_by_user(cls, user_id: int) -> List[Dict]:
+        """获取用户的反馈（返回 dict 列表）"""
         with get_db() as db:
-            return db.query(Feedback).filter(
+            feedbacks = db.query(Feedback).filter(
                 Feedback.user_id == user_id
             ).all()
+            return [f.to_dict() for f in feedbacks]
     
     @classmethod
-    def get_by_question(cls, question_id: int) -> List[Feedback]:
-        """获取题目的反馈"""
+    def get_by_question(cls, question_id: int) -> List[Dict]:
+        """获取题目的反馈（返回 dict 列表）"""
         with get_db() as db:
-            return db.query(Feedback).filter(
+            feedbacks = db.query(Feedback).filter(
                 Feedback.question_id == question_id
             ).all()
+            return [f.to_dict() for f in feedbacks]
     
     @classmethod
     def count(cls, question_id: int = None) -> int:
@@ -75,7 +78,7 @@ class FeedbackRepository(BaseRepository):
             return query.count()
     
     @classmethod
-    def get_trend(cls, days: int = 7, question_id: int = None) -> List[dict]:
+    def get_trend(cls, days: int = 7, question_id: int = None) -> List[Dict]:
         """获取趋势数据"""
         with get_db() as db:
             today = datetime.now().date()
@@ -124,10 +127,11 @@ class FeedbackRepository(BaseRepository):
             return trend_data
     
     @classmethod
-    def get_all_with_filter(cls, question_id: int = None) -> List[Feedback]:
-        """获取所有反馈（可筛选）"""
+    def get_all_with_filter(cls, question_id: int = None) -> List[Dict]:
+        """获取所有反馈（可筛选，返回 dict 列表）"""
         with get_db() as db:
             query = db.query(Feedback)
             if question_id:
                 query = query.filter(Feedback.question_id == question_id)
-            return query.all()
+            feedbacks = query.all()
+            return [f.to_dict() for f in feedbacks]

@@ -22,7 +22,7 @@ def login():
     
     try:
         admin = AuthService.login(username, password)
-        return success({'admin': admin.to_dict()})
+        return success({'admin': admin})
     except AppException as e:
         return error(e.message)
 

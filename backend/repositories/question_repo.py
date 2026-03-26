@@ -2,22 +2,23 @@
 from models import Question, Answer, AnswerReview
 from repositories.base import BaseRepository
 from utils.db_session import get_db
-from typing import Optional, List
+from typing import Optional, List, Dict
 
 class QuestionRepository(BaseRepository):
     model = Question
     
     @classmethod
-    def get_active(cls) -> List[Question]:
-        """获取所有激活的题目"""
+    def get_active(cls) -> List[Dict]:
+        """获取所有激活的题目（返回 dict 列表）"""
         with get_db() as db:
-            return db.query(Question).filter(
+            questions = db.query(Question).filter(
                 Question.status == 'active'
             ).order_by(Question.created_at.desc()).all()
+            return [q.to_dict() for q in questions]
     
     @classmethod
-    def get_with_answers(cls, question_id: int) -> Optional[dict]:
-        """获取题目及答案"""
+    def get_with_answers(cls, question_id: int) -> Optional[Dict]:
+        """获取题目及答案（返回 dict）"""
         with get_db() as db:
             question = db.query(Question).get(question_id)
             if not question:
@@ -43,17 +44,18 @@ class AnswerRepository(BaseRepository):
     model = Answer
     
     @classmethod
-    def get_by_question_and_version(cls, question_id: int, version: str) -> Optional[Answer]:
-        """根据题目ID和版本获取答案"""
+    def get_by_question_and_version(cls, question_id: int, version: str) -> Optional[Dict]:
+        """根据题目ID和版本获取答案（返回 dict）"""
         with get_db() as db:
-            return db.query(Answer).filter(
+            answer = db.query(Answer).filter(
                 Answer.question_id == question_id,
                 Answer.version == version
             ).first()
+            return answer.to_dict() if answer else None
     
     @classmethod
-    def create_or_update(cls, question_id: int, version: str, content: str, source: str = '') -> Answer:
-        """创建或更新答案"""
+    def create_or_update(cls, question_id: int, version: str, content: str, source: str = '') -> Dict:
+        """创建或更新答案（返回 dict）"""
         with get_db() as db:
             existing = db.query(Answer).filter(
                 Answer.question_id == question_id,
@@ -65,7 +67,7 @@ class AnswerRepository(BaseRepository):
                 existing.source = source
                 db.flush()
                 db.refresh(existing)
-                return existing
+                return existing.to_dict()
             else:
                 answer = Answer(
                     question_id=question_id,
@@ -76,31 +78,33 @@ class AnswerRepository(BaseRepository):
                 db.add(answer)
                 db.flush()
                 db.refresh(answer)
-                return answer
+                return answer.to_dict()
 
 class AnswerReviewRepository(BaseRepository):
     model = AnswerReview
     
     @classmethod
-    def get_by_question_and_version(cls, question_id: int, answer_version: str) -> Optional[AnswerReview]:
-        """根据题目ID和答案版本获取批改"""
+    def get_by_question_and_version(cls, question_id: int, answer_version: str) -> Optional[Dict]:
+        """根据题目ID和答案版本获取批改（返回 dict）"""
         with get_db() as db:
-            return db.query(AnswerReview).filter(
+            review = db.query(AnswerReview).filter(
                 AnswerReview.question_id == question_id,
                 AnswerReview.answer_version == answer_version
             ).first()
+            return review.to_dict() if review else None
     
     @classmethod
-    def get_by_question(cls, question_id: int) -> List[AnswerReview]:
-        """获取题目的所有批改"""
+    def get_by_question(cls, question_id: int) -> List[Dict]:
+        """获取题目的所有批改（返回 dict 列表）"""
         with get_db() as db:
-            return db.query(AnswerReview).filter(
+            reviews = db.query(AnswerReview).filter(
                 AnswerReview.question_id == question_id
             ).all()
+            return [r.to_dict() for r in reviews]
     
     @classmethod
-    def create_or_update(cls, question_id: int, answer_version: str, **kwargs) -> AnswerReview:
-        """创建或更新批改"""
+    def create_or_update(cls, question_id: int, answer_version: str, **kwargs) -> Dict:
+        """创建或更新批改（返回 dict）"""
         with get_db() as db:
             existing = db.query(AnswerReview).filter(
                 AnswerReview.question_id == question_id,
@@ -113,7 +117,7 @@ class AnswerReviewRepository(BaseRepository):
                         setattr(existing, key, value)
                 db.flush()
                 db.refresh(existing)
-                return existing
+                return existing.to_dict()
             else:
                 review = AnswerReview(
                     question_id=question_id,
@@ -123,4 +127,4 @@ class AnswerReviewRepository(BaseRepository):
                 db.add(review)
                 db.flush()
                 db.refresh(review)
-                return review
+                return review.to_dict()

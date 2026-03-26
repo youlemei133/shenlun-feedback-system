@@ -46,7 +46,7 @@ def register():
             phone=data.get('phone', '').strip(),
             score=data.get('score', '').strip()
         )
-        return success({'user_id': user.id, 'user': user.to_dict()})
+        return success({'user_id': user['id'], 'user': user})
     except AppException as e:
         return error(e.message)
 
@@ -88,6 +88,6 @@ def submit_feedback():
             willing_to_train=data.get('willing_to_train'),
             answer_image=data.get('answer_image')
         )
-        return success({'feedback_id': feedback.id})
+        return success({'feedback_id': feedback['id']})
     except AppException as e:
         return error(e.message)

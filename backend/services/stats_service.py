@@ -78,13 +78,14 @@ class StatsService:
         }
         
         for feedback in feedbacks:
-            answer = AnswerRepository.get_by_question_and_version(feedback.question_id, feedback.prefer)
-            source = answer.source if answer and answer.source else AnswerSource.UNKNOWN
+            answer = AnswerRepository.get_by_question_and_version(feedback['question_id'], feedback['prefer'])
+            source = answer.get('source') if answer else AnswerSource.UNKNOWN
             
             if source in stats['total']:
                 stats['total'][source] += 1
             
-            feedback_time = feedback.created_at.strftime('%Y-%m-%d %H:%M:%S')
+            # feedback['created_at'] 已经是字符串格式
+            feedback_time = feedback['created_at']
             if today_start <= feedback_time <= today_end:
                 if source in stats['today']:
                     stats['today'][source] += 1
@@ -165,17 +166,17 @@ class StatsService:
         
         for user in users:
             try:
-                user_score = float(user.score)
+                user_score = float(user['score'])
                 score_range = 'below_55' if user_score < ScoreThreshold.LOW else 'above_55'
             except (ValueError, TypeError):
                 continue
             
-            user_feedbacks = FeedbackRepository.get_by_user(user.id)
+            user_feedbacks = FeedbackRepository.get_by_user(user['id'])
             if question_id:
-                user_feedbacks = [f for f in user_feedbacks if f.question_id == question_id]
+                user_feedbacks = [f for f in user_feedbacks if f['question_id'] == question_id]
             
             for feedback in user_feedbacks:
-                mood = feedback.willing_to_train or Willingness.NOT_INTERESTED
+                mood = feedback.get('willing_to_train') or Willingness.NOT_INTERESTED
                 if mood in result[score_range]:
                     result[score_range][mood] += 1
         

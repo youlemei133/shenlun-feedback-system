@@ -2,19 +2,20 @@
 from models import User
 from repositories.base import BaseRepository
 from utils.db_session import get_db
-from typing import Optional, List
+from typing import Optional, List, Dict
 
 class UserRepository(BaseRepository):
     model = User
     
     @classmethod
-    def get_by_phone(cls, phone: str) -> Optional[User]:
-        """根据手机号获取用户"""
+    def get_by_phone(cls, phone: str) -> Optional[Dict]:
+        """根据手机号获取用户（返回 dict）"""
         with get_db() as db:
-            return db.query(User).filter(User.phone == phone).first()
+            user = db.query(User).filter(User.phone == phone).first()
+            return user.to_dict() if user else None
     
     @classmethod
-    def get_all_with_feedback_count(cls) -> List[dict]:
+    def get_all_with_feedback_count(cls) -> List[Dict]:
         """获取所有用户及其反馈数"""
         with get_db() as db:
             users = db.query(User).order_by(User.created_at.desc()).all()

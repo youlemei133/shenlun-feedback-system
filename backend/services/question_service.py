@@ -12,8 +12,7 @@ class QuestionService:
     @staticmethod
     def get_active():
         """获取激活的题目"""
-        questions = QuestionRepository.get_active()
-        return [q.to_dict() for q in questions]
+        return QuestionRepository.get_active()
     
     @staticmethod
     def get_with_answers(question_id: int):
@@ -29,14 +28,13 @@ class QuestionService:
         if not title or not material or not requirement:
             raise ValidationError('请填写必填项')
         
-        question = QuestionRepository.create(
+        return QuestionRepository.create(
             title=title,
             material=material,
             requirement=requirement,
             score=score,
             status=status
         )
-        return question
     
     @staticmethod
     def update(question_id: int, **kwargs):
@@ -53,7 +51,7 @@ class QuestionService:
         if not question:
             raise NotFoundError('题目')
         
-        new_status = 'inactive' if question.status == 'active' else 'active'
+        new_status = 'inactive' if question.get('status') == 'active' else 'active'
         return QuestionRepository.update(question_id, status=new_status)
     
     @staticmethod
@@ -93,20 +91,18 @@ class AnswerService:
         if not question_id or not version or not content:
             raise ValidationError('缺少必要参数')
         
-        answer = AnswerRepository.create_or_update(
+        return AnswerRepository.create_or_update(
             question_id=question_id,
             version=version,
             content=content,
             source=source
         )
-        return answer
 
 class AnswerReviewService:
     @staticmethod
     def get_by_question(question_id: int):
         """获取题目的批改"""
-        reviews = AnswerReviewRepository.get_by_question(question_id)
-        return [r.to_dict() for r in reviews]
+        return AnswerReviewRepository.get_by_question(question_id)
     
     @staticmethod
     def create_or_update(question_id: int, answer_version: str, **kwargs):
@@ -133,9 +129,8 @@ class AnswerReviewService:
             'logic_analysis': kwargs.get('logic_analysis', '')
         }
         
-        review = AnswerReviewRepository.create_or_update(
+        return AnswerReviewRepository.create_or_update(
             question_id=question_id,
             answer_version=answer_version,
             **data
         )
-        return review

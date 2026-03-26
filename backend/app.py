@@ -18,14 +18,17 @@ def create_app():
     # Flask-Login 配置
     login_manager = LoginManager()
     login_manager.init_app(app)
-    login_manager.login_view = 'admin'
+    login_manager.login_view = 'auth.login'
     login_manager.session_protection = 'strong'
     
     @login_manager.user_loader
     def load_user(user_id):
         from utils.db_session import get_db
         with get_db() as db:
-            return db.query(Admin).get(int(user_id))
+            admin = db.query(Admin).get(int(user_id))
+            if admin:
+                db.expunge(admin)
+            return admin
     
     # 初始化数据库
     init_db()
