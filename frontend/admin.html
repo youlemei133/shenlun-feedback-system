@@ -1,0 +1,2882 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理后台 - 申论判官</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #667eea;
+            --primary-dark: #5a6fd6;
+            --secondary: #764ba2;
+            --success: #52c41a;
+            --warning: #faad14;
+            --danger: #ff4d4f;
+            --text-main: #333;
+            --text-sub: #666;
+            --text-light: #999;
+            --bg-main: #f0f2f5;
+            --bg-white: #fff;
+            --bg-sidebar: #1a1f36;
+            --border: #e8e8e8;
+            --shadow: 0 2px 8px rgba(0,0,0,0.08);
+            --shadow-lg: 0 4px 16px rgba(0,0,0,0.12);
+            --radius: 8px;
+            --radius-lg: 12px;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: var(--bg-main);
+            min-height: 100vh;
+            color: var(--text-main);
+        }
+        
+        /* ==================== 布局结构 ==================== */
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* 侧边栏 */
+        .sidebar {
+            width: 240px;
+            background: var(--bg-sidebar);
+            color: #fff;
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            z-index: 100;
+            transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .sidebar-logo-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+        
+        .sidebar-nav {
+            flex: 1;
+            padding: 16px 12px;
+            overflow-y: auto;
+        }
+        
+        .nav-section {
+            margin-bottom: 24px;
+        }
+        
+        .nav-section-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.4);
+            padding: 0 12px;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+        
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            color: rgba(255,255,255,0.7);
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 4px;
+        }
+        
+        .nav-item:hover {
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+        }
+        
+        .nav-item.active {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: #fff;
+            font-weight: 500;
+        }
+        
+        .nav-item-icon { font-size: 18px; width: 24px; text-align: center; }
+        .nav-item-text { font-size: 14px; }
+        .nav-item-badge {
+            margin-left: auto;
+            background: var(--danger);
+            color: #fff;
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+        
+        .sidebar-footer {
+            padding: 16px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .sidebar-footer a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: rgba(255,255,255,0.6);
+            text-decoration: none;
+            font-size: 13px;
+            padding: 8px 12px;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+        
+        .sidebar-footer a:hover {
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+        }
+        
+        /* 主内容区 */
+        .main-content {
+            flex: 1;
+            margin-left: 240px;
+            min-height: 100vh;
+        }
+        
+        /* 顶部栏 */
+        .topbar {
+            background: var(--bg-white);
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+        
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .topbar-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 4px;
+        }
+        
+        /* 页面内容 */
+        .page-content {
+            padding: 24px;
+        }
+        
+        .page-section {
+            display: none;
+        }
+        
+        .page-section.active {
+            display: block;
+        }
+        
+        /* ==================== 统计卡片 ==================== */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        
+        .stat-card {
+            background: var(--bg-white);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+        
+        .stat-card:nth-child(2)::before { background: linear-gradient(90deg, #f093fb, #f5576c); }
+        .stat-card:nth-child(3)::before { background: linear-gradient(90deg, #4facfe, #00f2fe); }
+        .stat-card:nth-child(4)::before { background: linear-gradient(90deg, #43e97b, #38f9d7); }
+        
+        .stat-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+        
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            background: linear-gradient(135deg, rgba(102,126,234,0.1), rgba(118,75,162,0.1));
+        }
+        
+        .stat-card:nth-child(2) .stat-icon { background: linear-gradient(135deg, rgba(240,147,251,0.1), rgba(245,87,108,0.1)); }
+        .stat-card:nth-child(3) .stat-icon { background: linear-gradient(135deg, rgba(79,172,254,0.1), rgba(0,242,254,0.1)); }
+        .stat-card:nth-child(4) .stat-icon { background: linear-gradient(135deg, rgba(67,233,123,0.1), rgba(56,249,215,0.1)); }
+        
+        .stat-trend {
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .stat-trend.up { background: rgba(82,196,26,0.1); color: var(--success); }
+        .stat-trend.down { background: rgba(255,77,79,0.1); color: var(--danger); }
+        
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 4px;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: var(--text-sub);
+        }
+        
+        .stat-footer {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+        }
+        
+        .stat-today-label { color: var(--text-light); }
+        .stat-today-value { font-weight: 600; color: var(--primary); }
+        
+        /* ==================== 图表区域 ==================== */
+        .charts-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        
+        .chart-card {
+            background: var(--bg-white);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            box-shadow: var(--shadow);
+        }
+        
+        .chart-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+        
+        .chart-title {
+            font-size: 15px;
+            font-weight: 600;
+        }
+        
+        .chart-subtitle {
+            font-size: 12px;
+            color: var(--text-light);
+            margin-top: 2px;
+        }
+        
+        .chart-filter {
+            padding: 6px 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 12px;
+            background: var(--bg-white);
+            cursor: pointer;
+        }
+        
+        .chart-body {
+            height: 220px;
+            position: relative;
+        }
+        
+        /* ==================== 数据表格 ==================== */
+        .table-card {
+            background: var(--bg-white);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+        
+        .table-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        
+        .table-title {
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        .table-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: var(--bg-main);
+            border-radius: 6px;
+            padding: 0 12px;
+            border: 1px solid var(--border);
+        }
+        
+        .search-box input {
+            border: none;
+            background: none;
+            padding: 8px;
+            font-size: 13px;
+            width: 180px;
+            outline: none;
+        }
+        
+        .search-box-icon { color: var(--text-light); }
+        
+        .date-filter {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .date-filter input {
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 13px;
+            background: var(--bg-white);
+        }
+        
+        .table-wrapper {
+            overflow-x: auto;
+            overflow-y: visible;
+        }
+        
+        /* 修复下拉菜单被表格遮挡 */
+        .table-wrapper table {
+            position: relative;
+        }
+        
+        .table-wrapper tbody tr {
+            position: relative;
+        }
+        
+        .table-wrapper td:last-child {
+            position: relative;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 14px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        th {
+            background: #fafafa;
+            font-weight: 600;
+            font-size: 13px;
+            color: var(--text-sub);
+            white-space: nowrap;
+        }
+        
+        tr:hover { background: #fafafa; }
+        
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .status-active { background: rgba(82,196,26,0.1); color: var(--success); }
+        .status-inactive { background: rgba(255,77,79,0.1); color: var(--danger); }
+        .status-pending { background: rgba(250,173,20,0.1); color: var(--warning); }
+        
+        /* 操作下拉菜单 */
+        .action-dropdown {
+            position: relative;
+            display: inline-block;
+            z-index: 10;
+        }
+        
+        .action-btn {
+            padding: 6px 12px;
+            background: var(--bg-main);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 13px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .action-btn:hover { background: #e8e8e8; }
+        
+        .action-menu {
+            position: fixed;
+            background: var(--bg-white);
+            border-radius: var(--radius);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            min-width: 140px;
+            z-index: 99999;
+            display: none;
+            overflow: hidden;
+            margin-top: 4px;
+        }
+        
+        .action-menu.show { display: block; }
+        
+        .action-menu-item {
+            padding: 10px 14px;
+            font-size: 13px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+        
+        .action-menu-item:hover { background: var(--bg-main); }
+        .action-menu-item.danger { color: var(--danger); }
+        .action-menu-item.success { color: var(--success); }
+        .action-divider { height: 1px; background: var(--border); margin: 4px 0; }
+        
+        /* 分页 */
+        .table-footer {
+            padding: 16px 20px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        
+        .pagination-info {
+            font-size: 13px;
+            color: var(--text-sub);
+        }
+        
+        .pagination {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .page-btn {
+            padding: 6px 12px;
+            border: 1px solid var(--border);
+            background: var(--bg-white);
+            border-radius: 4px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .page-btn:hover { background: var(--bg-main); }
+        .page-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+        .page-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        
+        /* ==================== 按钮样式 ==================== */
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: #fff;
+        }
+        
+        .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(102,126,234,0.3); }
+        
+        .btn-success { background: var(--success); color: #fff; }
+        .btn-danger { background: var(--danger); color: #fff; }
+        .btn-outline { background: var(--bg-white); border: 1px solid var(--border); color: var(--text-main); }
+        .btn-outline:hover { background: var(--bg-main); }
+        
+        .btn-sm { padding: 6px 12px; font-size: 12px; }
+        
+        /* ==================== 弹窗样式 ==================== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .modal-overlay.show { display: flex; }
+        
+        .modal {
+            background: var(--bg-white);
+            border-radius: var(--radius-lg);
+            width: 100%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .modal-lg { max-width: 800px; }
+        
+        .modal-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            background: var(--bg-white);
+            z-index: 10;
+        }
+        
+        .modal-title { font-size: 18px; font-weight: 600; }
+        
+        .modal-close {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: none;
+            background: var(--bg-main);
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+        
+        .modal-close:hover { background: #e0e0e0; }
+        
+        .modal-body { padding: 24px; }
+        
+        .modal-footer {
+            padding: 16px 24px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+        
+        /* ==================== 表单样式 ==================== */
+        .form-group { margin-bottom: 16px; }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-main);
+        }
+        
+        .form-input,
+        .form-textarea,
+        .form-select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            font-size: 14px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        
+        .form-input:focus,
+        .form-textarea:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
+        }
+        
+        .form-textarea { min-height: 100px; resize: vertical; font-family: inherit; }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        
+        /* ==================== 标签输入 ==================== */
+        .tag-input-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        
+        .tag-input-row .form-input { flex: 1; }
+        
+        .tag-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 8px;
+        }
+        
+        .tag-item {
+            padding: 4px 10px;
+            background: var(--bg-main);
+            border-radius: 20px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .tag-item.yellow { background: #fff7e6; color: #d46b08; }
+        .tag-item.red { background: #fff1f0; color: #cf1322; }
+        
+        .tag-remove {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            line-height: 1;
+            opacity: 0.6;
+        }
+        
+        .tag-remove:hover { opacity: 1; }
+        
+        /* ==================== 图片上传 ==================== */
+        .upload-area {
+            border: 2px dashed var(--border);
+            border-radius: var(--radius-lg);
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .upload-area:hover { border-color: var(--primary); background: rgba(102,126,234,0.02); }
+        
+        .upload-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+            color: var(--text-light);
+        }
+        
+        .upload-text {
+            font-size: 14px;
+            color: var(--text-sub);
+            margin-bottom: 8px;
+        }
+        
+        .upload-hint {
+            font-size: 12px;
+            color: var(--text-light);
+        }
+        
+        .upload-preview {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: var(--radius);
+            margin-top: 16px;
+        }
+        
+        /* ==================== Toast 提示 ==================== */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .toast {
+            padding: 12px 20px;
+            background: var(--bg-white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: toastIn 0.3s ease;
+        }
+        
+        .toast.success { border-left: 4px solid var(--success); }
+        .toast.error { border-left: 4px solid var(--danger); }
+        .toast.warning { border-left: 4px solid var(--warning); }
+        
+        @keyframes toastIn {
+            from { opacity: 0; transform: translateX(100%); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        /* ==================== 响应式设计 ==================== */
+        @media (max-width: 1200px) {
+            .stats-row { grid-template-columns: repeat(2, 1fr); }
+            .charts-row { grid-template-columns: repeat(2, 1fr); }
+        }
+        
+        @media (max-width: 992px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+            .mobile-menu-btn { display: block; }
+            .charts-row { grid-template-columns: 1fr; }
+        }
+        
+        @media (max-width: 768px) {
+            .stats-row { grid-template-columns: 1fr; }
+            .table-header { flex-direction: column; align-items: stretch; }
+            .table-actions { justify-content: space-between; }
+            .search-box input { width: 100%; }
+            .form-row { grid-template-columns: 1fr; }
+        }
+        
+        /* 遮罩层 */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 99;
+        }
+        
+        .sidebar-overlay.show { display: block; }
+        
+        /* 加载状态 */
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            color: var(--text-light);
+        }
+        
+        .loading::after {
+            content: '';
+            width: 24px;
+            height: 24px;
+            border: 3px solid var(--border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-left: 10px;
+        }
+        
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
+        /* 空状态 */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-light);
+        }
+        
+        .empty-icon { font-size: 48px; margin-bottom: 16px; }
+        .empty-text { font-size: 14px; }
+        
+        /* ==================== 登录页面样式 ==================== */
+        .login-container {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .login-container.show { display: flex; }
+        
+        .login-box {
+            background: var(--bg-white);
+            border-radius: var(--radius-lg);
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .login-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        
+        .login-logo {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin: 0 auto 16px;
+        }
+        
+        .login-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 8px;
+        }
+        
+        .login-subtitle {
+            font-size: 14px;
+            color: var(--text-light);
+        }
+        
+        .login-form .form-group { margin-bottom: 20px; }
+        
+        .login-form .form-input {
+            padding: 14px 16px;
+            font-size: 15px;
+        }
+        
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            font-size: 16px;
+            margin-top: 8px;
+        }
+        
+        .login-error {
+            background: rgba(255, 77, 79, 0.1);
+            color: var(--danger);
+            padding: 12px;
+            border-radius: var(--radius);
+            font-size: 14px;
+            margin-bottom: 16px;
+            display: none;
+        }
+        
+        .login-error.show { display: block; }
+        
+        .app-container.hidden { display: none; }
+    </style>
+</head>
+<body>
+    <!-- 登录界面 -->
+    <div class="login-container" id="loginContainer">
+        <div class="login-box">
+            <div class="login-header">
+                <div class="login-logo">🔐</div>
+                <div class="login-title">管理后台登录</div>
+                <div class="login-subtitle">请输入管理员账号密码</div>
+            </div>
+            <form class="login-form" id="loginForm" onsubmit="handleLogin(event)">
+                <div class="login-error" id="loginError"></div>
+                <div class="form-group">
+                    <label class="form-label">用户名</label>
+                    <input type="text" class="form-input" id="loginUsername" placeholder="请输入用户名" required autocomplete="username">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">密码</label>
+                    <input type="password" class="form-input" id="loginPassword" placeholder="请输入密码" required autocomplete="current-password">
+                </div>
+                <button type="submit" class="btn btn-primary login-btn" id="loginBtn">登 录</button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- 主应用容器 -->
+    <div class="app-container hidden" id="appContainer">
+        <!-- 侧边栏遮罩 -->
+        <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+        
+        <!-- 侧边栏 -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <div class="sidebar-logo-icon">📊</div>
+                    <span>申论判官</span>
+                </div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">概览</div>
+                    <div class="nav-item active" data-page="dashboard" onclick="switchPage('dashboard', this)">
+                        <span class="nav-item-icon">📈</span>
+                        <span class="nav-item-text">数据看板</span>
+                    </div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">管理</div>
+                    <div class="nav-item" data-page="questions" onclick="switchPage('questions', this)">
+                        <span class="nav-item-icon">📝</span>
+                        <span class="nav-item-text">题目管理</span>
+                        <span class="nav-item-badge" id="questionCount">0</span>
+                    </div>
+                    <div class="nav-item" data-page="feedbacks" onclick="switchPage('feedbacks', this)">
+                        <span class="nav-item-icon">💬</span>
+                        <span class="nav-item-text">反馈数据</span>
+                    </div>
+                    <div class="nav-item" data-page="users" onclick="switchPage('users', this)">
+                        <span class="nav-item-icon">👥</span>
+                        <span class="nav-item-text">用户管理</span>
+                    </div>
+                    <div class="nav-item" data-page="admins" onclick="switchPage('admins', this)">
+                        <span class="nav-item-icon">🔐</span>
+                        <span class="nav-item-text">管理员</span>
+                    </div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">分析</div>
+                    <div class="nav-item" data-page="analytics" onclick="switchPage('analytics', this)">
+                        <span class="nav-item-icon">📊</span>
+                        <span class="nav-item-text">统计分析</span>
+                    </div>
+                </div>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <a href="/">
+                    <span>🏠</span>
+                    <span>返回前台</span>
+                </a>
+            </div>
+        </aside>
+        
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <!-- 顶部栏 -->
+            <header class="topbar">
+                <div class="topbar-left">
+                    <button class="mobile-menu-btn" onclick="toggleSidebar()">☰</button>
+                    <h1 class="topbar-title" id="pageTitle">数据看板</h1>
+                </div>
+                <div class="topbar-right">
+                    <span id="adminNickname" style="color: var(--text-sub); font-size: 14px; margin-right: 8px;"></span>
+                    <button class="btn btn-outline btn-sm" onclick="exportData('excel')">
+                        <span>📥</span> 导出数据
+                    </button>
+                    <button class="btn btn-primary btn-sm" onclick="refreshData()">
+                        <span>🔄</span> 刷新
+                    </button>
+                    <button class="btn btn-outline btn-sm" onclick="handleLogout()">
+                        <span>🚪</span> 退出
+                    </button>
+                </div>
+            </header>
+            
+            <!-- 页面内容 -->
+            <div class="page-content">
+                <!-- 数据看板页面 -->
+                <section class="page-section active" id="page-dashboard">
+                    <!-- 题目筛选器 -->
+                    <div class="filter-bar" style="background: var(--bg-white); padding: 16px 20px; border-radius: var(--radius-lg); margin-bottom: 20px; box-shadow: var(--shadow); display: flex; align-items: center; gap: 12px;">
+                        <span style="font-weight: 500; color: var(--text-sub);">📋 题目筛选：</span>
+                        <select id="questionFilter" class="form-select" style="width: 300px;" onchange="onQuestionFilterChange()">
+                            <option value="all">全部题目</option>
+                        </select>
+                        <span id="currentQuestionLabel" style="color: var(--text-light); font-size: 13px; margin-left: auto;"></span>
+                    </div>
+                    
+                    <!-- 关键指标 -->
+                    <div class="stats-row">
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-icon">📊</div>
+                                <div class="stat-trend up">↑ 今日</div>
+                            </div>
+                            <div class="stat-value" id="statTotalFeedbacks">0</div>
+                            <div class="stat-label">总反馈数</div>
+                            <div class="stat-footer">
+                                <span class="stat-today-label">今日新增</span>
+                                <span class="stat-today-value" id="statTodayFeedbacks">0</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-icon">🤖</div>
+                                <div class="stat-trend up">↑ AI</div>
+                            </div>
+                            <div class="stat-value" id="statPreferAi">0</div>
+                            <div class="stat-label">倾向AI答案</div>
+                            <div class="stat-footer">
+                                <span class="stat-today-label">今日新增</span>
+                                <span class="stat-today-value" id="statTodayAi">0</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-icon">✍️</div>
+                                <div class="stat-trend up">↑ 批改</div>
+                            </div>
+                            <div class="stat-value" id="statPreferShangancang">0</div>
+                            <div class="stat-label">倾向上岸仓批改</div>
+                            <div class="stat-footer">
+                                <span class="stat-today-label">今日新增</span>
+                                <span class="stat-today-value" id="statTodayShangancang">0</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-icon">🌟</div>
+                                <div class="stat-trend up">↑ 意愿</div>
+                            </div>
+                            <div class="stat-value" id="statWilling">0</div>
+                            <div class="stat-label">很想+愿意体验</div>
+                            <div class="stat-footer">
+                                <span class="stat-today-label">今日新增</span>
+                                <span class="stat-today-value" id="statTodayWilling">0</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 图表区域 -->
+                    <div class="charts-row">
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <div>
+                                    <div class="chart-title">答案来源倾向</div>
+                                    <div class="chart-subtitle">用户选择的答案来源分布</div>
+                                </div>
+                            </div>
+                            <div class="chart-body">
+                                <canvas id="answerSourceChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <div>
+                                    <div class="chart-title">批改来源倾向</div>
+                                    <div class="chart-subtitle">A=上岸仓, B=粉笔</div>
+                                </div>
+                            </div>
+                            <div class="chart-body">
+                                <canvas id="reviewSourceChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <div>
+                                    <div class="chart-title">参与意愿分布</div>
+                                    <div class="chart-subtitle">用户参与训练意愿</div>
+                                </div>
+                                <select class="chart-filter" id="scoreFilter" onchange="updateWillingnessChart()">
+                                    <option value="all">全部用户</option>
+                                    <option value="below_55">55分以下</option>
+                                    <option value="above_55">55分以上</option>
+                                </select>
+                            </div>
+                            <div class="chart-body">
+                                <canvas id="willingnessChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 近期反馈趋势 -->
+                    <div class="table-card">
+                        <div class="table-header">
+                            <div class="table-title">📈 近7天反馈趋势</div>
+                        </div>
+                        <div style="padding: 20px;">
+                            <div style="height: 250px;">
+                                <canvas id="trendChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- 题目管理页面 -->
+                <section class="page-section" id="page-questions">
+                    <div class="table-card">
+                        <div class="table-header">
+                            <div class="table-title">题目列表</div>
+                            <div class="table-actions">
+                                <div class="search-box">
+                                    <span class="search-box-icon">🔍</span>
+                                    <input type="text" placeholder="搜索题目..." id="questionSearch" oninput="filterQuestions()">
+                                </div>
+                                <button class="btn btn-success btn-sm" onclick="showAddQuestionModal()">+ 添加题目</button>
+                            </div>
+                        </div>
+                        <div class="table-wrapper">
+                            <table>
+                            <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>用户</th>
+                                        <th>题目</th>
+                                        <th>答案偏好</th>
+                                        <th>批改偏好</th>
+                                        <th>原因</th>
+                                        <th>参与意愿</th>
+                                        <th>时间</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="questionsTable">
+                                    <tr><td colspan="7" class="loading">加载中</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="table-footer">
+                            <div class="pagination-info" id="questionsPaginationInfo">共 0 条</div>
+                            <div class="pagination" id="questionsPagination"></div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- 反馈数据页面 -->
+                <section class="page-section" id="page-feedbacks">
+                    <div class="table-card">
+                        <div class="table-header">
+                            <div class="table-title">反馈列表</div>
+                            <div class="table-actions">
+                                <div class="date-filter">
+                                    <input type="date" id="feedbackDateStart" onchange="filterFeedbacks()">
+                                    <span>至</span>
+                                    <input type="date" id="feedbackDateEnd" onchange="filterFeedbacks()">
+                                </div>
+                                <button class="btn btn-outline btn-sm" onclick="exportFeedbacks()">📥 导出</button>
+                            </div>
+                        </div>
+                        <div class="table-wrapper">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>用户</th>
+                                        <th>题目</th>
+                                        <th>答案偏好</th>
+                                        <th>批改偏好</th>
+                                        <th>原因</th>
+                                        <th>参与意愿</th>
+                                        <th>时间</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="feedbacksTable">
+                                    <tr><td colspan="8" class="loading">加载中</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="table-footer">
+                            <div class="pagination-info" id="feedbacksPaginationInfo">共 0 条</div>
+                            <div class="pagination" id="feedbacksPagination"></div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- 用户管理页面 -->
+                <section class="page-section" id="page-users">
+                    <div class="table-card">
+                        <div class="table-header">
+                            <div class="table-title">用户列表</div>
+                            <div class="table-actions">
+                                <div class="search-box">
+                                    <span class="search-box-icon">🔍</span>
+                                    <input type="text" placeholder="搜索用户..." id="userSearch" oninput="filterUsers()">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="table-wrapper">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>昵称</th>
+                                        <th>手机号</th>
+                                        <th>申论分数</th>
+                                        <th>反馈数</th>
+                                        <th>注册时间</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="usersTable">
+                                    <tr><td colspan="6" class="loading">加载中</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="table-footer">
+                            <div class="pagination-info" id="usersPaginationInfo">共 0 条</div>
+                            <div class="pagination" id="usersPagination"></div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- 统计分析页面 -->
+                <section class="page-section" id="page-analytics">
+                    <div class="charts-row" style="grid-template-columns: 1fr 1fr;">
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <div>
+                                    <div class="chart-title">答案偏好分布</div>
+                                    <div class="chart-subtitle">A vs B 选择比例</div>
+                                </div>
+                            </div>
+                            <div class="chart-body" style="height: 280px;">
+                                <canvas id="preferChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <div>
+                                    <div class="chart-title">分数段分布</div>
+                                    <div class="chart-subtitle">用户申论分数分布</div>
+                                </div>
+                            </div>
+                            <div class="chart-body" style="height: 280px;">
+                                <canvas id="scoreDistChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- 管理员管理页面 -->
+                <section class="page-section" id="page-admins">
+                    <div class="table-card">
+                        <div class="table-header">
+                            <div class="table-title">管理员列表</div>
+                            <div class="table-actions">
+                                <button class="btn btn-success btn-sm" onclick="showAddAdminModal()">+ 添加管理员</button>
+                                <button class="btn btn-outline btn-sm" onclick="handleLogout()">退出登录</button>
+                            </div>
+                        </div>
+                        <div class="table-wrapper">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>用户名</th>
+                                        <th>昵称</th>
+                                        <th>创建时间</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="adminsTable">
+                                    <tr><td colspan="5" class="loading">加载中</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Toast 容器 -->
+    <div class="toast-container" id="toastContainer"></div>
+    
+    <!-- 添加题目弹窗 -->
+    <div class="modal-overlay" id="addQuestionModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">添加题目</h2>
+                <button class="modal-close" onclick="closeModal('addQuestionModal')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">题目名称 *</label>
+                    <input type="text" class="form-input" id="qTitle" placeholder="例如：2024年湖南省考 - 乡村振兴">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">给定资料 *</label>
+                    <textarea class="form-textarea" id="qMaterial" placeholder="输入给定资料内容..." style="min-height: 150px;"></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">作答要求 *</label>
+                    <textarea class="form-textarea" id="qRequirement" placeholder="例如：(1) 全面、准确、有条理；(2) 不超过200字;"></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">分值</label>
+                        <input type="number" class="form-input" id="qScore" value="15" min="1" max="100">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">状态</label>
+                        <select class="form-select" id="qStatus">
+                            <option value="active">激活</option>
+                            <option value="inactive">未激活</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('addQuestionModal')">取消</button>
+                <button class="btn btn-primary" onclick="createQuestion()">创建题目</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 答案编辑弹窗 -->
+    <div class="modal-overlay" id="answerModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title" id="answerModalTitle">编辑答案</h2>
+                <button class="modal-close" onclick="closeModal('answerModal')">×</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="answerQuestionId">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">版本</label>
+                        <select class="form-select" id="answerVersion">
+                            <option value="A">答案 A</option>
+                            <option value="B">答案 B</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">答案来源 *</label>
+                        <select class="form-select" id="answerSource">
+                            <option value="">请选择</option>
+                            <option value="上岸仓">上岸仓</option>
+                            <option value="粉笔">粉笔</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">答案内容 *</label>
+                    <textarea class="form-textarea" id="answerContent" style="min-height: 200px;"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('answerModal')">取消</button>
+                <button class="btn btn-primary" onclick="saveAnswer()">保存</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 图片上传弹窗 -->
+    <div class="modal-overlay" id="uploadImageModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">上传答案图片</h2>
+                <button class="modal-close" onclick="closeModal('uploadImageModal')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="upload-area" onclick="document.getElementById('imageInput').click()">
+                    <div class="upload-icon">📷</div>
+                    <div class="upload-text">点击或拖拽图片到此处上传</div>
+                    <div class="upload-hint">支持 PNG, JPG, GIF, WebP 格式</div>
+                    <input type="file" id="imageInput" accept="image/*" style="display:none;" onchange="previewImage(this)">
+                    <img id="previewImg" class="upload-preview" style="display:none;">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('uploadImageModal')">取消</button>
+                <button class="btn btn-primary" onclick="confirmUploadImage()">上传</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 添加管理员弹窗 -->
+    <div class="modal-overlay" id="addAdminModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">添加管理员</h2>
+                <button class="modal-close" onclick="closeModal('addAdminModal')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">用户名 *</label>
+                    <input type="text" class="form-input" id="newAdminUsername" placeholder="请输入用户名">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">密码 *</label>
+                    <input type="password" class="form-input" id="newAdminPassword" placeholder="请输入密码">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">昵称</label>
+                    <input type="text" class="form-input" id="newAdminNickname" placeholder="可选，用于显示">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('addAdminModal')">取消</button>
+                <button class="btn btn-primary" onclick="createAdmin()">创建</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 批改配置弹窗（新版）-->
+    <div class="modal-overlay" id="reviewModal">
+        <div class="modal modal-lg" style="max-width: 900px;">
+            <div class="modal-header">
+                <h2 class="modal-title">批改配置</h2>
+                <button class="modal-close" onclick="closeModal('reviewModal')">×</button>
+            </div>
+            <div class="modal-body">
+                <!-- 版本切换 -->
+                <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                    <button class="btn btn-primary" id="reviewVersionA" onclick="switchReviewVersion('A')">答案 A</button>
+                    <button class="btn btn-outline" id="reviewVersionB" onclick="switchReviewVersion('B')">答案 B</button>
+                </div>
+                
+                <!-- 评分信息 -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">题目总分</label>
+                        <input type="number" class="form-input" id="questionTotalScore" value="15" min="1">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">答案得分总分</label>
+                        <input type="number" class="form-input" id="answerTotalScore" value="0" min="0">
+                    </div>
+                </div>
+                
+                <!-- 要点统计 -->
+                <div class="form-group">
+                    <label class="form-label">📊 要点统计</label>
+                    <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px;">
+                        <div>
+                            <label style="font-size: 12px; color: var(--text-light); margin-bottom: 4px; display: block;">要点个数</label>
+                            <input type="number" class="form-input" id="kpTotal" value="0" min="0">
+                        </div>
+                        <div>
+                            <label style="font-size: 12px; color: var(--text-light); margin-bottom: 4px; display: block;">要点分</label>
+                            <input type="number" class="form-input" id="kpPointScore" value="0" min="0">
+                        </div>
+                        <div>
+                            <label style="font-size: 12px; color: var(--text-light); margin-bottom: 4px; display: block;">完全得分</label>
+                            <input type="number" class="form-input" id="kpFullyScored" value="0" min="0">
+                        </div>
+                        <div>
+                            <label style="font-size: 12px; color: var(--text-light); margin-bottom: 4px; display: block;">部分得分</label>
+                            <input type="number" class="form-input" id="kpPartiallyScored" value="0" min="0">
+                        </div>
+                        <div>
+                            <label style="font-size: 12px; color: var(--text-light); margin-bottom: 4px; display: block;">遗落个数</label>
+                            <input type="number" class="form-input" id="kpMissing" value="0" min="0">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 总体评价 -->
+                <div class="form-group">
+                    <label class="form-label">📝 本次得分与表现</label>
+                    <textarea class="form-textarea" id="performanceSummary" placeholder="描述本次作答的整体表现..." style="min-height: 80px;"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">🎯 下一步提升方向</label>
+                    <textarea class="form-textarea" id="nextSteps" placeholder="给出下一步的学习建议..." style="min-height: 80px;"></textarea>
+                </div>
+                
+                <!-- 遗漏要点表格 -->
+                <div class="form-group">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                        <label class="form-label">❌ 遗漏要点列表</label>
+                        <button class="btn btn-outline btn-sm" onclick="addMissingPoint()">+ 添加遗漏要点</button>
+                    </div>
+                    <div id="missingPointsTable" style="border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden;">
+                        <table style="width: 100%; margin: 0;">
+                            <thead>
+                                <tr style="background: var(--bg-main);">
+                                    <th style="padding: 10px; font-size: 13px; font-weight: 600;">要点标题</th>
+                                    <th style="padding: 10px; font-size: 13px; font-weight: 600;">原因分析</th>
+                                    <th style="padding: 10px; font-size: 13px; font-weight: 600;">改进建议</th>
+                                    <th style="padding: 10px; font-size: 13px; font-weight: 600; width: 60px;">操作</th>
+                                </tr>
+                            </thead>
+                            <tbody id="missingPointsBody">
+                                <!-- 动态添加行 -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- 部分得分要点表格 -->
+                <div class="form-group">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                        <label class="form-label">⚠️ 部分得分要点列表</label>
+                        <button class="btn btn-outline btn-sm" onclick="addPartialPoint()">+ 添加部分得分要点</button>
+                    </div>
+                    <div id="partialPointsTable" style="border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden;">
+                        <table style="width: 100%; margin: 0;">
+                            <thead>
+                                <tr style="background: var(--bg-main);">
+                                    <th style="padding: 10px; font-size: 13px; font-weight: 600;">要点标题</th>
+                                    <th style="padding: 10px; font-size: 13px; font-weight: 600;">原因分析</th>
+                                    <th style="padding: 10px; font-size: 13px; font-weight: 600;">改进建议</th>
+                                    <th style="padding: 10px; font-size: 13px; font-weight: 600; width: 60px;">操作</th>
+                                </tr>
+                            </thead>
+                            <tbody id="partialPointsBody">
+                                <!-- 动态添加行 -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- 作答逻辑 -->
+                <div class="form-group">
+                    <label class="form-label">🔍 作答逻辑评价</label>
+                    <textarea class="form-textarea" id="logicAnalysis" placeholder="评价答案的逻辑结构、条理清晰度..." style="min-height: 100px;"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('reviewModal')">取消</button>
+                <button class="btn btn-primary" onclick="saveReview()">保存配置</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = '/api';
+        
+        // ==================== 全局状态 ====================
+        let currentPage = 'dashboard';
+        let detailedStats = null;
+        let allQuestions = [];
+        let allFeedbacks = [];
+        let allUsers = [];
+        let allAdmins = [];
+        let currentAdmin = null;
+        
+        // 图表实例
+        let charts = {
+            answerSource: null,
+            reviewSource: null,
+            willingness: null,
+            trend: null,
+            prefer: null,
+            scoreDist: null
+        };
+        
+        // 当前编辑状态
+        let currentAnswers = { A: { content: '', source: '' }, B: { content: '', source: '' } };
+        let currentUploadQuestionId = null;
+        let currentImageBase64 = null;
+        let currentReviewQuestionId = null;
+        let currentReviewVersion = 'A';
+        let missingPoints = [];
+        let partialPoints = [];
+        
+        // ==================== 认证相关 ====================
+        async function checkAuth() {
+            try {
+                const response = await fetch(`${API_BASE}/admin/check-auth`);
+                const result = await response.json();
+                
+                if (result.success && result.authenticated) {
+                    currentAdmin = result.admin;
+                    showApp();
+                    return true;
+                } else {
+                    showLogin();
+                    return false;
+                }
+            } catch (error) {
+                console.error('检查登录状态失败:', error);
+                showLogin();
+                return false;
+            }
+        }
+        
+        function showLogin() {
+            document.getElementById('loginContainer').classList.add('show');
+            document.getElementById('appContainer').classList.add('hidden');
+        }
+        
+        function showApp() {
+            document.getElementById('loginContainer').classList.remove('show');
+            document.getElementById('appContainer').classList.remove('hidden');
+            updateAdminInfo();
+        }
+        
+        function updateAdminInfo() {
+            if (currentAdmin) {
+                const nicknameEl = document.getElementById('adminNickname');
+                if (nicknameEl) {
+                    nicknameEl.textContent = currentAdmin.nickname || currentAdmin.username;
+                }
+            }
+        }
+        
+        async function handleLogin(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value.trim();
+            const errorEl = document.getElementById('loginError');
+            const loginBtn = document.getElementById('loginBtn');
+            
+            if (!username || !password) {
+                errorEl.textContent = '请输入用户名和密码';
+                errorEl.classList.add('show');
+                return;
+            }
+            
+            loginBtn.disabled = true;
+            loginBtn.textContent = '登录中...';
+            errorEl.classList.remove('show');
+            
+            try {
+                const response = await fetch(`${API_BASE}/admin/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    currentAdmin = result.admin;
+                    showApp();
+                    initApp();
+                } else {
+                    errorEl.textContent = result.message || '登录失败';
+                    errorEl.classList.add('show');
+                }
+            } catch (error) {
+                errorEl.textContent = '网络错误，请重试';
+                errorEl.classList.add('show');
+            } finally {
+                loginBtn.disabled = false;
+                loginBtn.textContent = '登 录';
+            }
+        }
+        
+        async function handleLogout() {
+            if (!confirm('确定要退出登录吗？')) return;
+            
+            try {
+                await fetch(`${API_BASE}/admin/logout`, { method: 'POST' });
+            } catch (error) {
+                console.error('登出失败:', error);
+            }
+            
+            currentAdmin = null;
+            showLogin();
+        }
+        
+        // ==================== 管理员管理 ====================
+        async function loadAdmins() {
+            try {
+                const response = await fetch(`${API_BASE}/admin/admins`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    allAdmins = result.admins;
+                    renderAdminsTable(allAdmins);
+                }
+            } catch (error) {
+                console.error('加载管理员列表失败:', error);
+            }
+        }
+        
+        function renderAdminsTable(admins) {
+            const tbody = document.getElementById('adminsTable');
+            if (!tbody) return;
+            
+            if (admins.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" class="empty-state"><div class="empty-icon">👥</div><div class="empty-text">暂无管理员</div></td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = admins.map(a => `
+                <tr>
+                    <td>${a.id}</td>
+                    <td><strong>${a.username}</strong></td>
+                    <td>${a.nickname || '-'}</td>
+                    <td>${a.created_at}</td>
+                    <td>
+                        ${a.id !== currentAdmin.id ? 
+                            `<button class="btn btn-danger btn-sm" onclick="deleteAdmin(${a.id})">删除</button>` : 
+                            '<span style="color: var(--text-light);">当前用户</span>'
+                        }
+                    </td>
+                </tr>
+            `).join('');
+        }
+        
+        async function showAddAdminModal() {
+            document.getElementById('newAdminUsername').value = '';
+            document.getElementById('newAdminPassword').value = '';
+            document.getElementById('newAdminNickname').value = '';
+            showModal('addAdminModal');
+        }
+        
+        async function createAdmin() {
+            const username = document.getElementById('newAdminUsername').value.trim();
+            const password = document.getElementById('newAdminPassword').value.trim();
+            const nickname = document.getElementById('newAdminNickname').value.trim();
+            
+            if (!username || !password) {
+                showToast('请输入用户名和密码', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE}/admin/admins`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password, nickname })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showToast('管理员创建成功！');
+                    closeModal('addAdminModal');
+                    loadAdmins();
+                } else {
+                    showToast(result.message || '创建失败', 'error');
+                }
+            } catch (error) {
+                showToast('网络错误', 'error');
+            }
+        }
+        
+        async function deleteAdmin(adminId) {
+            if (!confirm('确定要删除该管理员吗？')) return;
+            
+            try {
+                const response = await fetch(`${API_BASE}/admin/admins/${adminId}`, {
+                    method: 'DELETE'
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showToast('删除成功！');
+                    loadAdmins();
+                } else {
+                    showToast(result.message || '删除失败', 'error');
+                }
+            } catch (error) {
+                showToast('网络错误', 'error');
+            }
+        }
+        
+        // ==================== 工具函数 ====================
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerHTML = `<span>${type === 'success' ? '✓' : type === 'error' ? '✗' : '!'}</span><span>${message}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+        
+        function animateNumber(elementId, targetValue, duration = 1000) {
+            const element = document.getElementById(elementId);
+            if (!element) return;
+            
+            const startValue = 0;
+            const startTime = performance.now();
+            
+            function updateNumber(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+                const currentValue = Math.floor(startValue + (targetValue - startValue) * easeOutQuart);
+                element.textContent = currentValue.toLocaleString();
+                if (progress < 1) {
+                    requestAnimationFrame(updateNumber);
+                } else {
+                    element.textContent = targetValue.toLocaleString();
+                }
+            }
+            requestAnimationFrame(updateNumber);
+        }
+        
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('show');
+        }
+        
+        function showModal(modalId) {
+            document.getElementById(modalId).classList.add('show');
+        }
+        
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+            document.querySelector('.sidebar-overlay').classList.toggle('show');
+        }
+        
+        // ==================== 页面切换 ====================
+        function switchPage(pageName, element) {
+            currentPage = pageName;
+            
+            // 移除所有 nav-item 的 active 类
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            
+            // 添加 active 类到当前点击的元素
+            if (element) {
+                element.classList.add('active');
+            } else {
+                // 兼容旧代码，通过 data-page 属性查找
+                const navItem = document.querySelector(`.nav-item[data-page="${pageName}"]`);
+                if (navItem) navItem.classList.add('active');
+            }
+            
+            // 切换页面内容
+            document.querySelectorAll('.page-section').forEach(section => section.classList.remove('active'));
+            const targetPage = document.getElementById(`page-${pageName}`);
+            if (targetPage) {
+                targetPage.classList.add('active');
+            }
+            
+            // 更新页面标题
+            const titles = {
+                dashboard: '数据看板',
+                questions: '题目管理',
+                feedbacks: '反馈数据',
+                users: '用户管理',
+                analytics: '统计分析',
+                admins: '管理员管理'
+            };
+            document.getElementById('pageTitle').textContent = titles[pageName] || '管理后台';
+            
+            // 移动端关闭侧边栏
+            if (window.innerWidth <= 992) {
+                toggleSidebar();
+            }
+            
+            // 加载对应页面数据
+            if (pageName === 'feedbacks') loadFeedbacks();
+            if (pageName === 'users') loadUsers();
+            if (pageName === 'analytics') loadAnalytics();
+            if (pageName === 'admins') loadAdmins();
+        }
+        
+        // ==================== 数据加载 ====================
+        async function loadDashboardData() {
+            try {
+                const questionId = document.getElementById('questionFilter').value;
+                const response = await fetch(`${API_BASE}/admin/stats/detailed?question_id=${questionId}`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    detailedStats = result.stats;
+                    
+                    animateNumber('statTotalFeedbacks', detailedStats.summary.total_feedbacks);
+                    animateNumber('statTodayFeedbacks', detailedStats.summary.today_feedbacks);
+                    animateNumber('statPreferAi', detailedStats.summary.prefer_ai_answer.total);
+                    animateNumber('statTodayAi', detailedStats.summary.prefer_ai_answer.today);
+                    animateNumber('statPreferShangancang', detailedStats.summary.prefer_shangancang_review.total);
+                    animateNumber('statTodayShangancang', detailedStats.summary.prefer_shangancang_review.today);
+                    animateNumber('statWilling', detailedStats.summary.willing_to_experience.total);
+                    animateNumber('statTodayWilling', detailedStats.summary.willing_to_experience.today);
+                    
+                    renderCharts();
+                }
+            } catch (error) {
+                console.error('加载统计数据失败:', error);
+            }
+        }
+        
+        async function loadTrendData() {
+            try {
+                const questionId = document.getElementById('questionFilter').value;
+                const response = await fetch(`${API_BASE}/admin/stats/trend?question_id=${questionId}`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    renderTrendChart(result.trend);
+                }
+            } catch (error) {
+                console.error('加载趋势数据失败:', error);
+            }
+        }
+        
+        // 加载题目筛选器选项
+        async function loadQuestionFilter() {
+            try {
+                const response = await fetch(`${API_BASE}/admin/questions`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    const filter = document.getElementById('questionFilter');
+                    // 保留 "全部题目" 选项
+                    filter.innerHTML = '<option value="all">全部题目</option>';
+                    
+                    result.questions.forEach(q => {
+                        const option = document.createElement('option');
+                        option.value = q.id;
+                        option.textContent = `[${q.id}] ${q.title.substring(0, 30)}${q.title.length > 30 ? '...' : ''}`;
+                        filter.appendChild(option);
+                    });
+                    
+                    // 更新标签
+                    updateQuestionLabel();
+                }
+            } catch (error) {
+                console.error('加载题目筛选器失败:', error);
+            }
+        }
+        
+        // 题目筛选变更处理
+        function onQuestionFilterChange() {
+            updateQuestionLabel();
+            loadDashboardData();
+            loadTrendData();
+        }
+        
+        // 更新当前题目标签
+        function updateQuestionLabel() {
+            const filter = document.getElementById('questionFilter');
+            const label = document.getElementById('currentQuestionLabel');
+            const selectedText = filter.options[filter.selectedIndex].text;
+            
+            if (filter.value === 'all') {
+                label.textContent = '';
+            } else {
+                label.textContent = `当前: ${selectedText}`;
+            }
+        }
+        
+        async function loadQuestions() {
+            try {
+                const response = await fetch(`${API_BASE}/admin/questions`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    allQuestions = result.questions;
+                    document.getElementById('questionCount').textContent = allQuestions.length;
+                    renderQuestionsTable(allQuestions);
+                }
+            } catch (error) {
+                console.error('加载题目失败:', error);
+            }
+        }
+        
+        async function loadFeedbacks() {
+            try {
+                const response = await fetch(`${API_BASE}/admin/feedbacks`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    allFeedbacks = result.feedbacks;
+                    renderFeedbacksTable(allFeedbacks);
+                }
+            } catch (error) {
+                console.error('加载反馈失败:', error);
+            }
+        }
+        
+        async function loadUsers() {
+            try {
+                const response = await fetch(`${API_BASE}/admin/users`);
+                if (!response.ok) {
+                    document.getElementById('usersTable').innerHTML = '<tr><td colspan="6" class="empty-state"><div class="empty-icon">👥</div><div class="empty-text">暂无用户数据</div></td></tr>';
+                    return;
+                }
+                const result = await response.json();
+                
+                if (result.success) {
+                    allUsers = result.users;
+                    renderUsersTable(allUsers);
+                }
+            } catch (error) {
+                console.error('加载用户失败:', error);
+                document.getElementById('usersTable').innerHTML = '<tr><td colspan="6" class="empty-state"><div class="empty-icon">👥</div><div class="empty-text">暂无用户数据</div></td></tr>';
+            }
+        }
+        
+        function loadAnalytics() {
+            renderPreferChart();
+            renderScoreDistChart();
+        }
+        
+        // ==================== 表格渲染 ====================
+        function renderQuestionsTable(questions) {
+            const tbody = document.getElementById('questionsTable');
+            
+            if (questions.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="empty-state"><div class="empty-icon">📝</div><div class="empty-text">暂无题目数据</div></td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = questions.map(q => `
+                <tr>
+                    <td>${q.id}</td>
+                    <td><strong>${q.title.substring(0, 30)}${q.title.length > 30 ? '...' : ''}</strong></td>
+                    <td>${q.score}分</td>
+                    <td>${q.answer_image ? '<span class="status-badge status-active">已上传</span>' : '<span class="status-badge status-pending">未上传</span>'}</td>
+                    <td><span class="status-badge ${q.status === 'active' ? 'status-active' : 'status-inactive'}">${q.status === 'active' ? '激活' : '未激活'}</span></td>
+                    <td>${q.created_at}</td>
+                    <td>
+                        <div class="action-dropdown">
+                            <button class="action-btn" onclick="toggleActionMenu(this)">
+                                操作 ▾
+                            </button>
+                                <div class="action-menu">
+                                <div class="action-menu-item" onclick="editAnswer(${q.id}); closeAllMenus();">✏️ 编辑答案</div>
+                                <div class="action-menu-item" onclick="editReview(${q.id}); closeAllMenus();">📝 批改配置</div>
+                                <div class="action-menu-item" onclick="uploadAnswerImage(${q.id}); closeAllMenus();">📷 上传图片</div>
+                                <div class="action-divider"></div>
+                                <div class="action-menu-item ${q.status === 'active' ? 'danger' : 'success'}" onclick="toggleQuestionStatus(${q.id}, '${q.status}'); closeAllMenus();">
+                                    ${q.status === 'active' ? '🚫 禁用' : '✓ 启用'}
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+            
+            document.getElementById('questionsPaginationInfo').textContent = `共 ${questions.length} 条`;
+        }
+        
+        function renderFeedbacksTable(feedbacks) {
+            const tbody = document.getElementById('feedbacksTable');
+            
+            if (feedbacks.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" class="empty-state"><div class="empty-icon">💬</div><div class="empty-text">暂无反馈数据</div></td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = feedbacks.map(f => `
+                <tr>
+                    <td>${f.id}</td>
+                    <td>用户${f.user_id}</td>
+                    <td>题目${f.question_id}</td>
+                    <td><span class="status-badge ${f.answer_prefer === 'A' ? 'status-active' : f.answer_prefer === 'B' ? 'status-pending' : ''}">${f.answer_prefer || '-'}</span></td>
+                    <td><span class="status-badge ${f.review_prefer === 'A' ? 'status-active' : f.review_prefer === 'B' ? 'status-pending' : ''}">${f.review_prefer || '-'}</span></td>
+                    <td>${f.reasons ? f.reasons.join(', ') : '-'}${f.other_reason ? ' <br><small>' + f.other_reason + '</small>' : ''}</td>
+                    <td><span class="status-badge ${f.willing_to_train === '很想体验' ? 'status-active' : f.willing_to_train === '愿意尝试' ? 'status-pending' : ''}">${f.willing_to_train || '-'}</span></td>
+                    <td>${f.created_at}</td>
+                </tr>
+            `).join('');
+            
+            document.getElementById('feedbacksPaginationInfo').textContent = `共 ${feedbacks.length} 条`;
+        }
+        
+        function renderUsersTable(users) {
+            const tbody = document.getElementById('usersTable');
+            
+            if (users.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="empty-state"><div class="empty-icon">👥</div><div class="empty-text">暂无用户数据</div></td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = users.map(u => `
+                <tr>
+                    <td>${u.id}</td>
+                    <td><strong>${u.nickname}</strong></td>
+                    <td>${u.phone}</td>
+                    <td><span class="status-badge ${parseFloat(u.score) >= 60 ? 'status-active' : 'status-pending'}">${u.score}分</span></td>
+                    <td>${u.feedback_count || 0}</td>
+                    <td>${u.created_at}</td>
+                </tr>
+            `).join('');
+            
+            document.getElementById('usersPaginationInfo').textContent = `共 ${users.length} 条`;
+        }
+        
+        // ==================== 图表渲染 ====================
+        function renderCharts() {
+            renderAnswerSourceChart();
+            renderReviewSourceChart();
+            updateWillingnessChart();
+            loadTrendData();
+        }
+        
+        function renderAnswerSourceChart() {
+            const ctx = document.getElementById('answerSourceChart').getContext('2d');
+            if (charts.answerSource) charts.answerSource.destroy();
+            
+            const data = detailedStats?.answer_source?.total || { '上岸仓': 0, '粉笔': 0 };
+            const total = (data['上岸仓'] || 0) + (data['粉笔'] || 0);
+            
+            charts.answerSource = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['上岸仓', '粉笔'],
+                    datasets: [{
+                        data: [data['上岸仓'] || 0, data['粉笔'] || 0],
+                        backgroundColor: ['rgba(102, 126, 234, 0.8)', 'rgba(240, 147, 251, 0.8)'],
+                        borderColor: ['rgba(102, 126, 234, 1)', 'rgba(240, 147, 251, 1)'],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { padding: 15, font: { size: 12 } } },
+                        tooltip: {
+                            callbacks: {
+                                label: (ctx) => {
+                                    const pct = total > 0 ? ((ctx.raw / total) * 100).toFixed(1) : 0;
+                                    return `${ctx.label}: ${ctx.raw} (${pct}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        function renderReviewSourceChart() {
+            const ctx = document.getElementById('reviewSourceChart').getContext('2d');
+            if (charts.reviewSource) charts.reviewSource.destroy();
+            
+            const data = detailedStats?.review_source?.total || { '上岸仓': 0, '粉笔': 0 };
+            const total = (data['上岸仓'] || 0) + (data['粉笔'] || 0);
+            
+            charts.reviewSource = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['上岸仓(A)', '粉笔(B)'],
+                    datasets: [{
+                        data: [data['上岸仓'] || 0, data['粉笔'] || 0],
+                        backgroundColor: ['rgba(102, 126, 234, 0.8)', 'rgba(240, 147, 251, 0.8)'],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { padding: 15, font: { size: 12 } } },
+                        tooltip: {
+                            callbacks: {
+                                label: (ctx) => {
+                                    const pct = total > 0 ? ((ctx.raw / total) * 100).toFixed(1) : 0;
+                                    return `${ctx.label}: ${ctx.raw} (${pct}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        function updateWillingnessChart() {
+            const ctx = document.getElementById('willingnessChart').getContext('2d');
+            if (charts.willingness) charts.willingness.destroy();
+            
+            const filter = document.getElementById('scoreFilter').value;
+            let data;
+            
+            if (filter === 'all') {
+                data = detailedStats?.willingness?.total || { '很想体验': 0, '愿意尝试': 0, '没兴趣': 0 };
+            } else if (filter === 'below_55') {
+                data = detailedStats?.willingness_by_score?.below_55 || { '很想体验': 0, '愿意尝试': 0, '没兴趣': 0 };
+            } else {
+                data = detailedStats?.willingness_by_score?.above_55 || { '很想体验': 0, '愿意尝试': 0, '没兴趣': 0 };
+            }
+            
+            charts.willingness = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['很想体验', '愿意尝试', '没兴趣'],
+                    datasets: [{
+                        data: [data['很想体验'] || 0, data['愿意尝试'] || 0, data['没兴趣'] || 0],
+                        backgroundColor: ['rgba(82, 196, 26, 0.8)', 'rgba(24, 144, 255, 0.8)', 'rgba(140, 140, 140, 0.8)'],
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+                }
+            });
+        }
+        
+        function renderTrendChart(trendData) {
+            const ctx = document.getElementById('trendChart').getContext('2d');
+            if (charts.trend) charts.trend.destroy();
+            
+            charts.trend = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: trendData.map(d => d.label),
+                    datasets: [{
+                        label: '反馈数量',
+                        data: trendData.map(d => d.count),
+                        borderColor: 'rgba(102, 126, 234, 1)',
+                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+                }
+            });
+        }
+        
+        function renderPreferChart() {
+            const ctx = document.getElementById('preferChart').getContext('2d');
+            if (charts.prefer) charts.prefer.destroy();
+            
+            const stats = detailedStats?.review_source?.total || { '上岸仓': 0, '粉笔': 0 };
+            
+            charts.prefer = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['偏好 A', '偏好 B'],
+                    datasets: [{
+                        data: [stats['上岸仓'] || 0, stats['粉笔'] || 0],
+                        backgroundColor: ['rgba(102, 126, 234, 0.8)', 'rgba(240, 147, 251, 0.8)'],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'bottom' } }
+                }
+            });
+        }
+        
+        function renderScoreDistChart() {
+            const ctx = document.getElementById('scoreDistChart').getContext('2d');
+            if (charts.scoreDist) charts.scoreDist.destroy();
+            
+            charts.scoreDist = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['<55分', '55-60分', '60-70分', '70-80分', '>80分'],
+                    datasets: [{
+                        label: '用户数',
+                        data: [0, 0, 0, 0, 0],
+                        backgroundColor: 'rgba(102, 126, 234, 0.8)',
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: { y: { beginAtZero: true } }
+                }
+            });
+        }
+        
+        // ==================== 操作下拉菜单 ====================
+        let activeMenu = null;
+        let activeBtn = null;
+        
+        function positionMenu(menu, btn) {
+            const rect = btn.getBoundingClientRect();
+            menu.style.left = (rect.right - 140) + 'px';  // 右对齐
+            menu.style.top = (rect.bottom + 4) + 'px';
+        }
+        
+        function toggleActionMenu(btn) {
+            const menu = btn.nextElementSibling;
+            
+            // 关闭其他已打开的菜单
+            document.querySelectorAll('.action-menu.show').forEach(m => {
+                if (m !== menu) m.classList.remove('show');
+            });
+            
+            // 切换当前菜单
+            const isShowing = menu.classList.contains('show');
+            
+            if (!isShowing) {
+                positionMenu(menu, btn);
+                menu.classList.add('show');
+                activeMenu = menu;
+                activeBtn = btn;
+            } else {
+                menu.classList.remove('show');
+                activeMenu = null;
+                activeBtn = null;
+            }
+        }
+        
+        // 窗口大小改变时重新定位
+        window.addEventListener('resize', () => {
+            if (activeMenu && activeBtn) {
+                positionMenu(activeMenu, activeBtn);
+            }
+        });
+        
+        // 滚动时关闭菜单
+        window.addEventListener('scroll', () => {
+            document.querySelectorAll('.action-menu.show').forEach(m => {
+                m.classList.remove('show');
+            });
+            activeMenu = null;
+            activeBtn = null;
+        });
+        
+        function closeAllMenus() {
+            document.querySelectorAll('.action-menu.show').forEach(m => {
+                m.classList.remove('show');
+            });
+            activeMenu = null;
+            activeBtn = null;
+        }
+        
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.action-dropdown')) {
+                document.querySelectorAll('.action-menu.show').forEach(m => m.classList.remove('show'));
+            }
+        });
+        
+        // ==================== 筛选功能 ====================
+        function filterQuestions() {
+            const keyword = document.getElementById('questionSearch').value.toLowerCase();
+            const filtered = allQuestions.filter(q => q.title.toLowerCase().includes(keyword));
+            renderQuestionsTable(filtered);
+        }
+        
+        function filterFeedbacks() {
+            const startDate = document.getElementById('feedbackDateStart').value;
+            const endDate = document.getElementById('feedbackDateEnd').value;
+            
+            let filtered = allFeedbacks;
+            
+            if (startDate) {
+                filtered = filtered.filter(f => f.created_at >= startDate);
+            }
+            if (endDate) {
+                filtered = filtered.filter(f => f.created_at <= endDate + ' 23:59:59');
+            }
+            
+            renderFeedbacksTable(filtered);
+        }
+        
+        function filterUsers() {
+            const keyword = document.getElementById('userSearch').value.toLowerCase();
+            const filtered = allUsers.filter(u => 
+                u.nickname.toLowerCase().includes(keyword) || 
+                u.phone.includes(keyword)
+            );
+            renderUsersTable(filtered);
+        }
+        
+        // ==================== 题目管理 ====================
+        function showAddQuestionModal() {
+            document.getElementById('addQuestionModal').classList.add('show');
+        }
+        
+        async function createQuestion() {
+            const title = document.getElementById('qTitle').value.trim();
+            const material = document.getElementById('qMaterial').value.trim();
+            const requirement = document.getElementById('qRequirement').value.trim();
+            const score = document.getElementById('qScore').value;
+            const status = document.getElementById('qStatus').value;
+            
+            if (!title || !material || !requirement) {
+                showToast('请填写必填项', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE}/admin/question`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ title, material, requirement, score, status })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showToast('题目创建成功！');
+                    closeModal('addQuestionModal');
+                    loadQuestions();
+                } else {
+                    showToast(result.message || '创建失败', 'error');
+                }
+            } catch (error) {
+                showToast('网络错误', 'error');
+            }
+        }
+        
+        async function toggleQuestionStatus(questionId, currentStatus) {
+            const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
+            
+            try {
+                const response = await fetch(`${API_BASE}/admin/question/${questionId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status: newStatus })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showToast(`题目已${newStatus === 'active' ? '启用' : '禁用'}`);
+                    loadQuestions();
+                } else {
+                    showToast(result.message || '操作失败', 'error');
+                }
+            } catch (error) {
+                showToast('网络错误', 'error');
+            }
+        }
+        
+        // ==================== 答案管理 ====================
+        async function editAnswer(questionId) {
+            document.getElementById('answerQuestionId').value = questionId;
+            
+            try {
+                const response = await fetch(`${API_BASE}/question/${questionId}`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    currentAnswers = {
+                        A: { content: result.answer_a?.content || '', source: result.answer_a?.source || '' },
+                        B: { content: result.answer_b?.content || '', source: result.answer_b?.source || '' }
+                    };
+                    
+                    document.getElementById('answerVersion').value = 'A';
+                    document.getElementById('answerVersion').dataset.previousValue = 'A';
+                    document.getElementById('answerContent').value = currentAnswers.A.content;
+                    document.getElementById('answerSource').value = currentAnswers.A.source;
+                    document.getElementById('answerModalTitle').textContent = '编辑答案 A';
+                }
+            } catch (error) {
+                console.error('加载答案失败:', error);
+                currentAnswers = { A: { content: '', source: '' }, B: { content: '', source: '' } };
+            }
+            
+            showModal('answerModal');
+        }
+        
+        document.getElementById('answerVersion')?.addEventListener('change', function() {
+            const oldVersion = this.dataset.previousValue || 'A';
+            const newVersion = this.value;
+            
+            currentAnswers[oldVersion] = {
+                content: document.getElementById('answerContent').value,
+                source: document.getElementById('answerSource').value
+            };
+            
+            document.getElementById('answerContent').value = currentAnswers[newVersion].content;
+            document.getElementById('answerSource').value = currentAnswers[newVersion].source;
+            this.dataset.previousValue = newVersion;
+            document.getElementById('answerModalTitle').textContent = `编辑答案 ${newVersion}`;
+        });
+        
+        async function saveAnswer() {
+            const questionId = document.getElementById('answerQuestionId').value;
+            const version = document.getElementById('answerVersion').value;
+            const content = document.getElementById('answerContent').value.trim();
+            const source = document.getElementById('answerSource').value;
+            
+            if (!content) {
+                showToast('请输入答案内容', 'error');
+                return;
+            }
+            if (!source) {
+                showToast('请选择答案来源', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE}/admin/answer`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ question_id: parseInt(questionId), version, content, source })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showToast('答案保存成功！');
+                    closeModal('answerModal');
+                } else {
+                    showToast(result.message || '保存失败', 'error');
+                }
+            } catch (error) {
+                showToast('网络错误', 'error');
+            }
+        }
+        
+        // ==================== 图片上传 ====================
+        function uploadAnswerImage(questionId) {
+            currentUploadQuestionId = questionId;
+            currentImageBase64 = null;
+            document.getElementById('previewImg').style.display = 'none';
+            showModal('uploadImageModal');
+        }
+        
+        function previewImage(input) {
+            const file = input.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                currentImageBase64 = e.target.result;
+                document.getElementById('previewImg').src = currentImageBase64;
+                document.getElementById('previewImg').style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+        
+        async function confirmUploadImage() {
+            if (!currentUploadQuestionId || !currentImageBase64) {
+                showToast('请先选择图片', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE}/admin/upload-answer-image/${currentUploadQuestionId}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ image: currentImageBase64 })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showToast('图片上传成功！');
+                    closeModal('uploadImageModal');
+                    loadQuestions();
+                } else {
+                    showToast(result.message || '上传失败', 'error');
+                }
+            } catch (error) {
+                showToast('网络错误', 'error');
+            }
+        }
+        
+        // ==================== 批改配置（新版）====================
+        function editReview(questionId) {
+            currentReviewQuestionId = questionId;
+            currentReviewVersion = 'A';
+            document.getElementById('reviewVersionA').classList.remove('btn-outline');
+            document.getElementById('reviewVersionA').classList.add('btn-primary');
+            document.getElementById('reviewVersionB').classList.remove('btn-primary');
+            document.getElementById('reviewVersionB').classList.add('btn-outline');
+            loadReviewData(questionId);
+            showModal('reviewModal');
+        }
+        
+        function switchReviewVersion(version) {
+            currentReviewVersion = version;
+            document.getElementById('reviewVersionA').classList.toggle('btn-primary', version === 'A');
+            document.getElementById('reviewVersionA').classList.toggle('btn-outline', version !== 'A');
+            document.getElementById('reviewVersionB').classList.toggle('btn-primary', version === 'B');
+            document.getElementById('reviewVersionB').classList.toggle('btn-outline', version !== 'B');
+            loadReviewData(currentReviewQuestionId);
+        }
+        
+        async function loadReviewData(questionId) {
+            try {
+                const response = await fetch(`${API_BASE}/admin/review/${questionId}`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    const review = result.reviews.find(r => r.answer_version === currentReviewVersion);
+                    if (review) {
+                        fillReviewData(review);
+                    } else {
+                        resetReviewForm();
+                    }
+                }
+            } catch (error) {
+                console.error('加载批改数据失败:', error);
+                resetReviewForm();
+            }
+        }
+        
+        function fillReviewData(review) {
+            // 评分信息
+            document.getElementById('questionTotalScore').value = review.question_total_score || 15;
+            document.getElementById('answerTotalScore').value = review.answer_total_score || 0;
+            
+            // 要点统计
+            const stats = review.key_points_stats || {};
+            document.getElementById('kpTotal').value = stats.total || 0;
+            document.getElementById('kpPointScore').value = stats.point_score || 0;
+            document.getElementById('kpFullyScored').value = stats.fully_scored || 0;
+            document.getElementById('kpPartiallyScored').value = stats.partially_scored || 0;
+            document.getElementById('kpMissing').value = stats.missing || 0;
+            
+            // 总体评价
+            document.getElementById('performanceSummary').value = review.performance_summary || '';
+            document.getElementById('nextSteps').value = review.next_steps || '';
+            
+            // 遗漏要点
+            missingPoints = review.missing_points || [];
+            renderMissingPoints();
+            
+            // 部分得分要点
+            partialPoints = review.partial_points || [];
+            renderPartialPoints();
+            
+            // 作答逻辑
+            document.getElementById('logicAnalysis').value = review.logic_analysis || '';
+        }
+        
+        function resetReviewForm() {
+            // 评分信息
+            document.getElementById('questionTotalScore').value = 15;
+            document.getElementById('answerTotalScore').value = 0;
+            
+            // 要点统计
+            document.getElementById('kpTotal').value = 0;
+            document.getElementById('kpPointScore').value = 0;
+            document.getElementById('kpFullyScored').value = 0;
+            document.getElementById('kpPartiallyScored').value = 0;
+            document.getElementById('kpMissing').value = 0;
+            
+            // 总体评价
+            document.getElementById('performanceSummary').value = '';
+            document.getElementById('nextSteps').value = '';
+            
+            // 遗漏要点
+            missingPoints = [];
+            renderMissingPoints();
+            
+            // 部分得分要点
+            partialPoints = [];
+            renderPartialPoints();
+            
+            // 作答逻辑
+            document.getElementById('logicAnalysis').value = '';
+        }
+        
+        // 遗漏要点管理
+        function renderMissingPoints() {
+            const tbody = document.getElementById('missingPointsBody');
+            if (missingPoints.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 20px; color: var(--text-light);">暂无遗漏要点</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = missingPoints.map((point, i) => `
+                <tr>
+                    <td style="padding: 8px;"><input type="text" class="form-input" value="${point.title || ''}" onchange="missingPoints[${i}].title = this.value" placeholder="要点标题"></td>
+                    <td style="padding: 8px;"><textarea class="form-textarea" onchange="missingPoints[${i}].analysis = this.value" placeholder="原因分析" style="min-height: 60px;">${point.analysis || ''}</textarea></td>
+                    <td style="padding: 8px;"><textarea class="form-textarea" onchange="missingPoints[${i}].suggestion = this.value" placeholder="改进建议" style="min-height: 60px;">${point.suggestion || ''}</textarea></td>
+                    <td style="padding: 8px; text-align: center;"><button class="btn btn-danger btn-sm" onclick="removeMissingPoint(${i})">删除</button></td>
+                </tr>
+            `).join('');
+        }
+        
+        function addMissingPoint() {
+            missingPoints.push({ title: '', analysis: '', suggestion: '' });
+            renderMissingPoints();
+        }
+        
+        function removeMissingPoint(index) {
+            missingPoints.splice(index, 1);
+            renderMissingPoints();
+        }
+        
+        // 部分得分要点管理
+        function renderPartialPoints() {
+            const tbody = document.getElementById('partialPointsBody');
+            if (partialPoints.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 20px; color: var(--text-light);">暂无部分得分要点</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = partialPoints.map((point, i) => `
+                <tr>
+                    <td style="padding: 8px;"><input type="text" class="form-input" value="${point.title || ''}" onchange="partialPoints[${i}].title = this.value" placeholder="要点标题"></td>
+                    <td style="padding: 8px;"><textarea class="form-textarea" onchange="partialPoints[${i}].analysis = this.value" placeholder="原因分析" style="min-height: 60px;">${point.analysis || ''}</textarea></td>
+                    <td style="padding: 8px;"><textarea class="form-textarea" onchange="partialPoints[${i}].suggestion = this.value" placeholder="改进建议" style="min-height: 60px;">${point.suggestion || ''}</textarea></td>
+                    <td style="padding: 8px; text-align: center;"><button class="btn btn-danger btn-sm" onclick="removePartialPoint(${i})">删除</button></td>
+                </tr>
+            `).join('');
+        }
+        
+        function addPartialPoint() {
+            partialPoints.push({ title: '', analysis: '', suggestion: '' });
+            renderPartialPoints();
+        }
+        
+        function removePartialPoint(index) {
+            partialPoints.splice(index, 1);
+            renderPartialPoints();
+        }
+        
+        async function saveReview() {
+            if (!currentReviewQuestionId) {
+                showToast('请先选择题目', 'error');
+                return;
+            }
+            
+            // 收集遗漏要点（过滤空数据）
+            const filteredMissingPoints = missingPoints.filter(p => p.title.trim());
+            const filteredPartialPoints = partialPoints.filter(p => p.title.trim());
+            
+            const data = {
+                question_id: currentReviewQuestionId,
+                answer_version: currentReviewVersion,
+                question_total_score: parseInt(document.getElementById('questionTotalScore').value) || 15,
+                answer_total_score: parseInt(document.getElementById('answerTotalScore').value) || 0,
+                key_points_stats: {
+                    total: parseInt(document.getElementById('kpTotal').value) || 0,
+                    point_score: parseInt(document.getElementById('kpPointScore').value) || 0,
+                    fully_scored: parseInt(document.getElementById('kpFullyScored').value) || 0,
+                    partially_scored: parseInt(document.getElementById('kpPartiallyScored').value) || 0,
+                    missing: parseInt(document.getElementById('kpMissing').value) || 0
+                },
+                performance_summary: document.getElementById('performanceSummary').value,
+                next_steps: document.getElementById('nextSteps').value,
+                missing_points: filteredMissingPoints,
+                partial_points: filteredPartialPoints,
+                logic_analysis: document.getElementById('logicAnalysis').value
+            };
+            
+            try {
+                const response = await fetch(`${API_BASE}/admin/review`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showToast('保存成功！');
+                    closeModal('reviewModal');
+                } else {
+                    showToast(result.message || '保存失败', 'error');
+                }
+            } catch (error) {
+                showToast('网络错误', 'error');
+            }
+        }
+        
+        function addDimension() {
+            const container = document.getElementById('reviewDimensions');
+            container.insertAdjacentHTML('beforeend', `
+                <div class="form-row" style="margin-bottom: 8px;">
+                    <input type="text" class="form-input dim-name" placeholder="维度名称" style="flex: 2;">
+                    <input type="number" class="form-input dim-score" value="0" step="0.5" style="flex: 1;">
+                    <input type="number" class="form-input dim-max" value="5" style="flex: 1;">
+                </div>
+            `);
+        }
+        
+        // ==================== 导出功能 ====================
+        function exportData(format) {
+            if (format === 'excel') {
+                exportFeedbacks();
+            }
+        }
+        
+        function exportFeedbacks() {
+            if (allFeedbacks.length === 0) {
+                showToast('暂无数据可导出', 'warning');
+                return;
+            }
+            
+            const headers = ['ID', '用户ID', '题目ID', '偏好', '原因', '其他原因', '参与意愿', '时间'];
+            const rows = allFeedbacks.map(f => [
+                f.id,
+                f.user_id,
+                f.question_id,
+                f.prefer,
+                f.reasons ? f.reasons.join('; ') : '',
+                f.other_reason || '',
+                f.willing_to_train || '',
+                f.created_at
+            ]);
+            
+            let csv = '\uFEFF' + headers.join(',') + '\n';
+            rows.forEach(row => {
+                csv += row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(',') + '\n';
+            });
+            
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `反馈数据_${new Date().toISOString().split('T')[0]}.csv`;
+            link.click();
+            
+            showToast('导出成功！');
+        }
+        
+        // ==================== 刷新数据 ====================
+        function refreshData() {
+            showToast('刷新中...', 'warning');
+            loadDashboardData();
+            loadQuestions();
+        }
+        
+        // ==================== 初始化 ====================
+        function initApp() {
+            loadQuestionFilter();
+            loadDashboardData();
+            loadQuestions();
+        }
+        
+        window.addEventListener('load', () => {
+            checkAuth().then(authenticated => {
+                if (authenticated) {
+                    initApp();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

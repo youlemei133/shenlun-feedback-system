@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>批改详情配置 - 管理后台</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --primary: #e07040;
+            --primary-light: #ff9966;
+            --bg-warm: #fff8f3;
+            --text-main: #5a3d2b;
+            --text-sub: #8b6b5c;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: #f5f7fa;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 { font-size: 20px; }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .tabs {
+            display: flex;
+            background: white;
+            border-radius: 12px;
+            padding: 6px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .tab {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            background: transparent;
+            border-radius: 8px;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tab.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 8px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .dimension-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+
+        .tag-input {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .tag-input input {
+            flex: 1;
+        }
+
+        .tag-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .tag {
+            background: var(--bg-warm);
+            color: var(--primary);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .tag button {
+            background: none;
+            border: none;
+            color: var(--primary);
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(224,112,64,0.3);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+        }
+
+        .suggestion-item {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .suggestion-item textarea {
+            flex: 1;
+            min-height: 60px;
+        }
+
+        .preview-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 14px 24px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(40,167,69,0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📝 批改详情配置</h1>
+        <button class="btn btn-secondary" onclick="window.location.href='/admin'">返回管理后台</button>
+    </div>
+
+    <div class="container">
+        <div class="card">
+            <h2 style="margin-bottom: 20px;">选择题目</h2>
+            <select id="questionSelect" class="form-control" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 14px;">
+                <option value="">加载中...</option>
+            </select>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="switchVersion('A')">答案 A 批改</button>
+            <button class="tab" onclick="switchVersion('B')">答案 B 批改</button>
+        </div>
+
+        <div class="card">
+            <h3 style="margin-bottom: 20px;">基本信息</h3>
+            <div class="form-group">
+                <label>得分</label>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <input type="number" id="score" value="13" min="0">
+                    <span>/</span>
+                    <input type="number" id="maxScore" value="15" min="1" style="width: 80px;">
+                    <span>分</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3 style="margin-bottom: 20px;">📊 维度评分</h3>
+            <div id="dimensionsContainer">
+                <div class="dimension-row">
+                    <input type="text" class="dim-name" value="要点覆盖度" placeholder="维度名称">
+                    <input type="number" class="dim-score" value="4.5" step="0.5" placeholder="得分">
+                    <input type="number" class="dim-max" value="5" placeholder="满分">
+                </div>
+                <div class="dimension-row">
+                    <input type="text" class="dim-name" value="逻辑结构" placeholder="维度名称">
+                    <input type="number" class="dim-score" value="4.5" step="0.5" placeholder="得分">
+                    <input type="number" class="dim-max" value="5" placeholder="满分">
+                </div>
+                <div class="dimension-row">
+                    <input type="text" class="dim-name" value="语言表达" placeholder="维度名称">
+                    <input type="number" class="dim-score" value="4" step="0.5" placeholder="得分">
+                    <input type="number" class="dim-max" value="5" placeholder="满分">
+                </div>
+            </div>
+            <button class="btn btn-secondary" onclick="addDimension()" style="margin-top: 10px;">+ 添加维度</button>
+        </div>
+
+        <div class="card">
+            <h3 style="margin-bottom: 20px;">✓ 亮点总结</h3>
+            <div class="form-group">
+                <label>标签</label>
+                <div class="tag-input">
+                    <input type="text" id="highlightTagInput" placeholder="输入标签，按回车添加">
+                    <button class="btn" onclick="addTag('highlight')">添加</button>
+                </div>
+                <div class="tag-list" id="highlightTags"></div>
+            </div>
+            <div class="form-group">
+                <label>描述</label>
+                <textarea id="highlightContent" placeholder="描述亮点内容..."></textarea>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3 style="margin-bottom: 20px;">! 提升空间</h3>
+            <div class="form-group">
+                <label>标签</label>
+                <div class="tag-input">
+                    <input type="text" id="improvementTagInput" placeholder="输入标签，按回车添加">
+                    <button class="btn" onclick="addTag('improvement')">添加</button>
+                </div>
+                <div class="tag-list" id="improvementTags"></div>
+            </div>
+            <div class="form-group">
+                <label>描述</label>
+                <textarea id="improvementContent" placeholder="描述提升空间..."></textarea>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3 style="margin-bottom: 20px;">💡 专业建议</h3>
+            <div id="suggestionsContainer">
+                <div class="suggestion-item">
+                    <textarea placeholder="输入专业建议..."></textarea>
+                    <button class="btn btn-secondary" onclick="removeSuggestion(this)">删除</button>
+                </div>
+            </div>
+            <button class="btn btn-secondary" onclick="addSuggestion()" style="margin-top: 10px;">+ 添加建议</button>
+        </div>
+
+        <div class="card">
+            <h3 style="margin-bottom: 20px;">📝 参考优化</h3>
+            <div class="form-group">
+                <label>优化后的范文</label>
+                <textarea id="referenceAnswer" style="min-height: 200px;" placeholder="输入优化后的参考范文..."></textarea>
+            </div>
+        </div>
+
+        <button class="btn" onclick="saveReview()" style="width: 100%; padding: 16px; font-size: 16px;">💾 保存配置</button>
+    </div>
+
+    <button class="preview-btn" onclick="preview()">👁️ 预览效果</button>
+
+    <script>
+        const API_BASE = '/api';
+        let currentVersion = 'A';
+        let highlightTags = ['要点全面', '逻辑清晰'];
+        let improvementTags = ['字数可精简'];
+        let suggestions = [
+            '要点提炼：第 2 点可进一步精简，保留核心动作即可。',
+            '语言表达："获得分红"建议改为"获取分红收益"。',
+            '字数控制：当前 195 字，建议控制在 180 字以内。',
+            '结构优化：建议调整各要点字数分布，使 4 个要点更加均衡。'
+        ];
+
+        // 加载题目列表
+        async function loadQuestions() {
+            try {
+                const response = await fetch(`${API_BASE}/admin/questions`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    const select = document.getElementById('questionSelect');
+                    select.innerHTML = result.questions.map(q => 
+                        `<option value="${q.id}">${q.title}</option>`
+                    ).join('');
+                    
+                    // 加载第一个题目的批改详情
+                    if (result.questions.length > 0) {
+                        loadReview(result.questions[0].id);
+                    }
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        // 加载批改详情
+        async function loadReview(questionId) {
+            try {
+                const response = await fetch(`${API_BASE}/admin/review/${questionId}`);
+                const result = await response.json();
+                
+                if (result.success && result.reviews.length > 0) {
+                    const review = result.reviews.find(r => r.answer_version === currentVersion);
+                    if (review) {
+                        fillReviewData(review);
+                    }
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        // 填充数据
+        function fillReviewData(review) {
+            document.getElementById('score').value = review.score;
+            document.getElementById('maxScore').value = review.max_score;
+            
+            // 维度评分
+            const dimsContainer = document.getElementById('dimensionsContainer');
+            dimsContainer.innerHTML = review.dimensions.map(d => `
+                <div class="dimension-row">
+                    <input type="text" class="dim-name" value="${d.name}">
+                    <input type="number" class="dim-score" value="${d.score}" step="0.5">
+                    <input type="number" class="dim-max" value="${d.max}">
+                </div>
+            `).join('');
+            
+            // 亮点标签
+            highlightTags = review.highlights.tags || [];
+            renderTags('highlight');
+            document.getElementById('highlightContent').value = review.highlights.content || '';
+            
+            // 提升空间标签
+            improvementTags = review.improvements.tags || [];
+            renderTags('improvement');
+            document.getElementById('improvementContent').value = review.improvements.content || '';
+            
+            // 专业建议
+            suggestions = review.suggestions || [];
+            renderSuggestions();
+            
+            // 参考优化
+            document.getElementById('referenceAnswer').value = review.reference_answer || '';
+        }
+
+        // 切换版本
+        function switchVersion(version) {
+            currentVersion = version;
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            const questionId = document.getElementById('questionSelect').value;
+            if (questionId) {
+                loadReview(questionId);
+            }
+        }
+
+        // 添加维度
+        function addDimension() {
+            const container = document.getElementById('dimensionsContainer');
+            container.insertAdjacentHTML('beforeend', `
+                <div class="dimension-row">
+                    <input type="text" class="dim-name" placeholder="维度名称">
+                    <input type="number" class="dim-score" value="0" step="0.5">
+                    <input type="number" class="dim-max" value="5">
+                </div>
+            `);
+        }
+
+        // 添加标签
+        function addTag(type) {
+            const input = document.getElementById(`${type}TagInput`);
+            const tag = input.value.trim();
+            
+            if (tag) {
+                if (type === 'highlight') {
+                    highlightTags.push(tag);
+                } else {
+                    improvementTags.push(tag);
+                }
+                renderTags(type);
+                input.value = '';
+            }
+        }
+
+        // 渲染标签
+        function renderTags(type) {
+            const container = document.getElementById(`${type}Tags`);
+            const tags = type === 'highlight' ? highlightTags : improvementTags;
+            
+            container.innerHTML = tags.map((tag, i) => `
+                <span class="tag">
+                    ${tag}
+                    <button onclick="removeTag('${type}', ${i})">×</button>
+                </span>
+            `).join('');
+        }
+
+        // 删除标签
+        function removeTag(type, index) {
+            if (type === 'highlight') {
+                highlightTags.splice(index, 1);
+            } else {
+                improvementTags.splice(index, 1);
+            }
+            renderTags(type);
+        }
+
+        // 添加建议
+        function addSuggestion() {
+            suggestions.push('');
+            renderSuggestions();
+        }
+
+        // 渲染建议
+        function renderSuggestions() {
+            const container = document.getElementById('suggestionsContainer');
+            container.innerHTML = suggestions.map((s, i) => `
+                <div class="suggestion-item">
+                    <textarea placeholder="输入专业建议..." onchange="suggestions[${i}] = this.value">${s}</textarea>
+                    <button class="btn btn-secondary" onclick="removeSuggestion(this)">删除</button>
+                </div>
+            `).join('');
+        }
+
+        // 删除建议
+        function removeSuggestion(btn) {
+            const index = Array.from(btn.parentNode.parentNode.children).indexOf(btn.parentNode);
+            suggestions.splice(index, 1);
+            renderSuggestions();
+        }
+
+        // 保存配置
+        async function saveReview() {
+            const questionId = document.getElementById('questionSelect').value;
+            if (!questionId) {
+                alert('请选择题目');
+                return;
+            }
+
+            // 收集维度评分
+            const dimensions = Array.from(document.querySelectorAll('.dimension-row')).map(row => ({
+                name: row.querySelector('.dim-name').value,
+                score: parseFloat(row.querySelector('.dim-score').value),
+                max: parseFloat(row.querySelector('.dim-max').value)
+            }));
+
+            const data = {
+                question_id: parseInt(questionId),
+                answer_version: currentVersion,
+                score: parseInt(document.getElementById('score').value),
+                max_score: parseInt(document.getElementById('maxScore').value),
+                dimensions: dimensions,
+                highlights: {
+                    tags: highlightTags,
+                    content: document.getElementById('highlightContent').value
+                },
+                improvements: {
+                    tags: improvementTags,
+                    content: document.getElementById('improvementContent').value
+                },
+                suggestions: suggestions,
+                reference_answer: document.getElementById('referenceAnswer').value
+            };
+
+            try {
+                const response = await fetch(`${API_BASE}/admin/review`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    alert('保存成功！');
+                } else {
+                    alert('保存失败：' + result.message);
+                }
+            } catch (error) {
+                alert('网络错误：' + error.message);
+            }
+        }
+
+        // 预览效果
+        function preview() {
+            // 打开新窗口预览
+            const questionId = document.getElementById('questionSelect').value;
+            if (questionId) {
+                window.open(`/preview/${questionId}/${currentVersion}`, '_blank');
+            }
+        }
+
+        // 监听题目选择
+        document.getElementById('questionSelect').addEventListener('change', function() {
+            loadReview(this.value);
+        });
+
+        // 标签输入框回车添加
+        document.getElementById('highlightTagInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                addTag('highlight');
+            }
+        });
+
+        document.getElementById('improvementTagInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                addTag('improvement');
+            }
+        });
+
+        // 初始化
+        loadQuestions();
+    </script>
+</body>
+</html>
