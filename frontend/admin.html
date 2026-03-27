@@ -1477,10 +1477,12 @@
                 <button class="modal-close" onclick="closeModal('reviewModal')">×</button>
             </div>
             <div class="modal-body">
-                <!-- 版本切换 -->
-                <div style="display: flex; gap: 10px; margin-bottom: 20px;">
-                    <button class="btn btn-primary" id="reviewVersionA" onclick="switchReviewVersion('A')">答案 A</button>
-                    <button class="btn btn-outline" id="reviewVersionB" onclick="switchReviewVersion('B')">答案 B</button>
+                <!-- 版本切换 - 4个Tab -->
+                <div style="display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap;">
+                    <button class="btn btn-primary" id="reviewTabASG" onclick="switchReviewTab('A', 'shangancang')">答案A-上岸仓批改</button>
+                    <button class="btn btn-outline" id="reviewTabAFB" onclick="switchReviewTab('A', 'fenbi')">答案A-粉笔批改</button>
+                    <button class="btn btn-outline" id="reviewTabBSG" onclick="switchReviewTab('B', 'shangancang')">答案B-上岸仓批改</button>
+                    <button class="btn btn-outline" id="reviewTabBFB" onclick="switchReviewTab('B', 'fenbi')">答案B-粉笔批改</button>
                 </div>
                 
                 <!-- 评分信息 -->
@@ -1620,6 +1622,7 @@
         let currentImageBase64 = null;
         let currentReviewQuestionId = null;
         let currentReviewVersion = 'A';
+        let currentReviewStyle = 'shangancang';
         let missingPoints = [];
         let partialPoints = [];
         
@@ -2615,20 +2618,29 @@ if (result.success) {
         function editReview(questionId) {
             currentReviewQuestionId = questionId;
             currentReviewVersion = 'A';
-            document.getElementById('reviewVersionA').classList.remove('btn-outline');
-            document.getElementById('reviewVersionA').classList.add('btn-primary');
-            document.getElementById('reviewVersionB').classList.remove('btn-primary');
-            document.getElementById('reviewVersionB').classList.add('btn-outline');
+            currentReviewStyle = 'shangancang';
+            updateReviewTabUI();
             loadReviewData(questionId);
             showModal('reviewModal');
         }
         
-        function switchReviewVersion(version) {
+        function updateReviewTabUI() {
+            const tabs = ['ASG', 'AFB', 'BSG', 'BFB'];
+            const versions = { 'ASG': 'A', 'AFB': 'A', 'BSG': 'B', 'BFB': 'B' };
+            const styles = { 'ASG': 'shangancang', 'AFB': 'fenbi', 'BSG': 'shangancang', 'BFB': 'fenbi' };
+            
+            tabs.forEach(tab => {
+                const btn = document.getElementById('reviewTab' + tab);
+                const isActive = versions[tab] === currentReviewVersion && styles[tab] === currentReviewStyle;
+                btn.classList.toggle('btn-primary', isActive);
+                btn.classList.toggle('btn-outline', !isActive);
+            });
+        }
+        
+        function switchReviewTab(version, style) {
             currentReviewVersion = version;
-            document.getElementById('reviewVersionA').classList.toggle('btn-primary', version === 'A');
-            document.getElementById('reviewVersionA').classList.toggle('btn-outline', version !== 'A');
-            document.getElementById('reviewVersionB').classList.toggle('btn-primary', version === 'B');
-            document.getElementById('reviewVersionB').classList.toggle('btn-outline', version !== 'B');
+            currentReviewStyle = style;
+            updateReviewTabUI();
             loadReviewData(currentReviewQuestionId);
         }
         
@@ -2638,7 +2650,17 @@ if (result.success) {
                 const result = await response.json();
                 
                 if (result.success) {
-                    const review = result.data.reviews.find(r => r.answer_version === currentReviewVersion);
+                    const key = currentReviewVersion.toLowerCase() + '_' + currentReviewStyle;
+                    const reviews = result.data.reviews;
+                    let review = null;
+                    
+                    for (let i = 0; i < reviews.length; i++) {
+                        if (reviews[i].answer_version === currentReviewVersion && reviews[i].review_style === currentReviewStyle) {
+                            review = reviews[i];
+                            break;
+                        }
+                    }
+                    
                     if (review) {
                         fillReviewData(review);
                     } else {
@@ -2777,6 +2799,7 @@ if (result.success) {
             const data = {
                 question_id: currentReviewQuestionId,
                 answer_version: currentReviewVersion,
+                review_style: currentReviewStyle,
                 question_total_score: parseInt(document.getElementById('questionTotalScore').value) || 15,
                 answer_total_score: parseInt(document.getElementById('answerTotalScore').value) || 0,
                 key_points_stats: {

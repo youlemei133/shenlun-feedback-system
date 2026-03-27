@@ -55,15 +55,16 @@ class QuestionRepository(BaseRepository):
             answer_b = next((a.to_dict() for a in answers if a.version == 'B'), None)
             
             reviews = db.query(AnswerReview).filter(AnswerReview.question_id == question_id).all()
-            review_a = next((r.to_dict() for r in reviews if r.answer_version == 'A'), None)
-            review_b = next((r.to_dict() for r in reviews if r.answer_version == 'B'), None)
+            reviews_dict = {}
+            for r in reviews:
+                key = f"{r.answer_version.lower()}_{r.review_style}"
+                reviews_dict[key] = r.to_dict()
             
             return {
                 'question': question.to_dict(),
                 'answer_a': answer_a,
                 'answer_b': answer_b,
-                'review_a': review_a,
-                'review_b': review_b
+                'reviews': reviews_dict
             }
 
 class AnswerRepository(BaseRepository):
@@ -110,14 +111,25 @@ class AnswerReviewRepository(BaseRepository):
     model = AnswerReview
     
     @classmethod
-    def get_by_question_and_version(cls, question_id: int, answer_version: str) -> Optional[Dict]:
-        """根据题目ID和答案版本获取批改（返回 dict）"""
+    def get_by_question_answer_style(cls, question_id: int, answer_version: str, review_style: str) -> Optional[Dict]:
+        """根据题目ID、答案版本和批改风格获取批改（返回 dict）"""
         with get_db() as db:
             review = db.query(AnswerReview).filter(
                 AnswerReview.question_id == question_id,
-                AnswerReview.answer_version == answer_version
+                AnswerReview.answer_version == answer_version,
+                AnswerReview.review_style == review_style
             ).first()
             return review.to_dict() if review else None
+    
+    @classmethod
+    def get_by_question_and_version(cls, question_id: int, answer_version: str) -> List[Dict]:
+        """根据题目ID和答案版本获取所有批改（返回 dict 列表）"""
+        with get_db() as db:
+            reviews = db.query(AnswerReview).filter(
+                AnswerReview.question_id == question_id,
+                AnswerReview.answer_version == answer_version
+            ).all()
+            return [r.to_dict() for r in reviews]
     
     @classmethod
     def get_by_question(cls, question_id: int) -> List[Dict]:
@@ -129,12 +141,13 @@ class AnswerReviewRepository(BaseRepository):
             return [r.to_dict() for r in reviews]
     
     @classmethod
-    def create_or_update(cls, question_id: int, answer_version: str, **kwargs) -> Dict:
+    def create_or_update(cls, question_id: int, answer_version: str, review_style: str, **kwargs) -> Dict:
         """创建或更新批改（返回 dict）"""
         with get_db() as db:
             existing = db.query(AnswerReview).filter(
                 AnswerReview.question_id == question_id,
-                AnswerReview.answer_version == answer_version
+                AnswerReview.answer_version == answer_version,
+                AnswerReview.review_style == review_style
             ).first()
             
             if existing:
@@ -148,6 +161,7 @@ class AnswerReviewRepository(BaseRepository):
                 review = AnswerReview(
                     question_id=question_id,
                     answer_version=answer_version,
+                    review_style=review_style,
                     **kwargs
                 )
                 db.add(review)

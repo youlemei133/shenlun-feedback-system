@@ -2451,8 +2451,7 @@
                 console.log('题目数据:', q);
                 console.log('答案 A:', result.data.answer_a);
                 console.log('答案 B:', result.data.answer_b);
-                console.log('批改 A:', result.data.review_a);
-                console.log('批改 B:', result.data.review_b);
+                console.log('批改数据:', result.data.reviews);
 
                 document.getElementById('questionTitle').textContent = q.title;
                 document.getElementById('questionReq').innerHTML = q.requirement.split('\n').map(r => `<li>${r}</li>`).join('');
@@ -2764,13 +2763,17 @@ runStage1();
 }
 // 体验批改按钮
 document.getElementById('entryA').addEventListener('click', function() {
-const reviewData = currentQuestion && currentQuestion.review_a ? currentQuestion.review_a : null;
-openModalWithAnimation('批改 A 详情', reviewData);
+    // 批改A = 用户选择答案的上岸仓批改
+    const reviewKey = selectedAnswer.toLowerCase() + '_shangancang';
+    const reviewData = currentQuestion && currentQuestion.reviews ? currentQuestion.reviews[reviewKey] : null;
+    openModalWithAnimation('批改 A 详情', reviewData);
 });
 
 document.getElementById('entryB').addEventListener('click', function() {
-const reviewData = currentQuestion && currentQuestion.review_b ? currentQuestion.review_b : null;
-openModalWithAnimation('批改 B 详情', reviewData);
+    // 批改B = 用户选择答案的粉笔批改
+    const reviewKey = selectedAnswer.toLowerCase() + '_fenbi';
+    const reviewData = currentQuestion && currentQuestion.reviews ? currentQuestion.reviews[reviewKey] : null;
+    openModalWithAnimation('批改 B 详情', reviewData);
 });
 
 document.getElementById('modal-x').addEventListener('click', function(e) {
@@ -2963,13 +2966,13 @@ function closeModal() {
 
     styleA.addEventListener('click', function() {
         styleA.classList.add('sel'); styleB.classList.remove('sel');
-        selectedStyle = 'A';
+        selectedStyle = 'shangancang';  // 批改A = 上岸仓批改
         btnP3.disabled = false; btnP3.style.opacity = '1';
     });
 
     styleB.addEventListener('click', function() {
         styleB.classList.add('sel'); styleA.classList.remove('sel');
-        selectedStyle = 'B';
+        selectedStyle = 'fenbi';  // 批改B = 粉笔批改
         btnP3.disabled = false; btnP3.style.opacity = '1';
     });
 
@@ -3079,7 +3082,7 @@ function closeModal() {
         const payload = {
             user_id: userId,
             question_id: currentQuestion.question.id,
-            prefer: selectedStyle || selectedAnswer,
+            prefer: selectedAnswer,  // 最终偏好取答案偏好
             answer_prefer: selectedAnswer,
             review_prefer: selectedStyle,
             reasons: reasons,

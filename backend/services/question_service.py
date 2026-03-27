@@ -110,9 +110,9 @@ class AnswerReviewService:
         return AnswerReviewRepository.get_by_question(question_id)
     
     @staticmethod
-    def create_or_update(question_id: int, answer_version: str, **kwargs):
+    def create_or_update(question_id: int, answer_version: str, review_style: str, **kwargs):
         """创建或更新批改"""
-        if not question_id or not answer_version:
+        if not question_id or not answer_version or not review_style:
             raise ValidationError('缺少必要参数')
         
         default_key_points = {
@@ -137,5 +137,6 @@ class AnswerReviewService:
         return AnswerReviewRepository.create_or_update(
             question_id=question_id,
             answer_version=answer_version,
+            review_style=review_style,
             **data
         )

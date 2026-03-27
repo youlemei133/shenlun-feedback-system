@@ -103,7 +103,8 @@ class AnswerReview(Base):
     
     id = Column(Integer, primary_key=True, autoincrement=True)
     question_id = Column(Integer, nullable=False)  # 关联题目 ID
-    answer_version = Column(String(10), nullable=False)  # A 或 B
+    answer_version = Column(String(10), nullable=False)  # A 或 B（关联哪个答案）
+    review_style = Column(String(20), nullable=False, default='shangancang')  # 批改风格：shangancang/fenbi
     
     # 评分信息
     question_total_score = Column(Integer, default=15)  # 题目总分
@@ -142,6 +143,7 @@ class AnswerReview(Base):
             'id': self.id,
             'question_id': self.question_id,
             'answer_version': self.answer_version,
+            'review_style': self.review_style,
             'question_total_score': self.question_total_score,
             'answer_total_score': self.answer_total_score,
             'key_points_stats': self.key_points_stats,

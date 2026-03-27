@@ -110,6 +110,7 @@ def create_or_update_review():
         review = AnswerReviewService.create_or_update(
             question_id=data.get('question_id'),
             answer_version=data.get('answer_version'),
+            review_style=data.get('review_style', 'shangancang'),
             **data
         )
         return success({'review': review})
