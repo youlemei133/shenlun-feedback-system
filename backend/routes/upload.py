@@ -18,15 +18,16 @@ def serve_upload(filename):
 @upload_bp.route('/admin/upload-answer-image/<int:question_id>', methods=['POST'])
 @login_required
 def upload_answer_image(question_id):
-    """上传答案图片"""
+    """上传答案图片和用户作答文字版"""
     data = request.json
     if not data:
         return error('数据不能为空')
     
-    image_data = data.get('image')
+    image_data = data.get('image', '')
+    user_answer_text = data.get('user_answer_text', '')
     
     try:
-        image_url = QuestionService.upload_answer_image(question_id, image_data)
+        image_url = QuestionService.upload_answer_image(question_id, image_data, user_answer_text)
         return success({'image_url': image_url})
     except AppException as e:
         return error(e.message, e.code)

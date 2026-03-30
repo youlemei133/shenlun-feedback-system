@@ -60,32 +60,42 @@ class QuestionService:
         return QuestionRepository.update(question_id, status=new_status)
     
     @staticmethod
-    def upload_answer_image(question_id: int, image_data: str):
-        """上传答案图片"""
+    def delete(question_id: int):
+        """删除题目（同时删除相关的答案、批改和反馈）"""
         question = QuestionRepository.get_by_id(question_id)
         if not question:
             raise NotFoundError('题目')
         
-        if not image_data:
-            raise ValidationError('图片数据不能为空')
+        QuestionRepository.delete(question_id)
+    
+    @staticmethod
+    def upload_answer_image(question_id: int, image_data: str, user_answer_text: str = ''):
+        """上传答案图片和用户作答文字版"""
+        question = QuestionRepository.get_by_id(question_id)
+        if not question:
+            raise NotFoundError('题目')
         
-        if ',' in image_data:
-            image_data = image_data.split(',')[1]
+        image_url = question.get('answer_image', '')
         
-        try:
-            image_bytes = base64.b64decode(image_data)
-        except Exception:
-            raise ValidationError('图片格式错误')
+        if image_data:
+            if ',' in image_data:
+                image_data = image_data.split(',')[1]
+            
+            try:
+                image_bytes = base64.b64decode(image_data)
+            except Exception:
+                raise ValidationError('图片格式错误')
+            
+            os.makedirs(QuestionService.UPLOAD_FOLDER, exist_ok=True)
+            filename = f"{uuid.uuid4().hex}.png"
+            filepath = os.path.join(QuestionService.UPLOAD_FOLDER, filename)
+            
+            with open(filepath, 'wb') as f:
+                f.write(image_bytes)
+            
+            image_url = f"/api/uploads/{filename}"
         
-        os.makedirs(QuestionService.UPLOAD_FOLDER, exist_ok=True)
-        filename = f"{uuid.uuid4().hex}.png"
-        filepath = os.path.join(QuestionService.UPLOAD_FOLDER, filename)
-        
-        with open(filepath, 'wb') as f:
-            f.write(image_bytes)
-        
-        image_url = f"/api/uploads/{filename}"
-        QuestionRepository.update(question_id, answer_image=image_url)
+        QuestionRepository.update(question_id, answer_image=image_url, user_answer_text=user_answer_text)
         
         return image_url
 
@@ -110,9 +120,9 @@ class AnswerReviewService:
         return AnswerReviewRepository.get_by_question(question_id)
     
     @staticmethod
-    def create_or_update(question_id: int, answer_version: str, review_style: str, **kwargs):
+    def create_or_update(question_id: int, review_style: str, **kwargs):
         """创建或更新批改"""
-        if not question_id or not answer_version or not review_style:
+        if not question_id or not review_style:
             raise ValidationError('缺少必要参数')
         
         default_key_points = {
@@ -131,12 +141,14 @@ class AnswerReviewService:
             'next_steps': kwargs.get('next_steps', ''),
             'missing_points': kwargs.get('missing_points', []),
             'partial_points': kwargs.get('partial_points', []),
-            'logic_analysis': kwargs.get('logic_analysis', '')
+            'logic_analysis': kwargs.get('logic_analysis', ''),
+            'fenbi_review_data': kwargs.get('fenbi_review_data'),
+            'shangancang_review_data': kwargs.get('shangancang_review_data'),
+            'points_description': kwargs.get('points_description')
         }
         
         return AnswerReviewRepository.create_or_update(
             question_id=question_id,
-            answer_version=answer_version,
             review_style=review_style,
             **data
         )

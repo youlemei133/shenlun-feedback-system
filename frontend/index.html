@@ -976,6 +976,10 @@
             justify-content: space-between;
             padding: 16px 20px;
             border-bottom: 1px solid #e9ecef;
+            position: sticky;
+            top: 0;
+            background: #fff;
+            z-index: 10;
         }
 
         .modal-t { font-size: 17px; font-weight: 600; }
@@ -1458,6 +1462,10 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 12px;
+            background: linear-gradient(to bottom, #fff0f0 0%, #ffe8e8 100%);
+            border-radius: 12px 12px 0 0;
+            padding: 12px 16px;
+            margin: -16px -16px 12px -16px;
         }
 
         .score-card-label {
@@ -1982,6 +1990,362 @@
             font-size: 13px;
             border: 1px solid #e9ecef;
         }
+        
+        /* 粉笔批改样式 */
+        .fb-collapse-panel {
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #f5f5f5;
+            margin-bottom: 12px;
+        }
+        
+        .fb-panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 16px;
+            background: #fff;
+            cursor: pointer;
+        }
+        
+        .fb-header-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .fb-switch-icon {
+            width: 22px;
+            height: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+        
+        .fb-panel-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #222;
+        }
+        
+        .fb-header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #999;
+            font-size: 14px;
+        }
+        
+        .fb-arrow {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s;
+        }
+        
+        .fb-arrow svg {
+            width: 18px;
+            height: 18px;
+            stroke: #666;
+            stroke-width: 2;
+            fill: none;
+        }
+        
+        .fb-arrow.up {
+            transform: rotate(180deg);
+        }
+        
+        .fb-panel-content {
+            padding: 0 16px 20px;
+            font-size: 16px;
+            line-height: 1.8;
+            color: #222;
+            display: none;
+        }
+        
+        .fb-panel-content.show {
+            display: block;
+        }
+        
+        .fb-highlight-wrapper {
+            display: inline-block;
+            position: relative;
+        }
+        
+        .fb-highlight-word {
+            color: #ff6a3c;
+            font-weight: 500;
+            display: inline-block;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .fb-highlight-word::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: 5px;
+            width: 100%;
+            height: 5px;
+            background-color: #ffd6c8;
+            z-index: -1;
+        }
+        
+        .fb-score-label {
+            position: absolute;
+            left: 100%;
+            bottom: -6px;
+            font-size: 11px;
+            color: #ff6a3c;
+            font-weight: 600;
+            line-height: 1;
+            white-space: nowrap;
+            margin-left: 2px;
+        }
+        
+        .fb-score-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 16px;
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .fb-trophy-icon {
+            width: 36px;
+            height: 36px;
+            background: #ff6a3c;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 18px;
+        }
+        
+        .fb-score-text {
+            color: #ff6a3c;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        
+        .fb-current-score {
+            color: #ff3b30;
+            font-size: 28px;
+            font-weight: 600;
+            margin-left: auto;
+        }
+        
+        .fb-max-score {
+            color: #999;
+            font-size: 16px;
+        }
+        
+        .fb-diagnosis-title {
+            color: #4285f4;
+            background: #e8f0fe;
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+        
+        .fb-analysis-section {
+            margin: 16px 0;
+        }
+        
+        .fb-analysis-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #333;
+        }
+        
+        .fb-analysis-title .fb-analysis-score {
+            color: #ff6a3c;
+            font-weight: 600;
+            margin: 0 4px;
+        }
+        
+        .fb-analysis-cards {
+            position: relative;
+            padding-left: 24px;
+        }
+        
+        .fb-analysis-cards::before {
+            content: '';
+            position: absolute;
+            left: 10px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: repeating-linear-gradient(to bottom, #ddd 0, #ddd 4px, transparent 4px, transparent 8px);
+        }
+        
+        .fb-blue-card {
+            background: #eef4ff;
+            border-radius: 12px;
+            padding: 14px 16px;
+            margin: 10px 0;
+            position: relative;
+        }
+        
+        .fb-blue-card::before {
+            content: '';
+            position: absolute;
+            left: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 10px;
+            height: 10px;
+            background: #fff;
+            border: 2px solid #ddd;
+            border-radius: 50%;
+        }
+        
+        .fb-blue-card:last-child::after {
+            content: '';
+            position: absolute;
+            left: -14px;
+            top: calc(50% + 7px);
+            width: 8px;
+            height: 100px;
+            background: #fff;
+        }
+        
+        .fb-blue-card {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .fb-blue-card:hover {
+            transform: translateX(4px);
+            background: #e0e8ff;
+        }
+        
+        .fb-blue-card:hover::before {
+            border-color: #4285f4;
+            background: #e0e8ff;
+        }
+        
+        .fb-blue-card:hover .fb-card-arrow {
+            border-color: #ff6a3c;
+            background: #fff5f0;
+        }
+        
+        .fb-blue-card:hover .fb-card-arrow svg {
+            stroke: #ff6a3c;
+        }
+        
+        #scoreAnalysisModal .modal-b {
+            font-size: 15px;
+            line-height: 1.8;
+            color: #333;
+        }
+        
+        #scoreAnalysisModal .modal-b p {
+            margin-bottom: 12px;
+        }
+        
+        #scoreAnalysisModal .modal-b h4 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #222;
+        }
+        
+        #scoreAnalysisModal .modal-b ul, 
+        #scoreAnalysisModal .modal-b ol {
+            margin-left: 20px;
+            margin-bottom: 12px;
+        }
+        
+        #scoreAnalysisModal .modal-b li {
+            margin-bottom: 6px;
+        }
+        
+        #scoreAnalysisModal .modal-b strong {
+            color: #ff6a3c;
+        }
+        
+        .fb-card-content {
+            font-size: 14px;
+            color: #333;
+            line-height: 1.8;
+            margin-bottom: 8px;
+        }
+        
+        .fb-card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+        }
+        
+        .fb-card-score {
+            color: #ff6a3c;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .fb-card-score span {
+            color: #999;
+            font-weight: 400;
+        }
+        
+        .fb-card-arrow {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 1.5px solid #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .fb-card-arrow:hover {
+            border-color: #ff6a3c;
+            background: #fff5f0;
+        }
+        
+        .fb-card-arrow svg {
+            width: 12px;
+            height: 12px;
+            stroke: #999;
+            stroke-width: 2.5;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        
+        .fb-card-arrow:hover svg {
+            stroke: #ff6a3c;
+        }
+        
+        .fb-analysis-score {
+            color: #ff6a3c;
+            font-weight: 600;
+        }
+        
+        .answer-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .answer-list li {
+            padding: 8px 0;
+            line-height: 1.8;
+        }
     </style>
 </head>
 <body>
@@ -2241,96 +2605,183 @@
 
             <!-- 批改内容区域（初始隐藏） -->
             <div class="review-content" id="reviewContent" style="display: none;">
+                <!-- 上岸仓批改展示 -->
+                <div id="shangancangReviewContent">
+                    <!-- 我的作答 -->
+                    <div class="review-section" id="sgMyAnswerSection">
+                        <div class="section-header">
+                            <span class="section-icon">📝</span>
+                            <span class="section-title">我的作答</span>
+                        </div>
+                        <div class="review-card">
+                            <div class="review-card-content" id="sgMyAnswerContent" style="line-height: 2.2;">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 1. 得分卡片 -->
+                    <div class="score-card" id="scoreCard">
+                        <div class="score-card-header">
+                            <div class="score-card-label">本题得分</div>
+                            <div class="score-card-score">
+                                <span id="scoreValue">-</span><span class="max-score">/<span id="maxScoreValue">15</span>分</span>
+                            </div>
+                        </div>
+                        <div class="score-card-info" id="scoreCardInfo">
+                            暂无要点描述
+                        </div>
+                        <div class="score-card-stats">
+                            <div class="score-stat-item">
+                                <div class="score-stat-value" id="fullScoreCount">-</div>
+                                <div class="score-stat-label">完全得分</div>
+                            </div>
+                            <div class="score-stat-item">
+                                <div class="score-stat-value" id="partialScoreCount">-</div>
+                                <div class="score-stat-label">部分得分</div>
+                            </div>
+                            <div class="score-stat-item">
+                                <div class="score-stat-value" id="missCount">-</div>
+                                <div class="score-stat-label">遗漏作答</div>
+                            </div>
+                        </div>
+                    </div>
 
-                <!-- 1. 得分卡片 -->
-                <div class="score-card" id="scoreCard">
-                    <div class="score-card-header">
-                        <div class="score-card-label">本题得分</div>
-                        <div class="score-card-score">
-                            <span id="scoreValue">-</span><span class="max-score">/<span id="maxScoreValue">15</span>分</span>
+                    <!-- 2. 整体点评卡片 -->
+                    <div class="review-section" id="overallReviewSection">
+                        <div class="section-header">
+                            <span class="section-icon">👨‍🏫</span>
+                            <span class="section-title">整体点评</span>
+                        </div>
+
+                        <!-- 本次得分与表现 -->
+                        <div class="review-card">
+                            <div class="review-card-header">
+                                <span class="card-icon">📊</span>
+                                <span class="card-title">本次得分与表现</span>
+                            </div>
+                            <div class="review-card-content" id="overallReview">
+                            </div>
+                        </div>
+
+                        <!-- 下一步提升方向 -->
+                        <div class="review-card">
+                            <div class="review-card-header">
+                                <span class="card-icon">⬆️</span>
+                                <span class="card-title">下一步提升方向</span>
+                            </div>
+                            <div class="review-card-content" id="improveDirection">
+                            </div>
                         </div>
                     </div>
-                    <div class="score-card-info">
-                        本题共 <span id="totalPoints">-</span> 个要点，要点分 <span id="pointScore">-</span> 分
-                    </div>
-                    <div class="score-card-stats">
-                        <div class="score-stat-item">
-                            <div class="score-stat-value" id="fullScoreCount">-</div>
-                            <div class="score-stat-label">完全得分</div>
+
+                    <!-- 3. 详细作答点评卡片 -->
+                    <div class="review-section" id="detailReviewSection">
+                        <div class="section-header">
+                            <span class="section-icon">📝</span>
+                            <span class="section-title">详细作答点评</span>
                         </div>
-                        <div class="score-stat-item">
-                            <div class="score-stat-value" id="partialScoreCount">-</div>
-                            <div class="score-stat-label">部分得分</div>
+
+                        <!-- Tab 切换 -->
+                        <div class="review-tabs">
+                            <div class="review-tab active" data-tab="miss">遗漏要点</div>
+                            <div class="review-tab" data-tab="partial">部分得分要点</div>
+                            <div class="review-tab" data-tab="logic">作答逻辑</div>
                         </div>
-                        <div class="score-stat-item">
-                            <div class="score-stat-value" id="missCount">-</div>
-                            <div class="score-stat-label">遗漏作答</div>
+
+                        <!-- 遗漏要点 -->
+                        <div class="review-tab-content active" id="missTab">
+                            <div class="review-item" id="missContent">
+                            </div>
+                        </div>
+
+                        <!-- 部分得分要点 -->
+                        <div class="review-tab-content" id="partialTab">
+                            <div class="review-item" id="partialContent">
+                            </div>
+                        </div>
+
+                        <!-- 作答逻辑 -->
+                        <div class="review-tab-content" id="logicTab">
+                            <div class="review-item" id="logicContent">
+                            </div>
                         </div>
                     </div>
                 </div>
-
-                <!-- 2. 整体点评卡片 -->
-                <div class="review-section" id="overallReviewSection">
-                    <div class="section-header">
-                        <span class="section-icon">👨‍🏫</span>
-                        <span class="section-title">整体点评</span>
-                    </div>
-
-                    <!-- 本次得分与表现 -->
-                    <div class="review-card">
-                        <div class="review-card-header">
-                            <span class="card-icon">📊</span>
-                            <span class="card-title">本次得分与表现</span>
+                
+                <!-- 粉笔批改展示 -->
+                <div id="fenbiReviewContent" style="display: none;">
+                    <!-- 1. 我的作答 -->
+                    <div class="fb-collapse-panel">
+                        <div class="fb-panel-header" onclick="toggleFbPanel(this)">
+                            <div class="fb-header-left">
+                                <div class="fb-switch-icon">✍️</div>
+                                <div class="fb-panel-title">我的作答</div>
+                            </div>
+                            <div class="fb-header-right">
+                                <span id="fbTotalScore">-</span>
+                                <span class="fb-arrow up"><svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6"/></svg></span>
+                            </div>
                         </div>
-                        <div class="review-card-content" id="overallReview">
-                            <!-- 动态填充 -->
-                        </div>
-                    </div>
-
-                    <!-- 下一步提升方向 -->
-                    <div class="review-card">
-                        <div class="review-card-header">
-                            <span class="card-icon">⬆️</span>
-                            <span class="card-title">下一步提升方向</span>
-                        </div>
-                        <div class="review-card-content" id="improveDirection">
-                            <!-- 动态填充 -->
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 3. 详细作答点评卡片 -->
-                <div class="review-section" id="detailReviewSection">
-                    <div class="section-header">
-                        <span class="section-icon">📝</span>
-                        <span class="section-title">详细作答点评</span>
-                    </div>
-
-                    <!-- Tab 切换 -->
-                    <div class="review-tabs">
-                        <div class="review-tab active" data-tab="miss">遗漏要点</div>
-                        <div class="review-tab" data-tab="partial">部分得分要点</div>
-                        <div class="review-tab" data-tab="logic">作答逻辑</div>
-                    </div>
-
-                    <!-- 遗漏要点 -->
-                    <div class="review-tab-content active" id="missTab">
-                        <div class="review-item" id="missContent">
-                            <!-- 动态填充 -->
+                        <div class="fb-panel-content show">
+                            <div id="fbMyAnswerContent"></div>
+                            
+                            <div class="fb-score-card">
+                                <div class="fb-trophy-icon">🏆</div>
+                                <span class="fb-score-text">总得分：</span>
+                                <span class="fb-current-score" id="fbCurrentScore">-</span>
+                                <span class="fb-max-score" id="fbMaxScoreLabel">/-分</span>
+                            </div>
+                            
+                            <div class="fb-diagnosis-title">优缺点诊断</div>
+                            <div id="fbDiagnosisContent"></div>
                         </div>
                     </div>
-
-                    <!-- 部分得分要点 -->
-                    <div class="review-tab-content" id="partialTab">
-                        <div class="review-item" id="partialContent">
-                            <!-- 动态填充 -->
+                    
+                    <!-- 2. 参考答案 -->
+                    <div class="fb-collapse-panel">
+                        <div class="fb-panel-header" onclick="toggleFbPanel(this)">
+                            <div class="fb-header-left">
+                                <div class="fb-switch-icon">📖</div>
+                                <div class="fb-panel-title">参考答案</div>
+                            </div>
+                            <div class="fb-header-right">
+                                <span class="fb-arrow"><svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6"/></svg></span>
+                            </div>
+                        </div>
+                        <div class="fb-panel-content">
+                            <div id="fbReferenceAnswer"></div>
                         </div>
                     </div>
-
-                    <!-- 作答逻辑 -->
-                    <div class="review-tab-content" id="logicTab">
-                        <div class="review-item" id="logicContent">
-                            <!-- 动态填充 -->
+                    
+                    <!-- 3. 得分分析 -->
+                    <div class="fb-collapse-panel">
+                        <div class="fb-panel-header" onclick="toggleFbPanel(this)">
+                            <div class="fb-header-left">
+                                <div class="fb-switch-icon">📊</div>
+                                <div class="fb-panel-title">得分分析</div>
+                            </div>
+                            <div class="fb-header-right">
+                                <span class="fb-arrow"><svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6"/></svg></span>
+                            </div>
+                        </div>
+                        <div class="fb-panel-content">
+                            <div id="fbScoreAnalysisContent"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- 4. 答题演示 -->
+                    <div class="fb-collapse-panel">
+                        <div class="fb-panel-header" onclick="toggleFbPanel(this)">
+                            <div class="fb-header-left">
+                                <div class="fb-switch-icon">🎯</div>
+                                <div class="fb-panel-title">答题演示</div>
+                            </div>
+                            <div class="fb-header-right">
+                                <span class="fb-arrow"><svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6"/></svg></span>
+                            </div>
+                        </div>
+                        <div class="fb-panel-content">
+                            <div id="fbAnswerDemoContent"></div>
                         </div>
                     </div>
                 </div>
@@ -2394,6 +2845,18 @@
         <img id="modalImage" src="" alt="放大图片">
     </div>
     <div class="image-modal-hint">🔍 双指缩放 / 滚轮缩放 · 拖拽移动 · 点击关闭</div>
+</div>
+
+<!-- 得分分析详情弹窗 -->
+<div class="modal-overlay" id="scoreAnalysisModal" style="display:none;align-items:center;justify-content:center;z-index:2000;">
+    <div class="modal-panel" style="height:auto;max-height:80%;max-width:500px;width:90%;border-radius:20px;">
+        <div class="modal-h">
+            <div class="modal-t" style="flex:1;text-align:center;">得分分析</div>
+            <div class="modal-x" id="scoreAnalysisModalX">×</div>
+        </div>
+        <div class="modal-b" id="scoreAnalysisModalBody" style="max-height:60vh;overflow-y:auto;">
+        </div>
+    </div>
 </div>
 
 <script>
@@ -2726,54 +3189,62 @@ if (reviewContent) {
 resetModalAnimations();
 }
 
-function openModalWithAnimation(title, reviewData) {
+function openModalWithAnimation(title, reviewData, skipAnimation) {
 document.getElementById('modal-t').textContent = title;
 
 // 显示加载动画，隐藏批改内容
 const gradingLoading = document.getElementById('gradingLoading');
 const reviewContent = document.getElementById('reviewContent');
 
-if (gradingLoading) {
-    gradingLoading.style.display = 'block';
-    gradingLoading.classList.add('show');
-}
-if (reviewContent) {
-    reviewContent.style.display = 'none';
-}
-
-// 先填充数据（但不可见）
-if (reviewData) {
-    fillReviewData(reviewData);
+if (skipAnimation) {
+    // 粉笔批改：直接显示内容，跳过动画
+    if (gradingLoading) {
+        gradingLoading.style.display = 'none';
+        gradingLoading.classList.remove('show');
+    }
+    if (reviewContent) {
+        reviewContent.style.display = 'block';
+    }
+    if (reviewData) {
+        fillReviewData(reviewData);
+    } else {
+        fillReviewData(null);
+    }
+    modal.style.display = 'flex';
+    setTimeout(() => modal.classList.add('on'), 10);
 } else {
-    fillReviewData(null);
+    // 上岸仓批改：显示加载动画
+    if (gradingLoading) {
+        gradingLoading.style.display = 'block';
+        gradingLoading.classList.add('show');
+    }
+    if (reviewContent) {
+        reviewContent.style.display = 'none';
+    }
+    if (reviewData) {
+        fillReviewData(reviewData);
+    } else {
+        fillReviewData(null);
+    }
+    modal.style.display = 'flex';
+    setTimeout(() => modal.classList.add('on'), 10);
+    
+    if (gradingTimer) clearTimeout(gradingTimer);
+    gradingTimer = setTimeout(showResult, 3000);
+    runStage1();
 }
-
-// 显示弹窗
-modal.style.display = 'flex';
-setTimeout(() => modal.classList.add('on'), 10);
-
-// 清除之前的定时器
-if (gradingTimer) clearTimeout(gradingTimer);
-
-// 3秒后自动显示批改结果
-gradingTimer = setTimeout(showResult, 3000);
-
-// 开始动画
-runStage1();
 }
 // 体验批改按钮
 document.getElementById('entryA').addEventListener('click', function() {
-    // 批改A = 用户选择答案的上岸仓批改
-    const reviewKey = selectedAnswer.toLowerCase() + '_shangancang';
-    const reviewData = currentQuestion && currentQuestion.reviews ? currentQuestion.reviews[reviewKey] : null;
-    openModalWithAnimation('批改 A 详情', reviewData);
+    // 批改A = 上岸仓批改（有动画）
+    const reviewData = currentQuestion && currentQuestion.reviews ? currentQuestion.reviews.shangancang : null;
+    openModalWithAnimation('批改 A 详情', reviewData, false);
 });
 
 document.getElementById('entryB').addEventListener('click', function() {
-    // 批改B = 用户选择答案的粉笔批改
-    const reviewKey = selectedAnswer.toLowerCase() + '_fenbi';
-    const reviewData = currentQuestion && currentQuestion.reviews ? currentQuestion.reviews[reviewKey] : null;
-    openModalWithAnimation('批改 B 详情', reviewData);
+    // 批改B = 粉笔批改（无动画）
+    const reviewData = currentQuestion && currentQuestion.reviews ? currentQuestion.reviews.fenbi : null;
+    openModalWithAnimation('批改 B 详情', reviewData, true);
 });
 
 document.getElementById('modal-x').addEventListener('click', function(e) {
@@ -2825,128 +3296,275 @@ if (modalBody) {
 function fillReviewData(review) {
 console.log('fillReviewData 收到的数据:', review);
 
+// 判断批改类型：根据 review_style 字段判断
+const isFenbi = review && review.review_style === 'fenbi';
+const shangancangContent = document.getElementById('shangancangReviewContent');
+const fenbiContent = document.getElementById('fenbiReviewContent');
+
+// 切换显示区域
+if (shangancangContent) shangancangContent.style.display = isFenbi ? 'none' : 'block';
+if (fenbiContent) fenbiContent.style.display = isFenbi ? 'block' : 'none';
+
 if (!review) {
-    // 没有批改数据
-    document.getElementById('scoreValue').textContent = '-';
-    document.getElementById('maxScoreValue').textContent = '15';
-    document.getElementById('fullScoreCount').textContent = '-';
-    document.getElementById('partialScoreCount').textContent = '-';
-    document.getElementById('missCount').textContent = '-';
-    document.getElementById('totalPoints').textContent = '-';
-    document.getElementById('pointScore').textContent = '-';
-    document.getElementById('overallReview').innerHTML = '暂无批改数据';
-    document.getElementById('improveDirection').innerHTML = '';
-    document.getElementById('missContent').innerHTML = '';
-    document.getElementById('partialContent').innerHTML = '';
-    document.getElementById('logicContent').innerHTML = '';
+    if (!isFenbi) {
+        document.getElementById('sgMyAnswerContent').innerHTML = '暂无用户作答';
+        document.getElementById('scoreValue').textContent = '-';
+        document.getElementById('maxScoreValue').textContent = '15';
+        document.getElementById('scoreCardInfo').textContent = '暂无要点描述';
+        document.getElementById('fullScoreCount').textContent = '-';
+        document.getElementById('partialScoreCount').textContent = '-';
+        document.getElementById('missCount').textContent = '-';
+        document.getElementById('overallReview').innerHTML = '暂无批改数据';
+        document.getElementById('improveDirection').innerHTML = '';
+        document.getElementById('missContent').innerHTML = '';
+        document.getElementById('partialContent').innerHTML = '';
+        document.getElementById('logicContent').innerHTML = '';
+    } else {
+        document.getElementById('fbCurrentScore').textContent = '-';
+        document.getElementById('fbMaxScoreLabel').textContent = '/-分';
+        document.getElementById('fbTotalScore').textContent = '-分';
+        document.getElementById('fbMyAnswerContent').innerHTML = '暂无用户作答';
+        document.getElementById('fbDiagnosisContent').innerHTML = '暂无诊断';
+        document.getElementById('fbReferenceAnswer').innerHTML = '暂无参考答案';
+        document.getElementById('fbScoreAnalysisContent').innerHTML = '暂无得分分析';
+        document.getElementById('fbAnswerDemoContent').innerHTML = '暂无答题演示';
+    }
     return;
 }
 
-// 获取评分信息
-const score = review.answer_total_score || 0;
-const maxScore = review.question_total_score || 15;
+if (isFenbi) {
+    // 粉笔批改数据填充
+    const fenbiData = review.fenbi_review_data || {};
+    const score = review.answer_total_score || 0;
+    const maxScore = review.question_total_score || 15;
+    
+    // 更新得分
+    document.getElementById('fbCurrentScore').textContent = score;
+    document.getElementById('fbMaxScoreLabel').textContent = '/' + maxScore + '分';
+    document.getElementById('fbTotalScore').textContent = score + '分';
+    
+    // 我的作答内容（带高亮）
+    const userAnswerText = currentQuestion.question.user_answer_text || '';
+    const highlights = fenbiData.my_answer?.highlights || [];
+    let myAnswerHtml = '<p>' + escapeHtml(userAnswerText);
+    highlights.forEach(function(h) {
+        if (h.text) {
+            const escapedText = escapeHtml(h.text);
+            const regex = new RegExp(escapeRegExp(escapedText), 'g');
+            myAnswerHtml = myAnswerHtml.replace(regex, 
+                '<span class="fb-highlight-wrapper"><span class="fb-highlight-word">' + escapedText + 
+                '</span><span class="fb-score-label">' + h.score + '分</span></span>');
+        }
+    });
+    myAnswerHtml += '</p>';
+    document.getElementById('fbMyAnswerContent').innerHTML = myAnswerHtml;
+    
+    // 优缺点诊断
+    document.getElementById('fbDiagnosisContent').innerHTML = fenbiData.my_answer?.diagnosis || '暂无诊断';
+    
+    // 参考答案
+    let refAnswerHtml = '<ul class="answer-list">';
+    if (currentQuestion.answer_a) {
+        refAnswerHtml += '<li>' + currentQuestion.answer_a.content.replace(/\n/g, '<br>') + '</li>';
+    }
+    if (currentQuestion.answer_b) {
+        refAnswerHtml += '<li>' + currentQuestion.answer_b.content.replace(/\n/g, '<br>') + '</li>';
+    }
+    refAnswerHtml += '</ul>';
+    document.getElementById('fbReferenceAnswer').innerHTML = refAnswerHtml;
+    
+    // 得分分析
+    const scoreAnalysis = fenbiData.score_analysis || [];
+    let analysisHtml = '';
+    scoreAnalysis.forEach(function(item, idx) {
+        analysisHtml += '<div class="fb-analysis-section">';
+        analysisHtml += '<div class="fb-analysis-title">' + (idx + 1) + '.' + escapeHtml(item.title) + '<span class="fb-analysis-score">' + item.score + '</span><span>/</span><span style="color:#999">' + item.max_score + '分</span></div>';
+        if (item.items && item.items.length > 0) {
+            analysisHtml += '<div class="fb-analysis-cards">';
+            item.items.forEach(function(subItem, subIdx) {
+                var detailContent = subItem.detail || '';
+                analysisHtml += '<div class="fb-blue-card" onclick="openScoreAnalysisDetail(\'' + encodeURIComponent(detailContent) + '\')">';
+                analysisHtml += '<div class="fb-card-content">' + escapeHtml(subItem.content) + '</div>';
+                analysisHtml += '<div class="fb-card-footer">';
+                analysisHtml += '<span class="fb-card-score">' + subItem.score + '<span>/' + subItem.max_score + '分</span></span>';
+                analysisHtml += '<div class="fb-card-arrow"><svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 18l6-6-6-6"/></svg></div>';
+                analysisHtml += '</div>';
+                analysisHtml += '</div>';
+            });
+            analysisHtml += '</div>';
+        }
+        analysisHtml += '</div>';
+    });
+    document.getElementById('fbScoreAnalysisContent').innerHTML = analysisHtml || '暂无得分分析';
+    
+    // 答题演示
+    document.getElementById('fbAnswerDemoContent').innerHTML = fenbiData.answer_demo || '暂无答题演示';
+    
+} else {
+    // 上岸仓批改数据填充
+    
+    // 我的作答内容（带高亮）
+    const sgData = review.shangancang_review_data || {};
+    const sgUserAnswerText = currentQuestion.question.user_answer_text || '';
+    const sgHighlights = sgData.my_answer?.highlights || [];
+    let sgMyAnswerHtml = '<p>' + escapeHtml(sgUserAnswerText);
+    sgHighlights.forEach(function(h) {
+        if (h.text) {
+            const escapedText = escapeHtml(h.text);
+            const regex = new RegExp(escapeRegExp(escapedText), 'g');
+            sgMyAnswerHtml = sgMyAnswerHtml.replace(regex, 
+                '<span class="fb-highlight-wrapper"><span class="fb-highlight-word">' + escapedText + 
+                '</span><span class="fb-score-label">' + h.score + '分</span></span>');
+        }
+    });
+    sgMyAnswerHtml += '</p>';
+    document.getElementById('sgMyAnswerContent').innerHTML = sgMyAnswerHtml || '暂无用户作答';
+    
+    const score = review.answer_total_score || 0;
+    const maxScore = review.question_total_score || 15;
 
-// 获取要点统计
-const keyStats = review.key_points_stats || {};
-const totalPoints = keyStats.total || 0;
-const pointScore = keyStats.point_score || 0;
-const fullyScored = keyStats.fully_scored || 0;
-const partiallyScored = keyStats.partially_scored || 0;
-const missing = keyStats.missing || 0;
+    const keyStats = review.key_points_stats || {};
+    const totalPoints = keyStats.total || 0;
+    const pointScore = keyStats.point_score || 0;
+    const fullyScored = keyStats.fully_scored || 0;
+    const partiallyScored = keyStats.partially_scored || 0;
+    const missing = keyStats.missing || 0;
 
-// 更新得分卡片 - 顶部得分
-const scoreValue = document.getElementById('scoreValue');
-const maxScoreValue = document.getElementById('maxScoreValue');
+    const scoreValue = document.getElementById('scoreValue');
+    const maxScoreValue = document.getElementById('maxScoreValue');
 
-if (scoreValue) scoreValue.textContent = score;
-if (maxScoreValue) maxScoreValue.textContent = maxScore;
+    if (scoreValue) scoreValue.textContent = score;
+    if (maxScoreValue) maxScoreValue.textContent = maxScore;
 
-// 更新得分卡片 - 要点统计数字（仅数字，不加单位）
-const fullScoreCount = document.getElementById('fullScoreCount');
-const partialScoreCount = document.getElementById('partialScoreCount');
-const missCountEl = document.getElementById('missCount');
+    // 要点描述文案
+    const scoreCardInfo = document.getElementById('scoreCardInfo');
+    if (scoreCardInfo) {
+        scoreCardInfo.textContent = review.points_description || '暂无要点描述';
+    }
 
-if (fullScoreCount) fullScoreCount.textContent = fullyScored;
-if (partialScoreCount) partialScoreCount.textContent = partiallyScored;
-if (missCountEl) missCountEl.textContent = missing;
+    const fullScoreCount = document.getElementById('fullScoreCount');
+    const partialScoreCount = document.getElementById('partialScoreCount');
+    const missCountEl = document.getElementById('missCount');
 
-// 更新得分卡片 - 信息描述
-const totalPointsEl = document.getElementById('totalPoints');
-const pointScoreEl = document.getElementById('pointScore');
+    if (fullScoreCount) fullScoreCount.textContent = fullyScored + '个';
+    if (partialScoreCount) partialScoreCount.textContent = partiallyScored + '个';
+    if (missCountEl) missCountEl.textContent = missing + '个';
 
-if (totalPointsEl) totalPointsEl.textContent = totalPoints;
-if (pointScoreEl) pointScoreEl.textContent = pointScore;
+    const overallReview = document.getElementById('overallReview');
+    if (overallReview) {
+        const summary = review.performance_summary || '暂无评价';
+        overallReview.innerHTML = summary.replace(/\n/g, '<br>');
+    }
 
-// 填充整体点评（使用新字段名 performance_summary）
-const overallReview = document.getElementById('overallReview');
-if (overallReview) {
-    const summary = review.performance_summary || '暂无评价';
-    overallReview.innerHTML = summary.replace(/\n/g, '<br>');
-}
+    const improveDirection = document.getElementById('improveDirection');
+    if (improveDirection) {
+        const nextSteps = review.next_steps || '';
+        improveDirection.innerHTML = nextSteps.replace(/\n/g, '<br>') || '暂无提升建议';
+    }
 
-// 填充提升方向（使用新字段名 next_steps）
-const improveDirection = document.getElementById('improveDirection');
-if (improveDirection) {
-    const nextSteps = review.next_steps || '';
-    improveDirection.innerHTML = nextSteps.replace(/\n/g, '<br>') || '暂无提升建议';
-}
+    const missContent = document.getElementById('missContent');
+    if (missContent) {
+        const missPoints = review.missing_points || [];
+        if (missPoints.length > 0) {
+            let html = '';
+            missPoints.forEach(function(point, idx) {
+                html += '<div class="review-item-title">要点' + (idx + 1) + '：' + (point.title || '未命名') + '</div>';
+                if (point.analysis) {
+                    html += '<div class="review-item-label cause">原因分析</div>';
+                    html += '<div class="review-item-content">' + point.analysis.replace(/\n/g, '<br>') + '</div>';
+                }
+                if (point.suggestion) {
+                    html += '<div class="review-item-label suggest">改进建议</div>';
+                    html += '<div class="review-item-content">' + point.suggestion.replace(/\n/g, '<br>') + '</div>';
+                }
+            });
+            missContent.innerHTML = html;
+        } else {
+            missContent.innerHTML = '<div style="color: var(--text-light); text-align: center; padding: 20px;">✓ 无遗漏要点，表现优秀！</div>';
+        }
+    }
 
-// 填充详细点评 - 遗漏要点（使用新字段名 missing_points，数组项使用 analysis/suggestion）
-const missContent = document.getElementById('missContent');
-if (missContent) {
-    const missPoints = review.missing_points || [];
-    if (missPoints.length > 0) {
-        let html = '';
-        missPoints.forEach(function(point, idx) {
-            html += '<div class="review-item-title">要点' + (idx + 1) + '：' + (point.title || '未命名') + '</div>';
-            if (point.analysis) {
-                html += '<div class="review-item-label cause">原因分析</div>';
-                html += '<div class="review-item-content">' + point.analysis.replace(/\n/g, '<br>') + '</div>';
-            }
-            if (point.suggestion) {
-                html += '<div class="review-item-label suggest">改进建议</div>';
-                html += '<div class="review-item-content">' + point.suggestion.replace(/\n/g, '<br>') + '</div>';
-            }
-        });
-        missContent.innerHTML = html;
-    } else {
-        missContent.innerHTML = '<div style="color: var(--text-light); text-align: center; padding: 20px;">✓ 无遗漏要点，表现优秀！</div>';
+    const partialContent = document.getElementById('partialContent');
+    if (partialContent) {
+        const partialPoints = review.partial_points || [];
+        if (partialPoints.length > 0) {
+            let html = '';
+            partialPoints.forEach(function(point, idx) {
+                html += '<div class="review-item-title">要点' + (idx + 1) + '：' + (point.title || '未命名') + '</div>';
+                if (point.analysis) {
+                    html += '<div class="review-item-label cause">原因分析</div>';
+                    html += '<div class="review-item-content">' + point.analysis.replace(/\n/g, '<br>') + '</div>';
+                }
+                if (point.suggestion) {
+                    html += '<div class="review-item-label suggest">改进建议</div>';
+                    html += '<div class="review-item-content">' + point.suggestion.replace(/\n/g, '<br>') + '</div>';
+                }
+            });
+            partialContent.innerHTML = html;
+        } else {
+            partialContent.innerHTML = '<div style="color: var(--text-light); text-align: center; padding: 20px;">✓ 无部分得分要点，全部满分！</div>';
+        }
+    }
+
+    const logicContent = document.getElementById('logicContent');
+    if (logicContent) {
+        const logicAnalysis = review.logic_analysis || '';
+        logicContent.innerHTML = logicAnalysis.replace(/\n/g, '<br>') || '<div style="color: var(--text-light); text-align: center; padding: 20px;">暂无作答逻辑评价</div>';
     }
 }
 
-// 填充详细点评 - 部分得分要点（使用新字段名 partial_points，数组项使用 analysis/suggestion）
-const partialContent = document.getElementById('partialContent');
-if (partialContent) {
-    const partialPoints = review.partial_points || [];
-    if (partialPoints.length > 0) {
-        let html = '';
-        partialPoints.forEach(function(point, idx) {
-            html += '<div class="review-item-title">要点' + (idx + 1) + '：' + (point.title || '未命名') + '</div>';
-            if (point.analysis) {
-                html += '<div class="review-item-label cause">原因分析</div>';
-                html += '<div class="review-item-content">' + point.analysis.replace(/\n/g, '<br>') + '</div>';
-            }
-            if (point.suggestion) {
-                html += '<div class="review-item-label suggest">改进建议</div>';
-                html += '<div class="review-item-content">' + point.suggestion.replace(/\n/g, '<br>') + '</div>';
-            }
-        });
-        partialContent.innerHTML = html;
-    } else {
-        partialContent.innerHTML = '<div style="color: var(--text-light); text-align: center; padding: 20px;">✓ 无部分得分要点，全部满分！</div>';
-    }
-}
-
-// 填充详细点评 - 作答逻辑（使用新字段名 logic_analysis）
-const logicContent = document.getElementById('logicContent');
-if (logicContent) {
-    const logicAnalysis = review.logic_analysis || '';
-    logicContent.innerHTML = logicAnalysis.replace(/\n/g, '<br>') || '<div style="color: var(--text-light); text-align: center; padding: 20px;">暂无作答逻辑评价</div>';
-}
-
-// 重置 Modal 动画
 resetModalAnimations();
 }
+
+function escapeHtml(text) {
+if (!text) return '';
+const div = document.createElement('div');
+div.textContent = text;
+return div.innerHTML;
+}
+
+function escapeRegExp(string) {
+return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function toggleFbPanel(el) {
+        const content = el.nextElementSibling;
+        const arrow = el.querySelector('.fb-arrow');
+        const isExpanded = content.classList.contains('show');
+        content.classList.toggle('show');
+        if (isExpanded) {
+            arrow.classList.remove('up');
+        } else {
+            arrow.classList.add('up');
+        }
+    }
+    
+    // 得分分析详情弹窗
+    const scoreAnalysisModal = document.getElementById('scoreAnalysisModal');
+    
+    function openScoreAnalysisDetail(detailEncoded) {
+        const detail = decodeURIComponent(detailEncoded);
+        const modalBody = document.getElementById('scoreAnalysisModalBody');
+        
+        if (detail && detail.trim() !== '') {
+            modalBody.innerHTML = detail;
+        } else {
+            modalBody.innerHTML = '<div style="text-align:center;color:#999;padding:30px;">暂无详细分析</div>';
+        }
+        
+        scoreAnalysisModal.style.display = 'flex';
+        setTimeout(() => scoreAnalysisModal.classList.add('on'), 10);
+    }
+    
+    function closeScoreAnalysisModal() {
+        scoreAnalysisModal.classList.remove('on');
+        setTimeout(() => scoreAnalysisModal.style.display = 'none', 300);
+    }
+    
+    document.getElementById('scoreAnalysisModalX').addEventListener('click', closeScoreAnalysisModal);
+    scoreAnalysisModal.addEventListener('click', function(e) {
+        if (e.target === scoreAnalysisModal) closeScoreAnalysisModal();
+    });
 
 function closeModal() {
         modal.classList.remove('on');

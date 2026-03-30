@@ -65,6 +65,16 @@ def toggle_question_status(question_id):
     except AppException as e:
         return error(e.message, e.code)
 
+@admin_bp.route('/question/<int:question_id>', methods=['DELETE'])
+@login_required
+def delete_question(question_id):
+    """删除题目"""
+    try:
+        QuestionService.delete(question_id)
+        return success({'message': '删除成功'})
+    except AppException as e:
+        return error(e.message, e.code)
+
 # ==================== 答案管理 ====================
 
 @admin_bp.route('/answer', methods=['POST'])
@@ -107,11 +117,16 @@ def create_or_update_review():
         return error('数据不能为空')
     
     try:
+        question_id = data.get('question_id')
+        review_style = data.get('review_style', 'shangancang')
+        
+        other_data = {k: v for k, v in data.items() 
+                      if k not in ['question_id', 'review_style']}
+        
         review = AnswerReviewService.create_or_update(
-            question_id=data.get('question_id'),
-            answer_version=data.get('answer_version'),
-            review_style=data.get('review_style', 'shangancang'),
-            **data
+            question_id=question_id,
+            review_style=review_style,
+            **other_data
         )
         return success({'review': review})
     except AppException as e:

@@ -60,6 +60,7 @@ class Question(Base):
     score = Column(Integer, default=15)  # 分值
     status = Column(String(20), default='active')  # active/inactive
     answer_image = Column(Text, nullable=True)  # 用户作答图片 URL
+    user_answer_text = Column(Text, nullable=True)  # 用户作答文字版
     created_at = Column(DateTime, default=datetime.now)
     updated_at = Column(DateTime, default=datetime.now, onupdate=datetime.now)
     
@@ -72,6 +73,7 @@ class Question(Base):
             'score': self.score,
             'status': self.status,
             'answer_image': self.answer_image,
+            'user_answer_text': self.user_answer_text,
             'created_at': self.created_at.strftime('%Y-%m-%d %H:%M:%S'),
             'updated_at': self.updated_at.strftime('%Y-%m-%d %H:%M:%S')
         }
@@ -98,12 +100,11 @@ class Answer(Base):
         }
 
 class AnswerReview(Base):
-    """答案批改详情表（新版）"""
+    """答案批改详情表"""
     __tablename__ = 'answer_reviews'
     
     id = Column(Integer, primary_key=True, autoincrement=True)
     question_id = Column(Integer, nullable=False)  # 关联题目 ID
-    answer_version = Column(String(10), nullable=False)  # A 或 B（关联哪个答案）
     review_style = Column(String(20), nullable=False, default='shangancang')  # 批改风格：shangancang/fenbi
     
     # 评分信息
@@ -135,6 +136,30 @@ class AnswerReview(Base):
     # 作答逻辑评价
     logic_analysis = Column(Text, default="")
     
+# 粉笔批改特有数据 (JSON)
+    # {
+    #   "my_answer": {
+    #     "highlights": [{"text": "...", "score": 0.5}, ...],
+    #     "diagnosis": "优缺点诊断（富文本）"
+    #   },
+    #   "score_analysis": [
+    #     {"title": "...", "score": 0.5, "max_score": 3, "items": [...]}
+    #   ],
+    #   "answer_demo": "答题演示（富文本）"
+    # }
+    fenbi_review_data = Column(JSON, nullable=True)
+    
+    # 上岸仓批改特有数据 (JSON)
+    # {
+    #   "my_answer": {
+    #     "highlights": [{"text": "...", "score": 0.5}, ...]
+    #   }
+    # }
+    shangancang_review_data = Column(JSON, nullable=True)
+    
+    # 要点描述文案（上岸仓批改专用）
+    points_description = Column(Text, nullable=True)
+    
     created_at = Column(DateTime, default=datetime.now)
     updated_at = Column(DateTime, default=datetime.now, onupdate=datetime.now)
     
@@ -142,7 +167,6 @@ class AnswerReview(Base):
         return {
             'id': self.id,
             'question_id': self.question_id,
-            'answer_version': self.answer_version,
             'review_style': self.review_style,
             'question_total_score': self.question_total_score,
             'answer_total_score': self.answer_total_score,
@@ -152,6 +176,9 @@ class AnswerReview(Base):
             'missing_points': self.missing_points,
             'partial_points': self.partial_points,
             'logic_analysis': self.logic_analysis,
+            'fenbi_review_data': self.fenbi_review_data,
+            'shangancang_review_data': self.shangancang_review_data,
+            'points_description': self.points_description,
             'created_at': self.created_at.strftime('%Y-%m-%d %H:%M:%S'),
             'updated_at': self.updated_at.strftime('%Y-%m-%d %H:%M:%S')
         }

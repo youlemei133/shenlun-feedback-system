@@ -468,7 +468,6 @@
         .action-dropdown {
             position: relative;
             display: inline-block;
-            z-index: 10;
         }
         
         .action-btn {
@@ -932,6 +931,235 @@
         .login-error.show { display: block; }
         
         .app-container.hidden { display: none; }
+        
+        /* ==================== 批改配置弹窗样式 ==================== */
+        .user-answer-preview {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            font-size: 14px;
+            line-height: 1.9;
+            white-space: pre-wrap;
+            color: var(--text-main);
+        }
+        
+        .config-section {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            margin-bottom: 16px;
+            overflow: hidden;
+        }
+        
+        .config-section-header {
+            display: flex;
+            align-items: center;
+            padding: 14px 16px;
+            background: var(--bg-main);
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.2s;
+        }
+        
+        .config-section-header:hover {
+            background: #f0f1f3;
+        }
+        
+        .config-section-icon {
+            font-size: 18px;
+            margin-right: 10px;
+        }
+        
+        .config-section-title {
+            flex: 1;
+            font-weight: 600;
+            font-size: 15px;
+            color: var(--text-main);
+        }
+        
+        .config-section-toggle {
+            font-size: 12px;
+            color: var(--text-light);
+            transition: transform 0.2s;
+        }
+        
+        .config-section.collapsed .config-section-toggle {
+            transform: rotate(-90deg);
+        }
+        
+        .config-section.collapsed .config-section-content {
+            display: none;
+        }
+        
+        .config-section-content {
+            padding: 16px;
+        }
+        
+        .form-label-sm {
+            display: block;
+            font-size: 12px;
+            color: var(--text-light);
+            margin-bottom: 4px;
+        }
+        
+        .sub-section {
+            margin-bottom: 20px;
+        }
+        
+        .sub-section:last-child {
+            margin-bottom: 0;
+        }
+        
+        .sub-section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 1px dashed var(--border);
+        }
+        
+        .sub-section-header span {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-sub);
+        }
+        
+        .data-table {
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+        }
+        
+        .data-table table {
+            width: 100%;
+            margin: 0;
+            border-collapse: collapse;
+        }
+        
+        .data-table th {
+            padding: 10px 12px;
+            font-size: 12px;
+            font-weight: 600;
+            text-align: left;
+            background: var(--bg-main);
+            color: var(--text-sub);
+        }
+        
+        .data-table td {
+            padding: 10px 12px;
+            font-size: 13px;
+            border-top: 1px solid var(--border);
+        }
+        
+        .data-table textarea {
+            width: 100%;
+            min-height: 50px;
+            padding: 8px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 13px;
+            resize: vertical;
+            font-family: inherit;
+        }
+        
+        .data-table textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        /* 富文本编辑器样式 */
+        .rich-editor {
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+        }
+        
+        .rich-editor-toolbar {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            padding: 8px 10px;
+            background: #fafbfc;
+            border-bottom: 1px solid var(--border);
+            flex-wrap: wrap;
+        }
+        
+        .toolbar-btn {
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            background: transparent;
+            cursor: pointer;
+            font-size: 13px;
+            color: var(--text-sub);
+            transition: all 0.15s;
+        }
+        
+        .toolbar-btn:hover {
+            background: #fff;
+            border-color: var(--border);
+            color: var(--text-main);
+        }
+        
+        .toolbar-btn.color-btn {
+            width: 32px;
+            font-size: 14px;
+        }
+        
+        .toolbar-divider {
+            width: 1px;
+            height: 20px;
+            background: var(--border);
+            margin: 0 6px;
+        }
+        
+        .rich-editor-content {
+            min-height: 120px;
+            padding: 14px 16px;
+            font-size: 14px;
+            line-height: 1.8;
+            color: var(--text-main);
+            background: #fff;
+            outline: none;
+            overflow-y: auto;
+            max-height: 300px;
+        }
+        
+        .rich-editor-content:focus {
+            background: #fffef8;
+        }
+        
+        .rich-editor-content:empty:before {
+            content: attr(placeholder);
+            color: var(--text-light);
+            pointer-events: none;
+        }
+        
+        .rich-editor-content h4 {
+            font-size: 15px;
+            font-weight: 600;
+            margin: 12px 0 8px 0;
+            color: #222;
+        }
+        
+        .rich-editor-content p {
+            margin: 8px 0;
+        }
+        
+        .rich-editor-content ul, 
+        .rich-editor-content ol {
+            margin: 8px 0;
+            padding-left: 24px;
+        }
+        
+        .rich-editor-content li {
+            margin: 4px 0;
+        }
     </style>
 </head>
 <body>
@@ -1176,16 +1404,15 @@
                         </div>
                         <div class="table-wrapper">
                             <table>
-                            <thead>
+                                <thead>
                                     <tr>
                                         <th>ID</th>
-                                        <th>用户</th>
-                                        <th>题目</th>
-                                        <th>答案偏好</th>
-                                        <th>批改偏好</th>
-                                        <th>原因</th>
-                                        <th>参与意愿</th>
-                                        <th>时间</th>
+                                        <th>题目名称</th>
+                                        <th>分值</th>
+                                        <th>作答图片</th>
+                                        <th>状态</th>
+                                        <th>创建时间</th>
+                                        <th>操作</th>
                                     </tr>
                                 </thead>
                                 <tbody id="questionsTable">
@@ -1420,23 +1647,30 @@
     
     <!-- 图片上传弹窗 -->
     <div class="modal-overlay" id="uploadImageModal">
-        <div class="modal">
+        <div class="modal" style="max-width: 600px;">
             <div class="modal-header">
-                <h2 class="modal-title">上传答案图片</h2>
+                <h2 class="modal-title">上传用户作答</h2>
                 <button class="modal-close" onclick="closeModal('uploadImageModal')">×</button>
             </div>
             <div class="modal-body">
-                <div class="upload-area" onclick="document.getElementById('imageInput').click()">
-                    <div class="upload-icon">📷</div>
-                    <div class="upload-text">点击或拖拽图片到此处上传</div>
-                    <div class="upload-hint">支持 PNG, JPG, GIF, WebP 格式</div>
-                    <input type="file" id="imageInput" accept="image/*" style="display:none;" onchange="previewImage(this)">
-                    <img id="previewImg" class="upload-preview" style="display:none;">
+                <div class="form-group">
+                    <label class="form-label">用户作答图片</label>
+                    <div class="upload-area" onclick="document.getElementById('imageInput').click()">
+                        <div class="upload-icon">📷</div>
+                        <div class="upload-text">点击或拖拽图片到此处上传</div>
+                        <div class="upload-hint">支持 PNG, JPG, GIF, WebP 格式</div>
+                        <input type="file" id="imageInput" accept="image/*" style="display:none;" onchange="previewImage(this)">
+                        <img id="previewImg" class="upload-preview" style="display:none;">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">用户作答文字版</label>
+                    <textarea class="form-textarea" id="userAnswerText" rows="8" placeholder="请输入用户作答的文字版内容..."></textarea>
                 </div>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-outline" onclick="closeModal('uploadImageModal')">取消</button>
-                <button class="btn btn-primary" onclick="confirmUploadImage()">上传</button>
+                <button class="btn btn-primary" onclick="confirmUploadImage()">保存</button>
             </div>
         </div>
     </div>
@@ -1469,122 +1703,308 @@
         </div>
     </div>
     
-    <!-- 批改配置弹窗（新版）-->
+    <!-- 批改配置弹窗 -->
     <div class="modal-overlay" id="reviewModal">
-        <div class="modal modal-lg" style="max-width: 900px;">
+        <div class="modal modal-lg" style="max-width: 1200px; height: 90vh;">
             <div class="modal-header">
                 <h2 class="modal-title">批改配置</h2>
                 <button class="modal-close" onclick="closeModal('reviewModal')">×</button>
             </div>
-            <div class="modal-body">
-                <!-- 版本切换 - 4个Tab -->
-                <div style="display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap;">
-                    <button class="btn btn-primary" id="reviewTabASG" onclick="switchReviewTab('A', 'shangancang')">答案A-上岸仓批改</button>
-                    <button class="btn btn-outline" id="reviewTabAFB" onclick="switchReviewTab('A', 'fenbi')">答案A-粉笔批改</button>
-                    <button class="btn btn-outline" id="reviewTabBSG" onclick="switchReviewTab('B', 'shangancang')">答案B-上岸仓批改</button>
-                    <button class="btn btn-outline" id="reviewTabBFB" onclick="switchReviewTab('B', 'fenbi')">答案B-粉笔批改</button>
-                </div>
-                
-                <!-- 评分信息 -->
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="form-label">题目总分</label>
-                        <input type="number" class="form-input" id="questionTotalScore" value="15" min="1">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">答案得分总分</label>
-                        <input type="number" class="form-input" id="answerTotalScore" value="0" min="0">
+            <div class="modal-body" style="padding: 0; display: flex; flex-direction: column; height: calc(100% - 120px);">
+                <!-- 批改风格切换 - 2个Tab -->
+                <div style="padding: 16px 20px; border-bottom: 1px solid var(--border); background: var(--bg-main);">
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn btn-primary" id="reviewTabSG" onclick="switchReviewTab('shangancang')">上岸仓批改</button>
+                        <button class="btn btn-outline" id="reviewTabFB" onclick="switchReviewTab('fenbi')">粉笔批改</button>
                     </div>
                 </div>
                 
-                <!-- 要点统计 -->
-                <div class="form-group">
-                    <label class="form-label">📊 要点统计</label>
-                    <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px;">
-                        <div>
-                            <label style="font-size: 12px; color: var(--text-light); margin-bottom: 4px; display: block;">要点个数</label>
-                            <input type="number" class="form-input" id="kpTotal" value="0" min="0">
+                <!-- 主内容区域 -->
+                <div style="flex: 1; display: flex; overflow: hidden;">
+                    <!-- 左侧：用户作答（固定） -->
+                    <div style="width: 320px; flex-shrink: 0; border-right: 1px solid var(--border); background: #fafbfc; display: flex; flex-direction: column;">
+                        <div style="padding: 12px 16px; border-bottom: 1px solid var(--border); background: #fff;">
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <span style="font-size: 16px;">📄</span>
+                                <span style="font-weight: 600; color: var(--text-main);">用户作答</span>
+                            </div>
                         </div>
-                        <div>
-                            <label style="font-size: 12px; color: var(--text-light); margin-bottom: 4px; display: block;">要点分</label>
-                            <input type="number" class="form-input" id="kpPointScore" value="0" min="0">
+                        <div id="sgUserAnswerText" class="user-answer-preview">暂无用户作答</div>
+                        <div id="fbUserAnswerText" class="user-answer-preview" style="display: none;">暂无用户作答</div>
+                    </div>
+                    
+                    <!-- 右侧：配置项（可滚动） -->
+                    <div style="flex: 1; overflow-y: auto; padding: 20px;">
+                        <!-- ==================== 上岸仓批改配置 ==================== -->
+                        <div id="shangancangForm">
+                            <!-- 基本信息区 -->
+                            <div class="config-section">
+                                <div class="config-section-header" onclick="toggleConfigSection(this)">
+                                    <span class="config-section-icon">📊</span>
+                                    <span class="config-section-title">基本信息</span>
+                                    <span class="config-section-toggle">▼</span>
+                                </div>
+                                <div class="config-section-content">
+                                    <div class="form-row">
+                                        <div class="form-group" style="flex: 1;">
+                                            <label class="form-label">题目总分</label>
+                                            <input type="number" class="form-input" id="sgQuestionTotalScore" value="15" min="1">
+                                        </div>
+                                        <div class="form-group" style="flex: 1;">
+                                            <label class="form-label">答案得分</label>
+                                            <input type="number" class="form-input" id="sgAnswerTotalScore" value="0" min="0">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">📋 要点描述文案</label>
+                                        <input type="text" class="form-input" id="sgPointsDescription" placeholder="例如：本题共 5 个要点，要点分 15 分">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 得分点高亮区 -->
+                            <div class="config-section">
+                                <div class="config-section-header" onclick="toggleConfigSection(this)">
+                                    <span class="config-section-icon">✨</span>
+                                    <span class="config-section-title">得分点高亮</span>
+                                    <span class="config-section-toggle">▼</span>
+                                </div>
+                                <div class="config-section-content">
+                                    <div style="display: flex; justify-content: flex-end; margin-bottom: 12px;">
+                                        <button class="btn btn-outline btn-sm" onclick="addSgHighlight()">+ 添加得分点</button>
+                                    </div>
+                                    <div id="sgHighlightsContainer" style="display: flex; flex-direction: column; gap: 8px;"></div>
+                                </div>
+                            </div>
+                            
+                            <!-- 要点统计区 -->
+                            <div class="config-section">
+                                <div class="config-section-header" onclick="toggleConfigSection(this)">
+                                    <span class="config-section-icon">📈</span>
+                                    <span class="config-section-title">要点统计</span>
+                                    <span class="config-section-toggle">▼</span>
+                                </div>
+                                <div class="config-section-content">
+                                    <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px;">
+                                        <div>
+                                            <label class="form-label-sm">要点个数</label>
+                                            <input type="number" class="form-input" id="kpTotal" value="0" min="0">
+                                        </div>
+                                        <div>
+                                            <label class="form-label-sm">要点分</label>
+                                            <input type="number" class="form-input" id="kpPointScore" value="0" min="0">
+                                        </div>
+                                        <div>
+                                            <label class="form-label-sm">完全得分</label>
+                                            <input type="number" class="form-input" id="kpFullyScored" value="0" min="0">
+                                        </div>
+                                        <div>
+                                            <label class="form-label-sm">部分得分</label>
+                                            <input type="number" class="form-input" id="kpPartiallyScored" value="0" min="0">
+                                        </div>
+                                        <div>
+                                            <label class="form-label-sm">遗落个数</label>
+                                            <input type="number" class="form-input" id="kpMissing" value="0" min="0">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 整体评价区 -->
+                            <div class="config-section">
+                                <div class="config-section-header" onclick="toggleConfigSection(this)">
+                                    <span class="config-section-icon">💬</span>
+                                    <span class="config-section-title">整体评价</span>
+                                    <span class="config-section-toggle">▼</span>
+                                </div>
+                                <div class="config-section-content">
+                                    <div class="form-group">
+                                        <label class="form-label">📝 本次得分与表现</label>
+                                        <textarea class="form-textarea" id="performanceSummary" placeholder="描述本次作答的整体表现..." style="min-height: 80px;"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">🎯 下一步提升方向</label>
+                                        <textarea class="form-textarea" id="nextSteps" placeholder="给出下一步的学习建议..." style="min-height: 80px;"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 详细点评区 -->
+                            <div class="config-section">
+                                <div class="config-section-header" onclick="toggleConfigSection(this)">
+                                    <span class="config-section-icon">📋</span>
+                                    <span class="config-section-title">详细点评</span>
+                                    <span class="config-section-toggle">▼</span>
+                                </div>
+                                <div class="config-section-content">
+                                    <!-- 遗漏要点 -->
+                                    <div class="sub-section">
+                                        <div class="sub-section-header">
+                                            <span>❌ 遗漏要点</span>
+                                            <button class="btn btn-outline btn-sm" onclick="addMissingPoint()">+ 添加</button>
+                                        </div>
+                                        <div id="missingPointsTable" class="data-table">
+                                            <table>
+                                                <thead>
+                                                    <tr>
+                                                        <th style="width: 20%;">要点标题</th>
+                                                        <th style="width: 35%;">原因分析</th>
+                                                        <th style="width: 35%;">改进建议</th>
+                                                        <th style="width: 10%;">操作</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="missingPointsBody"></tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- 部分得分要点 -->
+                                    <div class="sub-section">
+                                        <div class="sub-section-header">
+                                            <span>⚠️ 部分得分要点</span>
+                                            <button class="btn btn-outline btn-sm" onclick="addPartialPoint()">+ 添加</button>
+                                        </div>
+                                        <div id="partialPointsTable" class="data-table">
+                                            <table>
+                                                <thead>
+                                                    <tr>
+                                                        <th style="width: 20%;">要点标题</th>
+                                                        <th style="width: 35%;">原因分析</th>
+                                                        <th style="width: 35%;">改进建议</th>
+                                                        <th style="width: 10%;">操作</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="partialPointsBody"></tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- 作答逻辑 -->
+                                    <div class="form-group" style="margin-top: 16px;">
+                                        <label class="form-label">🔍 作答逻辑评价</label>
+                                        <textarea class="form-textarea" id="logicAnalysis" placeholder="评价答案的逻辑结构、条理清晰度..." style="min-height: 100px;"></textarea>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div>
-                            <label style="font-size: 12px; color: var(--text-light); margin-bottom: 4px; display: block;">完全得分</label>
-                            <input type="number" class="form-input" id="kpFullyScored" value="0" min="0">
+                        
+                        <!-- ==================== 粉笔批改配置 ==================== -->
+                        <div id="fenbiForm" style="display: none;">
+                            <!-- 基本信息区 -->
+                            <div class="config-section">
+                                <div class="config-section-header" onclick="toggleConfigSection(this)">
+                                    <span class="config-section-icon">📊</span>
+                                    <span class="config-section-title">基本信息</span>
+                                    <span class="config-section-toggle">▼</span>
+                                </div>
+                                <div class="config-section-content">
+                                    <div class="form-row">
+                                        <div class="form-group" style="flex: 1;">
+                                            <label class="form-label">题目总分</label>
+                                            <input type="number" class="form-input" id="fbQuestionTotalScore" value="15" min="1">
+                                        </div>
+                                        <div class="form-group" style="flex: 1;">
+                                            <label class="form-label">答案得分</label>
+                                            <input type="number" class="form-input" id="fbAnswerTotalScore" value="0" min="0">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 得分点高亮区 -->
+                            <div class="config-section">
+                                <div class="config-section-header" onclick="toggleConfigSection(this)">
+                                    <span class="config-section-icon">✨</span>
+                                    <span class="config-section-title">得分点高亮</span>
+                                    <span class="config-section-toggle">▼</span>
+                                </div>
+                                <div class="config-section-content">
+                                    <div style="display: flex; justify-content: flex-end; margin-bottom: 12px;">
+                                        <button class="btn btn-outline btn-sm" onclick="addHighlight()">+ 添加得分点</button>
+                                    </div>
+                                    <div id="highlightsContainer" style="display: flex; flex-direction: column; gap: 8px;"></div>
+                                </div>
+                            </div>
+                            
+                            <!-- 优缺点诊断区 -->
+                            <div class="config-section">
+                                <div class="config-section-header" onclick="toggleConfigSection(this)">
+                                    <span class="config-section-icon">🔍</span>
+                                    <span class="config-section-title">优缺点诊断</span>
+                                    <span class="config-section-toggle">▼</span>
+                                </div>
+                                <div class="config-section-content">
+                                    <div class="form-group">
+                                        <label class="form-label">诊断内容</label>
+                                        <div class="rich-editor">
+                                            <div class="rich-editor-toolbar">
+                                                <button type="button" class="toolbar-btn" onclick="execFormat('fbDiagnosis', 'bold')" title="加粗"><b>B</b></button>
+                                                <button type="button" class="toolbar-btn" onclick="execFormat('fbDiagnosis', 'italic')" title="斜体"><i>I</i></button>
+                                                <button type="button" class="toolbar-btn" onclick="execFormat('fbDiagnosis', 'underline')" title="下划线"><u>U</u></button>
+                                                <span class="toolbar-divider"></span>
+                                                <button type="button" class="toolbar-btn" onclick="execFormat('fbDiagnosis', 'insertUnorderedList')" title="列表">•≡</button>
+                                                <button type="button" class="toolbar-btn" onclick="execFormat('fbDiagnosis', 'formatBlock', 'h4')" title="标题">H</button>
+                                                <span class="toolbar-divider"></span>
+                                                <button type="button" class="toolbar-btn color-btn" onclick="execForeColor('fbDiagnosis', '#ff6a3c')" title="橙色"><span style="color:#ff6a3c;font-weight:bold;">A</span></button>
+                                                <button type="button" class="toolbar-btn color-btn" onclick="execForeColor('fbDiagnosis', '#4285f4')" title="蓝色"><span style="color:#4285f4;font-weight:bold;">A</span></button>
+                                                <button type="button" class="toolbar-btn color-btn" onclick="execForeColor('fbDiagnosis', '#52c41a')" title="绿色"><span style="color:#52c41a;font-weight:bold;">A</span></button>
+                                                <span class="toolbar-divider"></span>
+                                                <button type="button" class="toolbar-btn" onclick="execFormat('fbDiagnosis', 'removeFormat')" title="清除格式">✕</button>
+                                            </div>
+                                            <div class="rich-editor-content" id="fbDiagnosis" contenteditable="true" placeholder="点击输入诊断内容..."></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 得分分析区 -->
+                            <div class="config-section">
+                                <div class="config-section-header" onclick="toggleConfigSection(this)">
+                                    <span class="config-section-icon">📊</span>
+                                    <span class="config-section-title">得分分析</span>
+                                    <span class="config-section-toggle">▼</span>
+                                </div>
+                                <div class="config-section-content">
+                                    <div style="display: flex; justify-content: flex-end; margin-bottom: 12px;">
+                                        <button class="btn btn-outline btn-sm" onclick="addScoreAnalysis()">+ 添加分析维度</button>
+                                    </div>
+                                    <div id="scoreAnalysisContainer" style="display: flex; flex-direction: column; gap: 16px;"></div>
+                                </div>
+                            </div>
+                            
+                            <!-- 答题演示区 -->
+                            <div class="config-section">
+                                <div class="config-section-header" onclick="toggleConfigSection(this)">
+                                    <span class="config-section-icon">📖</span>
+                                    <span class="config-section-title">答题演示</span>
+                                    <span class="config-section-toggle">▼</span>
+                                </div>
+                                <div class="config-section-content">
+                                    <div class="form-group">
+                                        <label class="form-label">演示内容</label>
+                                        <div class="rich-editor">
+                                            <div class="rich-editor-toolbar">
+                                                <button type="button" class="toolbar-btn" onclick="execFormat('fbAnswerDemo', 'bold')" title="加粗"><b>B</b></button>
+                                                <button type="button" class="toolbar-btn" onclick="execFormat('fbAnswerDemo', 'italic')" title="斜体"><i>I</i></button>
+                                                <button type="button" class="toolbar-btn" onclick="execFormat('fbAnswerDemo', 'underline')" title="下划线"><u>U</u></button>
+                                                <span class="toolbar-divider"></span>
+                                                <button type="button" class="toolbar-btn" onclick="execFormat('fbAnswerDemo', 'insertUnorderedList')" title="列表">•≡</button>
+                                                <button type="button" class="toolbar-btn" onclick="execFormat('fbAnswerDemo', 'formatBlock', 'h4')" title="标题">H</button>
+                                                <button type="button" class="toolbar-btn" onclick="insertStepBlock('fbAnswerDemo')" title="步骤模板">📝</button>
+                                                <span class="toolbar-divider"></span>
+                                                <button type="button" class="toolbar-btn color-btn" onclick="execForeColor('fbAnswerDemo', '#ff6a3c')" title="橙色"><span style="color:#ff6a3c;font-weight:bold;">A</span></button>
+                                                <button type="button" class="toolbar-btn color-btn" onclick="execForeColor('fbAnswerDemo', '#4285f4')" title="蓝色"><span style="color:#4285f4;font-weight:bold;">A</span></button>
+                                                <button type="button" class="toolbar-btn color-btn" onclick="execForeColor('fbAnswerDemo', '#52c41a')" title="绿色"><span style="color:#52c41a;font-weight:bold;">A</span></button>
+                                                <span class="toolbar-divider"></span>
+                                                <button type="button" class="toolbar-btn" onclick="execFormat('fbAnswerDemo', 'removeFormat')" title="清除格式">✕</button>
+                                            </div>
+                                            <div class="rich-editor-content" id="fbAnswerDemo" contenteditable="true" placeholder="点击输入答题演示内容..."></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div>
-                            <label style="font-size: 12px; color: var(--text-light); margin-bottom: 4px; display: block;">部分得分</label>
-                            <input type="number" class="form-input" id="kpPartiallyScored" value="0" min="0">
-                        </div>
-                        <div>
-                            <label style="font-size: 12px; color: var(--text-light); margin-bottom: 4px; display: block;">遗落个数</label>
-                            <input type="number" class="form-input" id="kpMissing" value="0" min="0">
-                        </div>
                     </div>
-                </div>
-                
-                <!-- 总体评价 -->
-                <div class="form-group">
-                    <label class="form-label">📝 本次得分与表现</label>
-                    <textarea class="form-textarea" id="performanceSummary" placeholder="描述本次作答的整体表现..." style="min-height: 80px;"></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">🎯 下一步提升方向</label>
-                    <textarea class="form-textarea" id="nextSteps" placeholder="给出下一步的学习建议..." style="min-height: 80px;"></textarea>
-                </div>
-                
-                <!-- 遗漏要点表格 -->
-                <div class="form-group">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                        <label class="form-label">❌ 遗漏要点列表</label>
-                        <button class="btn btn-outline btn-sm" onclick="addMissingPoint()">+ 添加遗漏要点</button>
-                    </div>
-                    <div id="missingPointsTable" style="border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden;">
-                        <table style="width: 100%; margin: 0;">
-                            <thead>
-                                <tr style="background: var(--bg-main);">
-                                    <th style="padding: 10px; font-size: 13px; font-weight: 600;">要点标题</th>
-                                    <th style="padding: 10px; font-size: 13px; font-weight: 600;">原因分析</th>
-                                    <th style="padding: 10px; font-size: 13px; font-weight: 600;">改进建议</th>
-                                    <th style="padding: 10px; font-size: 13px; font-weight: 600; width: 60px;">操作</th>
-                                </tr>
-                            </thead>
-                            <tbody id="missingPointsBody">
-                                <!-- 动态添加行 -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                
-                <!-- 部分得分要点表格 -->
-                <div class="form-group">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                        <label class="form-label">⚠️ 部分得分要点列表</label>
-                        <button class="btn btn-outline btn-sm" onclick="addPartialPoint()">+ 添加部分得分要点</button>
-                    </div>
-                    <div id="partialPointsTable" style="border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden;">
-                        <table style="width: 100%; margin: 0;">
-                            <thead>
-                                <tr style="background: var(--bg-main);">
-                                    <th style="padding: 10px; font-size: 13px; font-weight: 600;">要点标题</th>
-                                    <th style="padding: 10px; font-size: 13px; font-weight: 600;">原因分析</th>
-                                    <th style="padding: 10px; font-size: 13px; font-weight: 600;">改进建议</th>
-                                    <th style="padding: 10px; font-size: 13px; font-weight: 600; width: 60px;">操作</th>
-                                </tr>
-                            </thead>
-                            <tbody id="partialPointsBody">
-                                <!-- 动态添加行 -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                
-                <!-- 作答逻辑 -->
-                <div class="form-group">
-                    <label class="form-label">🔍 作答逻辑评价</label>
-                    <textarea class="form-textarea" id="logicAnalysis" placeholder="评价答案的逻辑结构、条理清晰度..." style="min-height: 100px;"></textarea>
                 </div>
             </div>
             <div class="modal-footer">
@@ -1621,10 +2041,12 @@
         let currentUploadQuestionId = null;
         let currentImageBase64 = null;
         let currentReviewQuestionId = null;
-        let currentReviewVersion = 'A';
         let currentReviewStyle = 'shangancang';
         let missingPoints = [];
         let partialPoints = [];
+        let fbHighlights = [];
+        let fbScoreAnalysis = [];
+        let shangancangHighlights = [];
         
         // ==================== 认证相关 ====================
         async function checkAuth() {
@@ -2086,6 +2508,7 @@ if (result.success) {
                                 <div class="action-menu-item ${q.status === 'active' ? 'danger' : 'success'}" onclick="toggleQuestionStatus(${q.id}, '${q.status}'); closeAllMenus();">
                                     ${q.status === 'active' ? '🚫 禁用' : '✓ 启用'}
                                 </div>
+                                <div class="action-menu-item danger" onclick="deleteQuestion(${q.id}); closeAllMenus();">🗑️ 删除</div>
                             </div>
                         </div>
                     </td>
@@ -2486,6 +2909,30 @@ if (result.success) {
             }
         }
         
+        async function deleteQuestion(questionId) {
+            if (!confirm('确定要删除这个题目吗？删除后将同时删除相关的答案和批改数据，此操作不可恢复！')) {
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE}/admin/question/${questionId}`, {
+                    method: 'DELETE',
+                    credentials: 'include'
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showToast('题目已删除');
+                    loadQuestions();
+                } else {
+                    showToast(result.message || '删除失败', 'error');
+                }
+            } catch (error) {
+                showToast('网络错误', 'error');
+            }
+        }
+        
         // ==================== 答案管理 ====================
         async function editAnswer(questionId) {
             document.getElementById('answerQuestionId').value = questionId;
@@ -2544,6 +2991,14 @@ if (result.success) {
                 return;
             }
             
+            // 校验答案A和答案B的来源不能相同
+            const otherVersion = version === 'A' ? 'B' : 'A';
+            const otherSource = currentAnswers[otherVersion]?.source || '';
+            if (otherSource && otherSource === source) {
+                showToast(`答案${otherVersion}的来源已经是"${source}"，请选择不同的来源`, 'error');
+                return;
+            }
+            
             try {
                 const response = await fetch(`${API_BASE}/admin/answer`, {
                     method: 'POST',
@@ -2570,6 +3025,14 @@ if (result.success) {
             currentUploadQuestionId = questionId;
             currentImageBase64 = null;
             document.getElementById('previewImg').style.display = 'none';
+            document.getElementById('userAnswerText').value = '';
+            
+            // 加载已有的用户作答文字版
+            const question = allQuestions.find(q => q.id === questionId);
+            if (question && question.user_answer_text) {
+                document.getElementById('userAnswerText').value = question.user_answer_text;
+            }
+            
             showModal('uploadImageModal');
         }
         
@@ -2587,8 +3050,10 @@ if (result.success) {
         }
         
         async function confirmUploadImage() {
-            if (!currentUploadQuestionId || !currentImageBase64) {
-                showToast('请先选择图片', 'error');
+            const userAnswerText = document.getElementById('userAnswerText').value;
+            
+            if (!currentImageBase64 && !userAnswerText) {
+                showToast('请上传图片或填写用户作答文字版', 'error');
                 return;
             }
             
@@ -2597,48 +3062,119 @@ if (result.success) {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     credentials: 'include',
-                    body: JSON.stringify({ image: currentImageBase64 })
+                    body: JSON.stringify({ 
+                        image: currentImageBase64 || '',
+                        user_answer_text: userAnswerText
+                    })
                 });
                 
                 const result = await response.json();
                 
                 if (result.success) {
-                    showToast('图片上传成功！');
+                    showToast('保存成功！');
                     closeModal('uploadImageModal');
                     loadQuestions();
                 } else {
-                    showToast(result.message || '上传失败', 'error');
+                    showToast(result.message || '保存失败', 'error');
                 }
             } catch (error) {
                 showToast('网络错误', 'error');
             }
         }
         
-        // ==================== 批改配置（新版）====================
+        // ==================== 批改配置 ====================
         function editReview(questionId) {
             currentReviewQuestionId = questionId;
-            currentReviewVersion = 'A';
             currentReviewStyle = 'shangancang';
             updateReviewTabUI();
+            loadUserAnswerText(questionId);
             loadReviewData(questionId);
             showModal('reviewModal');
         }
         
-        function updateReviewTabUI() {
-            const tabs = ['ASG', 'AFB', 'BSG', 'BFB'];
-            const versions = { 'ASG': 'A', 'AFB': 'A', 'BSG': 'B', 'BFB': 'B' };
-            const styles = { 'ASG': 'shangancang', 'AFB': 'fenbi', 'BSG': 'shangancang', 'BFB': 'fenbi' };
+        function loadUserAnswerText(questionId) {
+            const question = allQuestions.find(q => q.id === questionId);
+            const userAnswerText = question && question.user_answer_text ? question.user_answer_text : '暂无用户作答';
             
-            tabs.forEach(tab => {
-                const btn = document.getElementById('reviewTab' + tab);
-                const isActive = versions[tab] === currentReviewVersion && styles[tab] === currentReviewStyle;
-                btn.classList.toggle('btn-primary', isActive);
-                btn.classList.toggle('btn-outline', !isActive);
-            });
+            document.getElementById('sgUserAnswerText').textContent = userAnswerText;
+            document.getElementById('fbUserAnswerText').textContent = userAnswerText;
         }
         
-        function switchReviewTab(version, style) {
-            currentReviewVersion = version;
+        function updateReviewTabUI() {
+            document.getElementById('reviewTabSG').classList.toggle('btn-primary', currentReviewStyle === 'shangancang');
+            document.getElementById('reviewTabSG').classList.toggle('btn-outline', currentReviewStyle !== 'shangancang');
+            document.getElementById('reviewTabFB').classList.toggle('btn-primary', currentReviewStyle === 'fenbi');
+            document.getElementById('reviewTabFB').classList.toggle('btn-outline', currentReviewStyle !== 'fenbi');
+            
+            // 切换表单显示
+            document.getElementById('shangancangForm').style.display = currentReviewStyle === 'shangancang' ? 'block' : 'none';
+            document.getElementById('fenbiForm').style.display = currentReviewStyle === 'fenbi' ? 'block' : 'none';
+            
+            // 切换用户作答预览
+            document.getElementById('sgUserAnswerText').style.display = currentReviewStyle === 'shangancang' ? 'block' : 'none';
+            document.getElementById('fbUserAnswerText').style.display = currentReviewStyle === 'fenbi' ? 'block' : 'none';
+        }
+        
+        // 折叠面板切换
+        function toggleConfigSection(header) {
+            const section = header.parentElement;
+            section.classList.toggle('collapsed');
+        }
+        
+        // 富文本编辑器 - 执行格式命令
+        function execFormat(editorId, command, value) {
+            const editor = document.getElementById(editorId);
+            if (!editor) return;
+            editor.focus();
+            
+            if (command === 'formatBlock') {
+                document.execCommand(command, false, value);
+            } else {
+                document.execCommand(command, false, value || null);
+            }
+        }
+        
+        // 富文本编辑器 - 设置文字颜色
+        function execForeColor(editorId, color) {
+            const editor = document.getElementById(editorId);
+            if (!editor) return;
+            editor.focus();
+            document.execCommand('foreColor', false, color);
+            document.execCommand('bold', false, null);
+        }
+        
+        // 富文本编辑器 - 插入步骤模板
+        function insertStepBlock(editorId) {
+            const editor = document.getElementById(editorId);
+            if (!editor) return;
+            editor.focus();
+            
+            const stepHtml = `
+                <h4 style="color:#222;">第一步——审题</h4>
+                <p>通过勾画题干关键点...</p>
+                <h4 style="color:#222;">第二步——找点</h4>
+                <p>逐段阅读资料...</p>
+                <h4 style="color:#222;">第三步——加工</h4>
+                <p>对要点进行整合加工...</p>
+            `;
+            document.execCommand('insertHTML', false, stepHtml);
+        }
+        
+        // 获取富文本内容
+        function getRichContent(editorId) {
+            const editor = document.getElementById(editorId);
+            if (!editor) return '';
+            return editor.innerHTML;
+        }
+        
+        // 设置富文本内容
+        function setRichContent(editorId, html) {
+            const editor = document.getElementById(editorId);
+            if (!editor) return;
+            editor.innerHTML = html || '';
+        }
+        
+        function switchReviewTab(style) {
             currentReviewStyle = style;
             updateReviewTabUI();
             loadReviewData(currentReviewQuestionId);
@@ -2650,12 +3186,11 @@ if (result.success) {
                 const result = await response.json();
                 
                 if (result.success) {
-                    const key = currentReviewVersion.toLowerCase() + '_' + currentReviewStyle;
                     const reviews = result.data.reviews;
                     let review = null;
                     
                     for (let i = 0; i < reviews.length; i++) {
-                        if (reviews[i].answer_version === currentReviewVersion && reviews[i].review_style === currentReviewStyle) {
+                        if (reviews[i].review_style === currentReviewStyle) {
                             review = reviews[i];
                             break;
                         }
@@ -2674,60 +3209,96 @@ if (result.success) {
         }
         
         function fillReviewData(review) {
-            // 评分信息
-            document.getElementById('questionTotalScore').value = review.question_total_score || 15;
-            document.getElementById('answerTotalScore').value = review.answer_total_score || 0;
-            
-            // 要点统计
-            const stats = review.key_points_stats || {};
-            document.getElementById('kpTotal').value = stats.total || 0;
-            document.getElementById('kpPointScore').value = stats.point_score || 0;
-            document.getElementById('kpFullyScored').value = stats.fully_scored || 0;
-            document.getElementById('kpPartiallyScored').value = stats.partially_scored || 0;
-            document.getElementById('kpMissing').value = stats.missing || 0;
-            
-            // 总体评价
-            document.getElementById('performanceSummary').value = review.performance_summary || '';
-            document.getElementById('nextSteps').value = review.next_steps || '';
-            
-            // 遗漏要点
-            missingPoints = review.missing_points || [];
-            renderMissingPoints();
-            
-            // 部分得分要点
-            partialPoints = review.partial_points || [];
-            renderPartialPoints();
-            
-            // 作答逻辑
-            document.getElementById('logicAnalysis').value = review.logic_analysis || '';
+            if (currentReviewStyle === 'shangancang') {
+                // 上岸仓批改数据
+                document.getElementById('sgQuestionTotalScore').value = review.question_total_score || 15;
+                document.getElementById('sgAnswerTotalScore').value = review.answer_total_score || 0;
+                
+                // 得分点高亮
+                const sgData = review.shangancang_review_data || {};
+                shangancangHighlights = sgData.my_answer?.highlights || [];
+                renderSgHighlights();
+                
+                const stats = review.key_points_stats || {};
+                document.getElementById('kpTotal').value = stats.total || 0;
+                document.getElementById('kpPointScore').value = stats.point_score || 0;
+                document.getElementById('kpFullyScored').value = stats.fully_scored || 0;
+                document.getElementById('kpPartiallyScored').value = stats.partially_scored || 0;
+                document.getElementById('kpMissing').value = stats.missing || 0;
+                
+                document.getElementById('performanceSummary').value = review.performance_summary || '';
+                document.getElementById('nextSteps').value = review.next_steps || '';
+                
+                missingPoints = review.missing_points || [];
+                renderMissingPoints();
+                
+                partialPoints = review.partial_points || [];
+                renderPartialPoints();
+                
+                document.getElementById('logicAnalysis').value = review.logic_analysis || '';
+                document.getElementById('sgPointsDescription').value = review.points_description || '';
+            } else {
+                // 粉笔批改数据
+                document.getElementById('fbQuestionTotalScore').value = review.question_total_score || 15;
+                document.getElementById('fbAnswerTotalScore').value = review.answer_total_score || 0;
+                
+                const fenbiData = review.fenbi_review_data || {};
+                
+                // 得分点高亮
+                fbHighlights = fenbiData.my_answer?.highlights || [];
+                renderHighlights();
+                
+                // 优缺点诊断
+                setRichContent('fbDiagnosis', fenbiData.my_answer?.diagnosis || '');
+                
+                // 得分分析
+                fbScoreAnalysis = fenbiData.score_analysis || [];
+                renderScoreAnalysis();
+                
+                // 答题演示
+                setRichContent('fbAnswerDemo', fenbiData.answer_demo || '');
+            }
         }
         
         function resetReviewForm() {
-            // 评分信息
-            document.getElementById('questionTotalScore').value = 15;
-            document.getElementById('answerTotalScore').value = 0;
-            
-            // 要点统计
-            document.getElementById('kpTotal').value = 0;
-            document.getElementById('kpPointScore').value = 0;
-            document.getElementById('kpFullyScored').value = 0;
-            document.getElementById('kpPartiallyScored').value = 0;
-            document.getElementById('kpMissing').value = 0;
-            
-            // 总体评价
-            document.getElementById('performanceSummary').value = '';
-            document.getElementById('nextSteps').value = '';
-            
-            // 遗漏要点
-            missingPoints = [];
-            renderMissingPoints();
-            
-            // 部分得分要点
-            partialPoints = [];
-            renderPartialPoints();
-            
-            // 作答逻辑
-            document.getElementById('logicAnalysis').value = '';
+            if (currentReviewStyle === 'shangancang') {
+                document.getElementById('sgQuestionTotalScore').value = 15;
+                document.getElementById('sgAnswerTotalScore').value = 0;
+                
+                shangancangHighlights = [];
+                renderSgHighlights();
+                
+                document.getElementById('kpTotal').value = 0;
+                document.getElementById('kpPointScore').value = 0;
+                document.getElementById('kpFullyScored').value = 0;
+                document.getElementById('kpPartiallyScored').value = 0;
+                document.getElementById('kpMissing').value = 0;
+                
+                document.getElementById('performanceSummary').value = '';
+                document.getElementById('nextSteps').value = '';
+                
+                missingPoints = [];
+                renderMissingPoints();
+                
+                partialPoints = [];
+                renderPartialPoints();
+                
+                document.getElementById('logicAnalysis').value = '';
+                document.getElementById('sgPointsDescription').value = '';
+            } else {
+                document.getElementById('fbQuestionTotalScore').value = 15;
+                document.getElementById('fbAnswerTotalScore').value = 0;
+                
+                fbHighlights = [];
+                renderHighlights();
+                
+                setRichContent('fbDiagnosis', '');
+                
+                fbScoreAnalysis = [];
+                renderScoreAnalysis();
+                
+                setRichContent('fbAnswerDemo', '');
+            }
         }
         
         // 遗漏要点管理
@@ -2792,29 +3363,63 @@ if (result.success) {
                 return;
             }
             
-            // 收集遗漏要点（过滤空数据）
-            const filteredMissingPoints = missingPoints.filter(p => p.title.trim());
-            const filteredPartialPoints = partialPoints.filter(p => p.title.trim());
-            
-            const data = {
+            let data = {
                 question_id: currentReviewQuestionId,
-                answer_version: currentReviewVersion,
-                review_style: currentReviewStyle,
-                question_total_score: parseInt(document.getElementById('questionTotalScore').value) || 15,
-                answer_total_score: parseInt(document.getElementById('answerTotalScore').value) || 0,
-                key_points_stats: {
+                review_style: currentReviewStyle
+            };
+            
+            if (currentReviewStyle === 'shangancang') {
+                // 上岸仓批改数据
+                const filteredMissingPoints = missingPoints.filter(p => p.title.trim());
+                const filteredPartialPoints = partialPoints.filter(p => p.title.trim());
+                const filteredSgHighlights = shangancangHighlights.filter(h => h.text.trim());
+                
+                data.question_total_score = parseInt(document.getElementById('sgQuestionTotalScore').value) || 15;
+                data.answer_total_score = parseInt(document.getElementById('sgAnswerTotalScore').value) || 0;
+                data.key_points_stats = {
                     total: parseInt(document.getElementById('kpTotal').value) || 0,
                     point_score: parseInt(document.getElementById('kpPointScore').value) || 0,
                     fully_scored: parseInt(document.getElementById('kpFullyScored').value) || 0,
                     partially_scored: parseInt(document.getElementById('kpPartiallyScored').value) || 0,
                     missing: parseInt(document.getElementById('kpMissing').value) || 0
-                },
-                performance_summary: document.getElementById('performanceSummary').value,
-                next_steps: document.getElementById('nextSteps').value,
-                missing_points: filteredMissingPoints,
-                partial_points: filteredPartialPoints,
-                logic_analysis: document.getElementById('logicAnalysis').value
-            };
+                };
+                data.performance_summary = document.getElementById('performanceSummary').value;
+                data.next_steps = document.getElementById('nextSteps').value;
+                data.missing_points = filteredMissingPoints;
+                data.partial_points = filteredPartialPoints;
+                data.logic_analysis = document.getElementById('logicAnalysis').value;
+                data.points_description = document.getElementById('sgPointsDescription').value;
+                data.shangancang_review_data = {
+                    my_answer: {
+                        highlights: filteredSgHighlights
+                    }
+                };
+            } else {
+                // 粉笔批改数据
+                const filteredHighlights = fbHighlights.filter(h => h.text.trim());
+                const filteredScoreAnalysis = fbScoreAnalysis.filter(s => s.title.trim()).map(s => ({
+                    title: s.title,
+                    score: s.score || 0,
+                    max_score: s.max_score || 0,
+                    items: (s.items || []).filter(item => item.content.trim()).map(item => ({
+                        content: item.content,
+                        score: item.score || 0,
+                        max_score: item.max_score || 0,
+                        detail: item.detail || ''
+                    }))
+                }));
+                
+                data.question_total_score = parseInt(document.getElementById('fbQuestionTotalScore').value) || 15;
+                data.answer_total_score = parseInt(document.getElementById('fbAnswerTotalScore').value) || 0;
+                data.fenbi_review_data = {
+                    my_answer: {
+                        highlights: filteredHighlights,
+                        diagnosis: getRichContent('fbDiagnosis')
+                    },
+                    score_analysis: filteredScoreAnalysis,
+                    answer_demo: getRichContent('fbAnswerDemo')
+                };
+            }
             
             try {
                 const response = await fetch(`${API_BASE}/admin/review`, {
@@ -2835,6 +3440,172 @@ if (result.success) {
             } catch (error) {
                 showToast('网络错误', 'error');
             }
+}
+
+// ==================== 上岸仓批改 - 得分点高亮 ====================
+function renderSgHighlights() {
+    const container = document.getElementById('sgHighlightsContainer');
+    if (shangancangHighlights.length === 0) {
+        container.innerHTML = '<div style="color: var(--text-light); padding: 10px;">暂无得分点，点击上方按钮添加</div>';
+        return;
+    }
+    
+    container.innerHTML = shangancangHighlights.map((h, i) => `
+        <div style="display: flex; gap: 8px; align-items: center; padding: 8px; background: var(--bg-main); border-radius: 6px;">
+            <input type="text" class="form-input" value="${h.text || ''}" onchange="shangancangHighlights[${i}].text = this.value" placeholder="高亮文字" style="flex: 3;">
+            <input type="number" class="form-input" value="${h.score || 0}" onchange="shangancangHighlights[${i}].score = parseFloat(this.value) || 0" placeholder="分数" step="0.5" style="flex: 1; min-width: 80px;">
+            <span style="color: var(--text-light);">分</span>
+            <button class="btn btn-danger btn-sm" onclick="removeSgHighlight(${i})">删除</button>
+        </div>
+    `).join('');
+}
+
+function addSgHighlight() {
+    shangancangHighlights.push({ text: '', score: 0 });
+    renderSgHighlights();
+}
+
+function removeSgHighlight(index) {
+    shangancangHighlights.splice(index, 1);
+    renderSgHighlights();
+}
+
+// ==================== 粉笔批改 - 得分点高亮 ====================
+        function renderHighlights() {
+            const container = document.getElementById('highlightsContainer');
+            if (fbHighlights.length === 0) {
+                container.innerHTML = '<div style="color: var(--text-light); padding: 10px;">暂无得分点，点击上方按钮添加</div>';
+                return;
+            }
+            
+            container.innerHTML = fbHighlights.map((h, i) => `
+                <div style="display: flex; gap: 8px; align-items: center; padding: 8px; background: var(--bg-main); border-radius: 6px;">
+                    <input type="text" class="form-input" value="${h.text || ''}" onchange="fbHighlights[${i}].text = this.value" placeholder="高亮文字" style="flex: 3;">
+                    <input type="number" class="form-input" value="${h.score || 0}" onchange="fbHighlights[${i}].score = parseFloat(this.value) || 0" placeholder="分数" step="0.5" style="flex: 1; min-width: 80px;">
+                    <span style="color: var(--text-light);">分</span>
+                    <button class="btn btn-danger btn-sm" onclick="removeHighlight(${i})">删除</button>
+                </div>
+            `).join('');
+        }
+        
+        function addHighlight() {
+            fbHighlights.push({ text: '', score: 0 });
+            renderHighlights();
+        }
+        
+        function removeHighlight(index) {
+            fbHighlights.splice(index, 1);
+            renderHighlights();
+        }
+        
+        // ==================== 粉笔批改 - 得分分析 ====================
+        function renderScoreAnalysis() {
+            const container = document.getElementById('scoreAnalysisContainer');
+            if (fbScoreAnalysis.length === 0) {
+                container.innerHTML = '<div style="color: var(--text-light); padding: 10px;">暂无得分分析，点击上方按钮添加分析维度</div>';
+                return;
+            }
+            
+            container.innerHTML = fbScoreAnalysis.map((s, i) => `
+                <div style="border: 1px solid var(--border); border-radius: 8px; padding: 16px; background: var(--bg-white);">
+                    <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 12px;">
+                        <input type="text" class="form-input" value="${s.title || ''}" onchange="fbScoreAnalysis[${i}].title = this.value" placeholder="维度名称（如：设备成本方面）" style="flex: 2;">
+                        <input type="number" class="form-input" value="${s.score || 0}" onchange="fbScoreAnalysis[${i}].score = parseFloat(this.value) || 0" step="0.5" style="flex: 1; min-width: 80px;">
+                        <span style="color: var(--text-light);">/</span>
+                        <input type="number" class="form-input" value="${s.max_score || 0}" onchange="fbScoreAnalysis[${i}].max_score = parseFloat(this.value) || 0" style="flex: 1; min-width: 80px;">
+                        <span style="color: var(--text-light);">分</span>
+                        <button class="btn btn-danger btn-sm" onclick="removeScoreAnalysis(${i})">删除维度</button>
+                    </div>
+                    <div style="margin-bottom: 8px;">
+                        <button class="btn btn-outline btn-sm" onclick="addScoreAnalysisItem(${i})">+ 添加得分项</button>
+                    </div>
+                    <div id="scoreAnalysisItems${i}" style="display: flex; flex-direction: column; gap: 8px;">
+                        ${renderScoreAnalysisItems(i)}
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function renderScoreAnalysisItems(parentIndex) {
+            const items = fbScoreAnalysis[parentIndex].items || [];
+            if (items.length === 0) return '';
+            
+            return items.map((item, j) => `
+                <div style="display: flex; flex-direction: column; gap: 8px; padding: 12px; background: #e8f0fe; border-radius: 8px;">
+                    <div style="display: flex; gap: 8px; align-items: flex-start;">
+                        <textarea class="form-textarea" onchange="fbScoreAnalysis[${parentIndex}].items[${j}].content = this.value" placeholder="得分项内容（简短，显示在卡片上）" style="flex: 3; min-height: 50px;">${item.content || ''}</textarea>
+                        <div style="display: flex; gap: 4px; align-items: center;">
+                            <input type="number" class="form-input" value="${item.score || 0}" onchange="fbScoreAnalysis[${parentIndex}].items[${j}].score = parseFloat(this.value) || 0" step="0.5" style="width: 60px;">
+                            <span style="color: var(--text-light);">/</span>
+                            <input type="number" class="form-input" value="${item.max_score || 0}" onchange="fbScoreAnalysis[${parentIndex}].items[${j}].max_score = parseFloat(this.value) || 0" style="width: 60px;">
+                        </div>
+                        <button class="btn btn-danger btn-sm" onclick="removeScoreAnalysisItem(${parentIndex}, ${j})">×</button>
+                    </div>
+                    <div style="margin-top: 4px;">
+                        <div style="font-size: 12px; color: var(--text-light); margin-bottom: 6px;">详细分析内容（点击卡片后显示）</div>
+                        <div class="rich-editor">
+                            <div class="rich-editor-toolbar">
+                                <button type="button" class="toolbar-btn" onclick="execItemDetail(${parentIndex}, ${j}, 'bold')" title="加粗"><b>B</b></button>
+                                <button type="button" class="toolbar-btn" onclick="execItemDetail(${parentIndex}, ${j}, 'italic')" title="斜体"><i>I</i></button>
+                                <button type="button" class="toolbar-btn" onclick="execItemDetail(${parentIndex}, ${j}, 'underline')" title="下划线"><u>U</u></button>
+                                <span class="toolbar-divider"></span>
+                                <button type="button" class="toolbar-btn" onclick="execItemDetail(${parentIndex}, ${j}, 'insertUnorderedList')" title="列表">•≡</button>
+                                <span class="toolbar-divider"></span>
+                                <button type="button" class="toolbar-btn color-btn" onclick="execItemDetailColor(${parentIndex}, ${j}, '#ff6a3c')" title="橙色"><span style="color:#ff6a3c;font-weight:bold;">A</span></button>
+                                <button type="button" class="toolbar-btn color-btn" onclick="execItemDetailColor(${parentIndex}, ${j}, '#4285f4')" title="蓝色"><span style="color:#4285f4;font-weight:bold;">A</span></button>
+                                <button type="button" class="toolbar-btn" onclick="execItemDetail(${parentIndex}, ${j}, 'removeFormat')" title="清除格式">✕</button>
+                            </div>
+                            <div class="rich-editor-content" id="detail_${parentIndex}_${j}" contenteditable="true" placeholder="输入详细分析..." onblur="saveItemDetail(${parentIndex}, ${j})" style="min-height: 60px;">${item.detail || ''}</div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function execItemDetail(parentIndex, itemIndex, command) {
+            const editor = document.getElementById(`detail_${parentIndex}_${itemIndex}`);
+            if (!editor) return;
+            editor.focus();
+            document.execCommand(command, false, null);
+        }
+        
+        function execItemDetailColor(parentIndex, itemIndex, color) {
+            const editor = document.getElementById(`detail_${parentIndex}_${itemIndex}`);
+            if (!editor) return;
+            editor.focus();
+            document.execCommand('foreColor', false, color);
+            document.execCommand('bold', false, null);
+        }
+        
+        function saveItemDetail(parentIndex, itemIndex) {
+            const editor = document.getElementById(`detail_${parentIndex}_${itemIndex}`);
+            if (!editor) return;
+            if (fbScoreAnalysis[parentIndex] && fbScoreAnalysis[parentIndex].items && fbScoreAnalysis[parentIndex].items[itemIndex]) {
+                fbScoreAnalysis[parentIndex].items[itemIndex].detail = editor.innerHTML;
+            }
+        }
+        
+        function addScoreAnalysis() {
+            fbScoreAnalysis.push({ title: '', score: 0, max_score: 0, items: [] });
+            renderScoreAnalysis();
+        }
+        
+        function removeScoreAnalysis(index) {
+            fbScoreAnalysis.splice(index, 1);
+            renderScoreAnalysis();
+        }
+        
+        function addScoreAnalysisItem(parentIndex) {
+            if (!fbScoreAnalysis[parentIndex].items) {
+                fbScoreAnalysis[parentIndex].items = [];
+            }
+            fbScoreAnalysis[parentIndex].items.push({ content: '', score: 0, max_score: 0, detail: '' });
+            renderScoreAnalysis();
+        }
+        
+        function removeScoreAnalysisItem(parentIndex, itemIndex) {
+            fbScoreAnalysis[parentIndex].items.splice(itemIndex, 1);
+            renderScoreAnalysis();
         }
         
         function addDimension() {
