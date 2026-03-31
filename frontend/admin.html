@@ -7,32 +7,210 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
-            --primary: #667eea;
-            --primary-dark: #5a6fd6;
-            --secondary: #764ba2;
-            --success: #52c41a;
-            --warning: #faad14;
-            --danger: #ff4d4f;
-            --text-main: #333;
-            --text-sub: #666;
-            --text-light: #999;
-            --bg-main: #f0f2f5;
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --primary-light: #60a5fa;
+            --secondary: #1e3a5f;
+            --success: #10b981;
+            --accent-green: #10b981;
+            --accent-teal: #14b8a6;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --text-main: #1e3a5f;
+            --text-sub: #475569;
+            --text-light: #64748b;
+            --bg-main: #f0f9ff;
             --bg-white: #fff;
-            --bg-sidebar: #1a1f36;
-            --border: #e8e8e8;
-            --shadow: 0 2px 8px rgba(0,0,0,0.08);
-            --shadow-lg: 0 4px 16px rgba(0,0,0,0.12);
-            --radius: 8px;
-            --radius-lg: 12px;
+            --bg-sidebar: #1e3a5f;
+            --sidebar-border: rgba(255,255,255,0.08);
+            --sidebar-text: rgba(255,255,255,0.9);
+            --sidebar-text-muted: rgba(255,255,255,0.55);
+            --sidebar-hover: rgba(255,255,255,0.06);
+            --sidebar-active-bg: rgba(59, 130, 246, 0.15);
+            --sidebar-active-border: var(--primary);
+            --border: #e0f2fe;
+            --border-strong: #bfdbfe;
+            --shadow: 0 1px 3px rgba(30, 58, 95, 0.08);
+            --shadow-lg: 0 8px 24px rgba(30, 58, 95, 0.12);
+            --shadow-glow: 0 0 20px rgba(59, 130, 246, 0.15);
+            --radius: 6px;
+            --radius-lg: 10px;
+            --focus-ring: 0 0 0 2px var(--primary);
+            
+            --space-xs: 4px;
+            --space-sm: 8px;
+            --space-md: 16px;
+            --space-lg: 24px;
+            --space-xl: 32px;
+            --space-2xl: 48px;
+            --space-3xl: 64px;
+            
+            --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            --font-mono: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+            
+            --text-xs: 0.75rem;
+            --text-sm: 0.875rem;
+            --text-base: 1rem;
+            --text-lg: 1.125rem;
+            --text-xl: 1.25rem;
+            --text-2xl: 1.5rem;
+            --text-3xl: 2rem;
+            --text-4xl: 2.5rem;
+            --text-5xl: 3rem;
+            --text-6xl: 3.5rem;
+            
+            --leading-tight: 1.1;
+            --leading-normal: 1.5;
+            --leading-relaxed: 1.75;
+            
+            --font-normal: 400;
+            --font-medium: 500;
+            --font-semibold: 600;
+            --font-bold: 700;
+            --font-black: 900;
+            
+            --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+            --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+            --duration-fast: 150ms;
+            --duration-normal: 250ms;
+            --duration-slow: 400ms;
         }
         
         * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        /* 全局焦点指示器 */
+        :focus-visible {
+            outline: none;
+            box-shadow: var(--focus-ring);
+        }
+
+        button:focus-visible,
+        a:focus-visible,
+        input:focus-visible,
+        select:focus-visible,
+        textarea:focus-visible,
+        [role="button"]:focus-visible {
+            outline: none;
+            box-shadow: var(--focus-ring);
+        }
+
+        /* 减少动画支持 */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+        
+        /* ==================== 入场动画 ==================== */
+        .page-section.active {
+            animation: fadeIn 0.4s var(--ease-out);
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .db-main .kpi-card {
+            animation: slideUp 0.5s var(--ease-out) backwards;
+        }
+        
+        .db-main .kpi-card:nth-child(1) { animation-delay: 0.05s; }
+        .db-main .kpi-card:nth-child(2) { animation-delay: 0.1s; }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .db-details .detail-box {
+            animation: slideIn 0.4s var(--ease-out) backwards;
+        }
+        
+        .db-details .detail-box:nth-child(1) { animation-delay: 0.15s; }
+        .db-details .detail-box:nth-child(2) { animation-delay: 0.2s; }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        .db-charts .chart-panel,
+        .db-charts .trend-panel {
+            animation: fadeScale 0.5s var(--ease-out) backwards;
+        }
+        
+        .db-charts .chart-panel { animation-delay: 0.25s; }
+        .db-charts .trend-panel { animation-delay: 0.3s; }
+        
+        @keyframes fadeScale {
+            from {
+                opacity: 0;
+                transform: scale(0.98);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        .kpi-value {
+            transition: color var(--duration-normal) var(--ease-out);
+        }
+        
+        .nav-item {
+            transition: background var(--duration-fast) ease,
+                        color var(--duration-fast) ease,
+                        padding-left var(--duration-normal) var(--ease-out);
+        }
+        
+        .tab {
+            transition: background var(--duration-fast) ease,
+                        color var(--duration-fast) ease;
+        }
+        
+        .tab:hover {
+            background: var(--border-strong);
+        }
+        
+        .tab.active {
+            background: var(--primary);
+            color: #fff;
+            font-weight: var(--font-medium);
+            transform: scale(1.02);
+        }
         
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            font-family: var(--font-sans);
+            font-size: var(--text-base);
+            line-height: var(--leading-normal);
             background: var(--bg-main);
             min-height: 100vh;
             color: var(--text-main);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
         
         /* ==================== 布局结构 ==================== */
@@ -45,7 +223,7 @@
         .sidebar {
             width: 240px;
             background: var(--bg-sidebar);
-            color: #fff;
+            color: var(--sidebar-text);
             position: fixed;
             left: 0;
             top: 0;
@@ -57,101 +235,160 @@
         }
         
         .sidebar-header {
-            padding: 20px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding: var(--space-lg);
+            border-bottom: 1px solid var(--sidebar-border);
         }
         
         .sidebar-logo {
             display: flex;
             align-items: center;
-            gap: 10px;
-            font-size: 18px;
-            font-weight: 600;
+            gap: var(--space-sm);
+            font-size: var(--text-lg);
+            font-weight: var(--font-semibold);
+            color: #fff;
         }
         
         .sidebar-logo-icon {
             width: 36px;
             height: 36px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: var(--primary);
             border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 20px;
+            position: relative;
+        }
+        
+        .sidebar-logo-icon::after {
+            content: '';
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            width: 8px;
+            height: 8px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 2px;
         }
         
         .sidebar-nav {
             flex: 1;
-            padding: 16px 12px;
+            padding: var(--space-md) var(--space-sm);
             overflow-y: auto;
         }
         
         .nav-section {
-            margin-bottom: 24px;
+            margin-bottom: var(--space-lg);
         }
         
         .nav-section-title {
-            font-size: 11px;
+            font-size: var(--text-xs);
             text-transform: uppercase;
-            color: rgba(255,255,255,0.4);
-            padding: 0 12px;
-            margin-bottom: 8px;
+            color: var(--sidebar-text-muted);
+            padding: 0 var(--space-md);
+            margin-bottom: var(--space-sm);
             letter-spacing: 1px;
+            font-weight: var(--font-semibold);
         }
         
         .nav-item {
             display: flex;
             align-items: center;
-            gap: 12px;
-            padding: 12px 16px;
-            border-radius: 8px;
-            color: rgba(255,255,255,0.7);
+            gap: var(--space-sm);
+            padding: var(--space-sm) var(--space-md);
+            border-radius: var(--radius);
+            color: var(--sidebar-text);
             cursor: pointer;
-            transition: all 0.2s;
-            margin-bottom: 4px;
+            transition: all 0.15s ease;
+            margin-bottom: var(--space-xs);
+            width: 100%;
+            text-align: left;
+            border: none;
+            background: transparent;
+            font-family: var(--font-sans);
+            position: relative;
         }
         
         .nav-item:hover {
-            background: rgba(255,255,255,0.1);
+            background: var(--sidebar-hover);
             color: #fff;
         }
         
         .nav-item.active {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: var(--sidebar-active-bg);
             color: #fff;
-            font-weight: 500;
+            font-weight: var(--font-medium);
+            border-left: 3px solid var(--sidebar-active-border);
+            padding-left: calc(var(--space-md) - 3px);
         }
         
-        .nav-item-icon { font-size: 18px; width: 24px; text-align: center; }
-        .nav-item-text { font-size: 14px; }
+        .nav-item.active::before {
+            content: '';
+            position: absolute;
+            left: -3px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 3px;
+            height: 60%;
+            background: var(--primary);
+            border-radius: 0 2px 2px 0;
+        }
+        
+        .nav-item-icon { 
+            font-size: var(--text-lg); 
+            width: 20px; 
+            text-align: center; 
+            opacity: 0.7; 
+            transition: opacity 0.15s;
+            flex-shrink: 0;
+        }
+        
+        .nav-item[data-page="dashboard"] .nav-item-icon::before { content: '◆'; }
+        .nav-item[data-page="questions"] .nav-item-icon::before { content: '▣'; }
+        .nav-item[data-page="feedbacks"] .nav-item-icon::before { content: '◈'; }
+        .nav-item[data-page="users"] .nav-item-icon::before { content: '◇'; }
+        .nav-item[data-page="admins"] .nav-item-icon::before { content: '◆'; }
+        .nav-item[data-page="analytics"] .nav-item-icon::before { content: '○'; }
+        
+        .nav-item:hover .nav-item-icon,
+        .nav-item.active .nav-item-icon { opacity: 1; }
+        
+        .nav-item-text { 
+            font-size: var(--text-sm);
+            flex: 1;
+        }
+        
         .nav-item-badge {
-            margin-left: auto;
             background: var(--danger);
             color: #fff;
-            font-size: 11px;
-            padding: 2px 8px;
-            border-radius: 10px;
+            font-size: 10px;
+            padding: 1px 6px;
+            border-radius: 8px;
+            font-weight: var(--font-semibold);
+            flex-shrink: 0;
+            min-width: 18px;
+            text-align: center;
         }
         
         .sidebar-footer {
-            padding: 16px;
-            border-top: 1px solid rgba(255,255,255,0.1);
+            padding: var(--space-md);
+            border-top: 1px solid var(--sidebar-border);
         }
         
         .sidebar-footer a {
             display: flex;
             align-items: center;
-            gap: 10px;
-            color: rgba(255,255,255,0.6);
+            gap: var(--space-sm);
+            color: var(--sidebar-text-muted);
             text-decoration: none;
-            font-size: 13px;
-            padding: 8px 12px;
+            font-size: var(--text-sm);
+            padding: var(--space-sm) var(--space-md);
             border-radius: 6px;
-            transition: all 0.2s;
+            transition: all 0.15s ease;
         }
         
         .sidebar-footer a:hover {
-            background: rgba(255,255,255,0.1);
+            background: var(--sidebar-hover);
             color: #fff;
         }
         
@@ -165,7 +402,7 @@
         /* 顶部栏 */
         .topbar {
             background: var(--bg-white);
-            padding: 16px 24px;
+            padding: var(--space-md) var(--space-lg);
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -178,18 +415,18 @@
         .topbar-left {
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: var(--space-md);
         }
         
         .topbar-title {
-            font-size: 18px;
-            font-weight: 600;
+            font-size: var(--text-lg);
+            font-weight: var(--font-semibold);
         }
         
         .topbar-right {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: var(--space-sm);
         }
         
         .mobile-menu-btn {
@@ -203,7 +440,7 @@
         
         /* 页面内容 */
         .page-content {
-            padding: 24px;
+            padding: var(--space-lg);
         }
         
         .page-section {
@@ -218,120 +455,825 @@
         .stats-row {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 16px;
-            margin-bottom: 24px;
+            gap: var(--space-md);
+            margin-bottom: var(--space-lg);
+        }
+        
+        /* ==================== 数据看板 - 新版 ==================== */
+        .db-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--space-md);
+        }
+        
+        .db-title {
+            font-size: var(--text-xl);
+            font-weight: var(--font-bold);
+            color: var(--text-main);
+        }
+        
+        .db-actions {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+        
+        .db-select {
+            padding: var(--space-xs) var(--space-sm);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            font-size: var(--text-sm);
+            background: var(--bg-white);
+            cursor: pointer;
+            font-family: var(--font-sans);
+        }
+        
+        .db-btn {
+            padding: var(--space-xs);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            background: var(--bg-white);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-sub);
+            transition: all 0.15s;
+        }
+        
+        .db-btn:hover {
+            background: var(--bg-main);
+            color: var(--primary);
+        }
+        
+        .db-main {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-md);
+            margin-bottom: var(--space-md);
+        }
+        
+        .kpi-card {
+            background: var(--bg-white);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            transition: transform var(--duration-normal) var(--ease-out), 
+                        box-shadow var(--duration-normal) var(--ease-out);
+        }
+        
+        .kpi-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .kpi-card::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 60px;
+            height: 60px;
+            background: radial-gradient(circle at top right, rgba(59, 130, 246, 0.05), transparent 70%);
+        }
+        
+        .kpi-blue { }
+        .kpi-green { }
+        
+        .kpi-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: var(--space-sm);
+        }
+        
+        .kpi-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        .kpi-blue .kpi-icon {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--primary);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+        
+        .kpi-green .kpi-icon {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--accent-green);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+        
+        .kpi-meta {
+            text-align: right;
+        }
+        
+        .kpi-today {
+            font-size: var(--text-sm);
+            color: var(--text-light);
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 10px;
+            background: rgba(59, 130, 246, 0.08);
+            border-radius: 20px;
+        }
+        
+        .kpi-today strong {
+            color: var(--primary);
+            font-weight: var(--font-semibold);
+        }
+        
+        .kpi-body {
+            margin-bottom: var(--space-xs);
+        }
+        
+        .kpi-value {
+            font-size: 48px;
+            font-weight: var(--font-black);
+            color: var(--text-main);
+            line-height: 1;
+            letter-spacing: -0.02em;
+        }
+        
+        .kpi-card:hover .kpi-value {
+            color: var(--primary);
+        }
+        
+        .kpi-label {
+            font-size: var(--text-base);
+            color: var(--text-sub);
+            margin-top: 6px;
+            font-weight: var(--font-medium);
+        }
+        
+        .kpi-hint {
+            font-size: var(--text-xs);
+            color: var(--text-light);
+            margin-top: 4px;
+        }
+        
+        .db-details {
+            margin-bottom: var(--space-md);
+        }
+        
+        .detail-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-sm);
+        }
+        
+        .detail-box {
+            background: var(--bg-white);
+            border-radius: var(--radius-lg);
+            padding: var(--space-md);
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            border: 1px solid var(--border);
+            transition: transform var(--duration-normal) var(--ease-out);
+        }
+        
+        .detail-box:hover {
+            transform: translateX(4px);
+        }
+        
+        .detail-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        .detail-icon-blue {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--primary);
+            border: 1px solid rgba(59, 130, 246, 0.15);
+        }
+        
+        .detail-icon-teal {
+            background: rgba(20, 184, 166, 0.1);
+            color: var(--accent-teal);
+            border: 1px solid rgba(20, 184, 166, 0.15);
+        }
+        
+        .detail-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        
+        .detail-label {
+            font-size: var(--text-sm);
+            color: var(--text-sub);
+            font-weight: var(--font-medium);
+        }
+        
+        .detail-value {
+            font-size: var(--text-2xl);
+            font-weight: var(--font-black);
+            color: var(--text-main);
+            line-height: 1;
+        }
+        
+        .detail-tag {
+            font-size: var(--text-xs);
+            color: var(--text-light);
+            background: rgba(59, 130, 246, 0.08);
+            padding: 4px 8px;
+            border-radius: 4px;
+            white-space: nowrap;
+        }
+        
+        .db-charts {
+            display: grid;
+            grid-template-columns: 1fr 280px;
+            gap: var(--space-md);
+            min-height: 260px;
+        }
+        
+        .chart-panel {
+            background: var(--bg-white);
+            border-radius: var(--radius-lg);
+            padding: var(--space-md);
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            border: 1px solid var(--border);
+        }
+        
+        .chart-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--space-md);
+            padding-bottom: var(--space-sm);
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .chart-tabs {
+            display: flex;
+            gap: var(--space-xs);
+        }
+        
+        .tab {
+            padding: var(--space-xs) var(--space-md);
+            border: none;
+            background: transparent;
+            border-radius: 20px;
+            font-size: var(--text-sm);
+            color: var(--text-sub);
+            cursor: pointer;
+            transition: all var(--duration-fast) ease;
+            font-family: var(--font-sans);
+            font-weight: var(--font-medium);
+        }
+        
+        .chart-filter-sm {
+            padding: var(--space-xs) var(--space-sm);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            font-size: var(--text-xs);
+            background: var(--bg-white);
+            cursor: pointer;
+        }
+        
+        .chart-body {
+            flex: 1;
+            position: relative;
+            min-height: 180px;
+        }
+        
+        .chart-body canvas {
+            position: absolute;
+            inset: 0;
+        }
+        
+        .trend-panel {
+            background: var(--bg-white);
+            border-radius: var(--radius-lg);
+            padding: var(--space-md);
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            border: 1px solid var(--border);
+        }
+        
+        .trend-head {
+            font-size: var(--text-sm);
+            font-weight: var(--font-semibold);
+            color: var(--text-main);
+            margin-bottom: var(--space-md);
+            padding-bottom: var(--space-sm);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .trend-head::before {
+            content: '';
+            width: 3px;
+            height: 14px;
+            background: var(--primary);
+            border-radius: 2px;
+        }
+        
+        .trend-body {
+            flex: 1;
+            position: relative;
+            min-height: 180px;
+        }
+        
+        .trend-body canvas {
+            position: absolute;
+            inset: 0;
+        }
+        
+        @media (max-width: 1200px) {
+            .db-main {
+                grid-template-columns: 1fr;
+            }
+            
+            .db-charts {
+                grid-template-columns: 1fr;
+            }
+            
+            .trend-panel {
+                min-height: 200px;
+            }
+            
+            .kpi-value {
+                font-size: 40px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .kpi-card {
+                padding: var(--space-md);
+            }
+            
+            .kpi-value {
+                font-size: 36px;
+            }
+            
+            .kpi-icon {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .detail-box {
+                padding: var(--space-sm) var(--space-md);
+            }
+            
+            .detail-value {
+                font-size: var(--text-xl);
+            }
+            
+            .chart-panel,
+            .trend-panel {
+                padding: var(--space-sm);
+            }
+        }
+        
+        /* ==================== 数据看板旧布局 ==================== */
+        .dashboard-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--space-md);
+        }
+        
+        .dashboard-title {
+            font-size: var(--text-xl);
+            font-weight: var(--font-bold);
+            color: var(--text-main);
+        }
+        
+        .dashboard-filter {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: var(--space-md);
+            height: auto;
+        }
+        
+        .dashboard-left {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+        }
+        
+        .metric-cards {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-sm);
+        }
+        
+        .metric-card {
+            background: var(--bg-white);
+            border-radius: var(--radius-lg);
+            padding: var(--space-md);
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            transition: transform var(--duration-normal) var(--ease-out);
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-2px);
+        }
+        
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+        }
+        
+        .metric-primary::before { background: var(--primary); }
+        .metric-green::before { background: var(--success); }
+        
+        .metric-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .metric-primary .metric-icon {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--primary);
+            border: 1px solid rgba(59, 130, 246, 0.15);
+        }
+        
+        .metric-green .metric-icon {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+            border: 1px solid rgba(16, 185, 129, 0.15);
+        }
+        
+        .metric-content {
+            flex: 1;
+        }
+        
+        .metric-value {
+            font-size: var(--text-xl);
+            font-weight: var(--font-bold);
+            color: var(--text-main);
+            line-height: 1.2;
+        }
+        
+        .metric-label {
+            font-size: var(--text-xs);
+            color: var(--text-sub);
+            margin-top: 2px;
+        }
+        
+        .metric-trend {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: var(--space-xs);
+            border-top: 1px solid var(--border);
+            font-size: var(--text-xs);
+        }
+        
+        .trend-label { color: var(--text-light); }
+        .trend-value { font-weight: var(--font-semibold); color: var(--primary); }
+        
+        .detail-metrics {
+            background: var(--bg-white);
+            border-radius: var(--radius-lg);
+            padding: var(--space-xs);
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--radius);
+            transition: background 0.15s;
+        }
+        
+        .detail-item:hover {
+            background: var(--bg-main);
+        }
+        
+        .detail-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        .detail-content {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .detail-label {
+            font-size: var(--text-xs);
+            color: var(--text-light);
+        }
+        
+        .detail-row {
+            display: flex;
+            align-items: baseline;
+            gap: var(--space-sm);
+        }
+        
+        .detail-value {
+            font-size: var(--text-base);
+            font-weight: var(--font-bold);
+            color: var(--text-main);
+        }
+        
+        .detail-today {
+            font-size: var(--text-xs);
+            color: var(--text-light);
+        }
+        
+        .trend-card {
+            background: var(--bg-white);
+            border-radius: var(--radius-lg);
+            padding: var(--space-sm) var(--space-md);
+            box-shadow: var(--shadow);
+            height: 180px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .trend-header {
+            font-size: var(--text-sm);
+            font-weight: var(--font-semibold);
+            color: var(--text-sub);
+            margin-bottom: var(--space-sm);
+        }
+        
+        .trend-chart {
+            flex: 1;
+            min-height: 0;
+        }
+        
+        .dashboard-right {
+            min-width: 0;
+        }
+        
+        .chart-container {
+            background: var(--bg-white);
+            border-radius: var(--radius-lg);
+            padding: var(--space-md);
+            box-shadow: var(--shadow);
+            height: 320px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .chart-tabs {
+            display: flex;
+            gap: var(--space-xs);
+            margin-bottom: var(--space-sm);
+        }
+        
+        .chart-tab {
+            padding: var(--space-xs) var(--space-md);
+            border: none;
+            background: var(--bg-main);
+            border-radius: 6px;
+            font-size: var(--text-sm);
+            color: var(--text-sub);
+            cursor: pointer;
+            transition: all 0.15s;
+            font-family: var(--font-sans);
+        }
+        
+        .chart-tab:hover {
+            background: var(--border);
+        }
+        
+        .chart-tab.active {
+            background: var(--primary);
+            color: #fff;
+            font-weight: var(--font-medium);
+        }
+        
+        .chart-filter-inline {
+            padding: var(--space-xs) var(--space-sm);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: var(--text-xs);
+            background: var(--bg-white);
+            cursor: pointer;
+            margin-left: auto;
+        }
+        
+        .chart-area {
+            flex: 1;
+            min-height: 0;
+            position: relative;
+        }
+        
+        .chart-area canvas {
+            position: absolute;
+            inset: 0;
+        }
+        
+        @media (max-width: 1024px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+                height: auto;
+            }
+            
+            .dashboard-left {
+                order: 1;
+            }
+            
+            .dashboard-right {
+                order: 2;
+            }
+            
+            .chart-container {
+                min-height: 280px;
+                height: 280px;
+            }
+            
+            .trend-card {
+                height: 160px;
+            }
         }
         
         .stat-card {
             background: var(--bg-white);
             border-radius: var(--radius-lg);
-            padding: 20px;
+            padding: var(--space-lg);
             box-shadow: var(--shadow);
             position: relative;
             overflow: hidden;
+            border-left: 3px solid var(--primary);
+            transition: transform var(--duration-normal) var(--ease-out),
+                        box-shadow var(--duration-normal) var(--ease-out);
         }
         
-        .stat-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
         }
         
-        .stat-card:nth-child(2)::before { background: linear-gradient(90deg, #f093fb, #f5576c); }
-        .stat-card:nth-child(3)::before { background: linear-gradient(90deg, #4facfe, #00f2fe); }
-        .stat-card:nth-child(4)::before { background: linear-gradient(90deg, #43e97b, #38f9d7); }
+        .stat-card:nth-child(2) { border-left-color: var(--accent-teal); }
+        .stat-card:nth-child(3) { border-left-color: var(--success); }
+        .stat-card:nth-child(4) { border-left-color: var(--warning); }
         
         .stat-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 12px;
+            margin-bottom: var(--space-md);
         }
         
         .stat-icon {
             width: 48px;
             height: 48px;
-            border-radius: 12px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 24px;
-            background: linear-gradient(135deg, rgba(102,126,234,0.1), rgba(118,75,162,0.1));
         }
         
-        .stat-card:nth-child(2) .stat-icon { background: linear-gradient(135deg, rgba(240,147,251,0.1), rgba(245,87,108,0.1)); }
-        .stat-card:nth-child(3) .stat-icon { background: linear-gradient(135deg, rgba(79,172,254,0.1), rgba(0,242,254,0.1)); }
-        .stat-card:nth-child(4) .stat-icon { background: linear-gradient(135deg, rgba(67,233,123,0.1), rgba(56,249,215,0.1)); }
+        .stat-card:nth-child(1) .stat-icon {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.15);
+        }
+        
+        .stat-card:nth-child(2) .stat-icon {
+            background: rgba(20, 184, 166, 0.1);
+            border: 1px solid rgba(20, 184, 166, 0.15);
+        }
+        
+        .stat-card:nth-child(3) .stat-icon {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.15);
+        }
+        
+        .stat-card:nth-child(4) .stat-icon {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.15);
+        }
         
         .stat-trend {
             font-size: 12px;
             padding: 4px 8px;
-            border-radius: 4px;
+            border-radius: 20px;
             display: flex;
             align-items: center;
             gap: 4px;
+            font-weight: var(--font-medium);
         }
         
-        .stat-trend.up { background: rgba(82,196,26,0.1); color: var(--success); }
-        .stat-trend.down { background: rgba(255,77,79,0.1); color: var(--danger); }
+        .stat-trend.up { background: rgba(16, 185, 129, 0.15); color: var(--success); }
+        .stat-trend.down { background: rgba(239, 68, 68, 0.15); color: var(--danger); }
         
         .stat-value {
-            font-size: 32px;
-            font-weight: 700;
+            font-size: 40px;
+            font-weight: var(--font-black);
             color: var(--text-main);
-            margin-bottom: 4px;
+            line-height: 1;
+            letter-spacing: -0.02em;
         }
         
         .stat-label {
-            font-size: 14px;
+            font-size: var(--text-sm);
             color: var(--text-sub);
+            margin-top: 6px;
+            font-weight: var(--font-medium);
         }
         
         .stat-footer {
-            margin-top: 12px;
-            padding-top: 12px;
+            margin-top: var(--space-md);
+            padding-top: var(--space-sm);
             border-top: 1px solid var(--border);
             display: flex;
             justify-content: space-between;
-            font-size: 13px;
+            font-size: var(--text-sm);
         }
         
         .stat-today-label { color: var(--text-light); }
-        .stat-today-value { font-weight: 600; color: var(--primary); }
+        .stat-today-value {
+            font-weight: var(--font-semibold);
+            color: var(--primary);
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
         
         /* ==================== 图表区域 ==================== */
         .charts-row {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 16px;
-            margin-bottom: 24px;
+            gap: var(--space-md);
+            margin-bottom: var(--space-lg);
         }
         
         .chart-card {
             background: var(--bg-white);
             border-radius: var(--radius-lg);
-            padding: 20px;
+            padding: var(--space-lg);
             box-shadow: var(--shadow);
+            border: 1px solid var(--border);
         }
         
         .chart-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 16px;
+            margin-bottom: var(--space-md);
+            padding-bottom: var(--space-sm);
+            border-bottom: 1px solid var(--border);
         }
         
         .chart-title {
-            font-size: 15px;
-            font-weight: 600;
+            font-size: var(--text-base);
+            font-weight: var(--font-semibold);
+            color: var(--text-main);
         }
         
         .chart-subtitle {
-            font-size: 12px;
+            font-size: var(--text-xs);
             color: var(--text-light);
             margin-top: 2px;
         }
@@ -339,10 +1281,81 @@
         .chart-filter {
             padding: 6px 12px;
             border: 1px solid var(--border);
-            border-radius: 6px;
+            border-radius: 20px;
             font-size: 12px;
             background: var(--bg-white);
             cursor: pointer;
+        }
+        
+        .chart-tab {
+            padding: 8px 16px;
+            border: none;
+            background: transparent;
+            border-radius: 20px;
+            font-size: 13px;
+            color: var(--text-sub);
+            cursor: pointer;
+            transition: all var(--duration-fast) ease;
+            font-weight: var(--font-medium);
+        }
+        
+        .chart-tab:hover {
+            background: var(--bg-main);
+        }
+        
+        .chart-tab.active {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .detail-stats summary {
+            list-style: none;
+        }
+        
+        .detail-stats summary::-webkit-details-marker {
+            display: none;
+        }
+        
+        .detail-stats summary::after {
+            content: '▼';
+            font-size: 10px;
+            margin-left: auto;
+            color: var(--text-light);
+            transition: transform 0.2s;
+        }
+        
+        .detail-stats[open] summary::after {
+            transform: rotate(180deg);
+        }
+        
+        .stat-card-lg .stat-value {
+            font-size: 40px;
+        }
+        
+        .stat-card-lg .stat-icon {
+            width: 56px;
+            height: 56px;
+            font-size: 28px;
+        }
+        
+        .help-guide summary {
+            list-style: none;
+        }
+        
+        .help-guide summary::-webkit-details-marker {
+            display: none;
+        }
+        
+        .help-guide summary::after {
+            content: '▼';
+            font-size: 10px;
+            margin-left: auto;
+            color: var(--primary);
+            transition: transform 0.2s;
+        }
+        
+        .help-guide[open] summary::after {
+            transform: rotate(180deg);
         }
         
         .chart-body {
@@ -356,27 +1369,30 @@
             border-radius: var(--radius-lg);
             box-shadow: var(--shadow);
             overflow: hidden;
+            border: 1px solid var(--border);
         }
         
         .table-header {
-            padding: 16px 20px;
+            padding: var(--space-md) var(--space-lg);
             border-bottom: 1px solid var(--border);
             display: flex;
             align-items: center;
             justify-content: space-between;
             flex-wrap: wrap;
-            gap: 12px;
+            gap: var(--space-sm);
+            background: linear-gradient(180deg, var(--bg-white) 0%, rgba(240, 249, 255, 0.5) 100%);
         }
         
         .table-title {
-            font-size: 16px;
-            font-weight: 600;
+            font-size: var(--text-lg);
+            font-weight: var(--font-semibold);
+            color: var(--text-main);
         }
         
         .table-actions {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: var(--space-sm);
             flex-wrap: wrap;
         }
         
@@ -438,17 +1454,23 @@
         }
         
         th, td {
-            padding: 14px 16px;
+            padding: var(--space-sm) var(--space-md);
             text-align: left;
             border-bottom: 1px solid var(--border);
         }
         
         th {
             background: #fafafa;
-            font-weight: 600;
-            font-size: 13px;
+            font-weight: var(--font-semibold);
+            font-size: var(--text-xs);
             color: var(--text-sub);
             white-space: nowrap;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        td {
+            font-size: var(--text-sm);
         }
         
         tr:hover { background: #fafafa; }
@@ -457,12 +1479,23 @@
             padding: 4px 10px;
             border-radius: 20px;
             font-size: 12px;
-            font-weight: 500;
+            font-weight: var(--font-medium);
         }
         
-        .status-active { background: rgba(82,196,26,0.1); color: var(--success); }
-        .status-inactive { background: rgba(255,77,79,0.1); color: var(--danger); }
-        .status-pending { background: rgba(250,173,20,0.1); color: var(--warning); }
+        .status-active {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--success);
+        }
+        
+        .status-inactive {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--danger);
+        }
+        
+        .status-pending {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--warning);
+        }
         
         /* 操作下拉菜单 */
         .action-dropdown {
@@ -515,7 +1548,7 @@
         
         /* 分页 */
         .table-footer {
-            padding: 16px 20px;
+            padding: var(--space-md) var(--space-lg);
             border-top: 1px solid var(--border);
             display: flex;
             align-items: center;
@@ -550,46 +1583,97 @@
         .page-btn:disabled { opacity: 0.5; cursor: not-allowed; }
         
         /* ==================== 按钮样式 ==================== */
-        .btn {
-            padding: 10px 20px;
+.btn {
+            padding: 10px var(--space-md);
             border: none;
             border-radius: var(--radius);
-            font-size: 14px;
-            font-weight: 500;
+            font-size: var(--text-sm);
+            font-weight: var(--font-medium);
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all var(--duration-fast) ease;
             display: inline-flex;
             align-items: center;
             gap: 6px;
+            font-family: var(--font-sans);
+            position: relative;
         }
         
         .btn-primary {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: var(--primary);
             color: #fff;
         }
         
-        .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(102,126,234,0.3); }
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+        
+        .btn-primary:active {
+            transform: translateY(0);
+        }
         
         .btn-success { background: var(--success); color: #fff; }
-        .btn-danger { background: var(--danger); color: #fff; }
-        .btn-outline { background: var(--bg-white); border: 1px solid var(--border); color: var(--text-main); }
-        .btn-outline:hover { background: var(--bg-main); }
+        .btn-success:hover { background: #059669; }
         
-        .btn-sm { padding: 6px 12px; font-size: 12px; }
+        .btn-danger { background: var(--danger); color: #fff; }
+        .btn-danger:hover { background: #dc2626; }
+        
+        .btn-outline {
+            background: var(--bg-white);
+            border: 1px solid var(--border-strong);
+            color: var(--text-main);
+        }
+        
+        .btn-outline:hover {
+            background: var(--bg-main);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        
+        .btn-sm { padding: var(--space-xs) var(--space-sm); font-size: var(--text-xs); }
+        
+        .btn-icon {
+            width: 36px;
+            height: 36px;
+            border: 1px solid transparent;
+            background: var(--bg-main);
+            border-radius: var(--radius);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-sub);
+            transition: all var(--duration-fast) ease;
+        }
+        
+        .btn-icon:hover {
+            background: var(--bg-white);
+            border-color: var(--border-strong);
+            color: var(--primary);
+        }
         
         /* ==================== 弹窗样式 ==================== */
         .modal-overlay {
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0,0,0,0.5);
+            background: rgba(30, 58, 95, 0.4);
+            backdrop-filter: blur(4px);
             z-index: 1000;
             align-items: center;
             justify-content: center;
             padding: 20px;
         }
         
-        .modal-overlay.show { display: flex; }
+        .modal-overlay.show {
+            display: flex;
+            animation: modalFadeIn 0.2s ease;
+        }
+        
+        @keyframes modalFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
         
         .modal {
             background: var(--bg-white);
@@ -599,6 +1683,19 @@
             max-height: 90vh;
             overflow-y: auto;
             box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border);
+            animation: modalSlideUp 0.3s var(--ease-out);
+        }
+        
+        @keyframes modalSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.98);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
         }
         
         .modal-lg { max-width: 800px; }
@@ -615,23 +1712,31 @@
             z-index: 10;
         }
         
-        .modal-title { font-size: 18px; font-weight: 600; }
+        .modal-title {
+            font-size: 18px;
+            font-weight: var(--font-semibold);
+            color: var(--text-main);
+        }
         
         .modal-close {
             width: 32px;
             height: 32px;
-            border-radius: 50%;
+            border-radius: var(--radius);
             border: none;
-            background: var(--bg-main);
+            background: transparent;
             font-size: 20px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: background 0.2s;
+            transition: background var(--duration-fast) ease;
+            color: var(--text-light);
         }
         
-        .modal-close:hover { background: #e0e0e0; }
+        .modal-close:hover {
+            background: var(--bg-main);
+            color: var(--text-main);
+        }
         
         .modal-body { padding: 24px; }
         
@@ -771,21 +1876,40 @@
         .toast {
             padding: 12px 20px;
             background: var(--bg-white);
-            border-radius: var(--radius);
+            border-radius: var(--radius-lg);
             box-shadow: var(--shadow-lg);
             display: flex;
             align-items: center;
             gap: 10px;
-            animation: toastIn 0.3s ease;
+            animation: toastIn 0.3s var(--ease-out);
+            border: 1px solid var(--border);
+            font-weight: var(--font-medium);
         }
         
-        .toast.success { border-left: 4px solid var(--success); }
-        .toast.error { border-left: 4px solid var(--danger); }
-        .toast.warning { border-left: 4px solid var(--warning); }
+        .toast.success {
+            border-color: var(--success);
+            color: var(--success);
+        }
+        
+        .toast.error {
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+        
+        .toast.warning {
+            border-color: var(--warning);
+            color: var(--warning);
+        }
         
         @keyframes toastIn {
-            from { opacity: 0; transform: translateX(100%); }
-            to { opacity: 1; transform: translateX(0); }
+            from {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
         
         /* ==================== 响应式设计 ==================== */
@@ -858,10 +1982,20 @@
             display: none;
             position: fixed;
             inset: 0;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--bg-sidebar);
             z-index: 9999;
             align-items: center;
             justify-content: center;
+        }
+        
+        .login-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 40%;
+            background: linear-gradient(180deg, rgba(59, 130, 246, 0.2) 0%, transparent 100%);
         }
         
         .login-container.show { display: flex; }
@@ -873,6 +2007,18 @@
             width: 100%;
             max-width: 400px;
             box-shadow: var(--shadow-lg);
+            animation: loginSlideUp 0.6s var(--ease-out);
+        }
+        
+        @keyframes loginSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         
         .login-header {
@@ -883,13 +2029,25 @@
         .login-logo {
             width: 64px;
             height: 64px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: var(--primary);
             border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 32px;
             margin: 0 auto 16px;
+            position: relative;
+        }
+        
+        .login-logo::after {
+            content: '';
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            width: 16px;
+            height: 16px;
+            background: rgba(255,255,255,0.25);
+            border-radius: 4px;
         }
         
         .login-title {
@@ -933,6 +2091,19 @@
         .app-container.hidden { display: none; }
         
         /* ==================== 批改配置弹窗样式 ==================== */
+        
+        :root {
+            --sg-color: #3b82f6;
+            --sg-bg: rgba(59, 130, 246, 0.08);
+            --sg-border: rgba(59, 130, 246, 0.2);
+            --sg-text: #1d4ed8;
+            
+            --fb-color: #0891b2;
+            --fb-bg: rgba(8, 145, 178, 0.08);
+            --fb-border: rgba(8, 145, 178, 0.2);
+            --fb-text: #0e7490;
+        }
+        
         .user-answer-preview {
             flex: 1;
             overflow-y: auto;
@@ -941,14 +2112,20 @@
             line-height: 1.9;
             white-space: pre-wrap;
             color: var(--text-main);
+            background: linear-gradient(180deg, #fafbfc 0%, #f1f5f9 100%);
         }
         
         .config-section {
             background: #fff;
             border: 1px solid var(--border);
-            border-radius: var(--radius);
+            border-radius: var(--radius-lg);
             margin-bottom: 16px;
             overflow: hidden;
+            transition: border-color var(--duration-fast) ease;
+        }
+        
+        .config-section:hover {
+            border-color: var(--border-strong);
         }
         
         .config-section-header {
@@ -958,16 +2135,21 @@
             background: var(--bg-main);
             cursor: pointer;
             user-select: none;
-            transition: background 0.2s;
+            transition: background var(--duration-fast) ease;
         }
         
         .config-section-header:hover {
-            background: #f0f1f3;
+            background: #eef2ff;
         }
         
         .config-section-icon {
             font-size: 18px;
             margin-right: 10px;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
         .config-section-title {
@@ -980,7 +2162,17 @@
         .config-section-toggle {
             font-size: 12px;
             color: var(--text-light);
-            transition: transform 0.2s;
+            transition: transform var(--duration-normal) var(--ease-out);
+        }
+        
+        .config-section-badge {
+            font-size: 10px;
+            padding: 3px 8px;
+            background: #f1f5f9;
+            color: var(--text-sub);
+            border-radius: 10px;
+            margin-left: 8px;
+            font-weight: 500;
         }
         
         .config-section.collapsed .config-section-toggle {
@@ -993,6 +2185,35 @@
         
         .config-section-content {
             padding: 16px;
+        }
+        
+        /* 得分统计网格样式 */
+        .config-section-content .form-input[type="number"] {
+            text-align: center;
+            font-variant-numeric: tabular-nums;
+        }
+        
+        /* 题目总分和答案得分样式 */
+        #sgQuestionTotalScore,
+        #sgAnswerTotalScore {
+            font-weight: 700;
+        }
+        
+        #fbQuestionTotalScore,
+        #fbAnswerTotalScore {
+            font-weight: 700;
+        }
+        
+        /* 表单标签hover效果 */
+        .form-label:hover {
+            color: var(--primary);
+        }
+        
+        /* 添加按钮样式优化 */
+        .sub-section-header .btn-outline:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: rgba(59, 130, 246, 0.05);
         }
         
         .form-label-sm {
@@ -1025,6 +2246,17 @@
             color: var(--text-sub);
         }
         
+        .sub-section-header span:first-child::before {
+            content: '';
+            display: inline-block;
+            width: 3px;
+            height: 12px;
+            background: var(--primary);
+            border-radius: 2px;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+        
         .data-table {
             border: 1px solid var(--border);
             border-radius: var(--radius);
@@ -1042,14 +2274,19 @@
             font-size: 12px;
             font-weight: 600;
             text-align: left;
-            background: var(--bg-main);
+            background: linear-gradient(180deg, #fafbfc 0%, #f1f5f9 100%);
             color: var(--text-sub);
+            border-bottom: 1px solid var(--border);
         }
         
         .data-table td {
             padding: 10px 12px;
             font-size: 13px;
             border-top: 1px solid var(--border);
+        }
+        
+        .data-table tr:hover td {
+            background: rgba(59, 130, 246, 0.03);
         }
         
         .data-table textarea {
@@ -1061,11 +2298,13 @@
             font-size: 13px;
             resize: vertical;
             font-family: inherit;
+            transition: border-color var(--duration-fast) ease, box-shadow var(--duration-fast) ease;
         }
         
         .data-table textarea:focus {
             outline: none;
             border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
         }
         
         /* 富文本编辑器样式 */
@@ -1080,7 +2319,7 @@
             align-items: center;
             gap: 2px;
             padding: 8px 10px;
-            background: #fafbfc;
+            background: linear-gradient(180deg, #fafbfc 0%, #f1f5f9 100%);
             border-bottom: 1px solid var(--border);
             flex-wrap: wrap;
         }
@@ -1097,13 +2336,14 @@
             cursor: pointer;
             font-size: 13px;
             color: var(--text-sub);
-            transition: all 0.15s;
+            transition: all var(--duration-fast) ease;
         }
         
         .toolbar-btn:hover {
             background: #fff;
             border-color: var(--border);
             color: var(--text-main);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
         }
         
         .toolbar-btn.color-btn {
@@ -1132,6 +2372,7 @@
         
         .rich-editor-content:focus {
             background: #fffef8;
+            box-shadow: inset 0 2px 8px rgba(217, 119, 6, 0.05);
         }
         
         .rich-editor-content:empty:before {
@@ -1160,26 +2401,152 @@
         .rich-editor-content li {
             margin: 4px 0;
         }
+        
+        /* 批改切换按钮样式 */
+        #reviewTabSG.btn-primary {
+            background: var(--sg-color);
+        }
+        
+        #reviewTabSG.btn-primary:hover {
+            background: var(--sg-text);
+        }
+        
+        #reviewTabFB.btn-primary {
+            background: var(--fb-color);
+        }
+        
+        #reviewTabFB.btn-primary:hover {
+            background: var(--fb-text);
+        }
+        
+        #reviewTabFB.btn-outline:hover {
+            border-color: var(--fb-color);
+            color: var(--fb-color);
+        }
+        
+        /* 得分数字强调 */
+        .form-input[type="number"] {
+            font-weight: 600;
+            color: var(--text-main);
+        }
+        
+        .form-input[type="number"]:focus {
+            border-color: var(--primary);
+            background: rgba(59, 130, 246, 0.02);
+        }
+        
+        /* 得分字段网格 */
+        .config-section-content .form-label-sm {
+            font-weight: 500;
+            color: var(--text-sub);
+        }
+        
+        .config-section-content .form-label-sm::after {
+            content: '';
+        }
+        
+        /* 题目总分和答案得分 */
+        #shangancangForm .form-row:first-child .form-input[type="number"] {
+            background: rgba(59, 130, 246, 0.03);
+        }
+        
+        #fenbiForm .form-row:first-child .form-input[type="number"] {
+            background: rgba(5, 150, 105, 0.03);
+        }
+        
+        /* 使用说明样式 */
+        .help-guide {
+            background: linear-gradient(135deg, #eff6ff 0%, #f0fdf4 100%);
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .help-guide summary {
+            color: var(--text-sub);
+            font-weight: 500;
+        }
+        
+        .help-guide summary span:first-of-type {
+            color: var(--primary);
+        }
+        
+        /* 得分统计网格样式 */
+        .config-section-content .form-input[type="number"] {
+            text-align: center;
+            font-variant-numeric: tabular-nums;
+        }
+        
+        /* 完全得分 - 绿色 */
+        .form-label-sm[for="kpFullyScored"],
+        #kpFullyScored {
+            color: var(--success);
+        }
+        
+        /* 部分得分 - 蓝色 */
+        .form-label-sm[for="kpPartiallyScored"],
+        #kpPartiallyScored {
+            color: var(--primary);
+        }
+        
+        /* 遗漏 - 红色 */
+        .form-label-sm[for="kpMissing"],
+        #kpMissing {
+            color: var(--danger);
+        }
+        
+        /* 要点数 - 紫色 */
+        .form-label-sm[for="kpTotal"],
+        #kpTotal {
+            color: var(--config-demo);
+        }
+        
+        /* 要点分 - 橙色 */
+        .form-label-sm[for="kpPointScore"],
+        #kpPointScore {
+            color: var(--config-diagnosis);
+        }
+        
+        /* 题目总分和答案得分样式 */
+        #sgQuestionTotalScore,
+        #sgAnswerTotalScore {
+            font-weight: 700;
+        }
+        
+        #fbQuestionTotalScore,
+        #fbAnswerTotalScore {
+            font-weight: 700;
+        }
+        
+        /* 表单标签hover效果 */
+        .form-label:hover {
+            color: var(--primary);
+        }
+        
+        /* 添加按钮样式优化 */
+        .sub-section-header .btn-outline:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: rgba(59, 130, 246, 0.05);
+        }
     </style>
 </head>
 <body>
     <!-- 登录界面 -->
-    <div class="login-container" id="loginContainer">
+    <div class="login-container" id="loginContainer" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
         <div class="login-box">
             <div class="login-header">
-                <div class="login-logo">🔐</div>
-                <div class="login-title">管理后台登录</div>
+                <div class="login-logo" aria-hidden="true"></div>
+                <div class="login-title" id="loginTitle">管理后台登录</div>
                 <div class="login-subtitle">请输入管理员账号密码</div>
             </div>
-            <form class="login-form" id="loginForm" onsubmit="handleLogin(event)">
-                <div class="login-error" id="loginError"></div>
+            <form class="login-form" id="loginForm" onsubmit="handleLogin(event)" novalidate>
+                <div class="login-error" id="loginError" role="alert" aria-live="polite"></div>
                 <div class="form-group">
-                    <label class="form-label">用户名</label>
-                    <input type="text" class="form-input" id="loginUsername" placeholder="请输入用户名" required autocomplete="username">
+                    <label class="form-label" for="loginUsername">用户名</label>
+                    <input type="text" class="form-input" id="loginUsername" name="username" placeholder="请输入用户名" required autocomplete="username" aria-required="true">
                 </div>
                 <div class="form-group">
-                    <label class="form-label">密码</label>
-                    <input type="password" class="form-input" id="loginPassword" placeholder="请输入密码" required autocomplete="current-password">
+                    <label class="form-label" for="loginPassword">密码</label>
+                    <input type="password" class="form-input" id="loginPassword" name="password" placeholder="请输入密码" required autocomplete="current-password" aria-required="true">
                 </div>
                 <button type="submit" class="btn btn-primary login-btn" id="loginBtn">登 录</button>
             </form>
@@ -1189,204 +2556,201 @@
     <!-- 主应用容器 -->
     <div class="app-container hidden" id="appContainer">
         <!-- 侧边栏遮罩 -->
-        <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+        <div class="sidebar-overlay" onclick="toggleSidebar()" aria-hidden="true"></div>
         
         <!-- 侧边栏 -->
-        <aside class="sidebar" id="sidebar">
+        <aside class="sidebar" id="sidebar" role="navigation" aria-label="主导航">
             <div class="sidebar-header">
                 <div class="sidebar-logo">
-                    <div class="sidebar-logo-icon">📊</div>
+                    <div class="sidebar-logo-icon" aria-hidden="true"></div>
                     <span>申论判官</span>
                 </div>
             </div>
             
             <nav class="sidebar-nav">
                 <div class="nav-section">
-                    <div class="nav-section-title">概览</div>
-                    <div class="nav-item active" data-page="dashboard" onclick="switchPage('dashboard', this)">
-                        <span class="nav-item-icon">📈</span>
+                    <div class="nav-section-title" id="nav-overview">概览</div>
+                    <button class="nav-item active" data-page="dashboard" onclick="switchPage('dashboard', this)" aria-current="page">
+                        <span class="nav-item-icon" aria-hidden="true"></span>
                         <span class="nav-item-text">数据看板</span>
-                    </div>
+                    </button>
                 </div>
                 
                 <div class="nav-section">
-                    <div class="nav-section-title">管理</div>
-                    <div class="nav-item" data-page="questions" onclick="switchPage('questions', this)">
-                        <span class="nav-item-icon">📝</span>
+                    <div class="nav-section-title" id="nav-manage">管理</div>
+                    <button class="nav-item" data-page="questions" onclick="switchPage('questions', this)">
+                        <span class="nav-item-icon" aria-hidden="true"></span>
                         <span class="nav-item-text">题目管理</span>
-                        <span class="nav-item-badge" id="questionCount">0</span>
-                    </div>
-                    <div class="nav-item" data-page="feedbacks" onclick="switchPage('feedbacks', this)">
-                        <span class="nav-item-icon">💬</span>
+                        <span class="nav-item-badge" id="questionCount" aria-label="题目数量">0</span>
+                    </button>
+                    <button class="nav-item" data-page="feedbacks" onclick="switchPage('feedbacks', this)">
+                        <span class="nav-item-icon" aria-hidden="true"></span>
                         <span class="nav-item-text">反馈数据</span>
-                    </div>
-                    <div class="nav-item" data-page="users" onclick="switchPage('users', this)">
-                        <span class="nav-item-icon">👥</span>
+                    </button>
+                    <button class="nav-item" data-page="users" onclick="switchPage('users', this)">
+                        <span class="nav-item-icon" aria-hidden="true"></span>
                         <span class="nav-item-text">用户管理</span>
-                    </div>
-                    <div class="nav-item" data-page="admins" onclick="switchPage('admins', this)">
-                        <span class="nav-item-icon">🔐</span>
+                    </button>
+                    <button class="nav-item" data-page="admins" onclick="switchPage('admins', this)">
+                        <span class="nav-item-icon" aria-hidden="true"></span>
                         <span class="nav-item-text">管理员</span>
-                    </div>
+                    </button>
                 </div>
                 
                 <div class="nav-section">
-                    <div class="nav-section-title">分析</div>
-                    <div class="nav-item" data-page="analytics" onclick="switchPage('analytics', this)">
-                        <span class="nav-item-icon">📊</span>
+                    <div class="nav-section-title" id="nav-analyze">分析</div>
+                    <button class="nav-item" data-page="analytics" onclick="switchPage('analytics', this)">
+                        <span class="nav-item-icon" aria-hidden="true"></span>
                         <span class="nav-item-text">统计分析</span>
-                    </div>
+                    </button>
                 </div>
             </nav>
             
             <div class="sidebar-footer">
-                <a href="/">
-                    <span>🏠</span>
+                <a href="/" aria-label="返回前台首页">
+                    <span aria-hidden="true"></span>
                     <span>返回前台</span>
                 </a>
             </div>
         </aside>
         
         <!-- 主内容区 -->
-        <main class="main-content">
+        <main class="main-content" role="main">
             <!-- 顶部栏 -->
             <header class="topbar">
                 <div class="topbar-left">
-                    <button class="mobile-menu-btn" onclick="toggleSidebar()">☰</button>
+                    <button class="mobile-menu-btn" onclick="toggleSidebar()" aria-label="打开导航菜单">☰</button>
                     <h1 class="topbar-title" id="pageTitle">数据看板</h1>
                 </div>
                 <div class="topbar-right">
-                    <span id="adminNickname" style="color: var(--text-sub); font-size: 14px; margin-right: 8px;"></span>
-                    <button class="btn btn-outline btn-sm" onclick="exportData('excel')">
-                        <span>📥</span> 导出数据
+                    <span id="adminNickname" style="color: var(--text-sub); font-size: 14px;"></span>
+                    <button class="btn-icon" onclick="refreshData()" aria-label="刷新数据" title="刷新">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>
                     </button>
-                    <button class="btn btn-primary btn-sm" onclick="refreshData()">
-                        <span>🔄</span> 刷新
-                    </button>
-                    <button class="btn btn-outline btn-sm" onclick="handleLogout()">
-                        <span>🚪</span> 退出
-                    </button>
+                    <button class="btn btn-outline btn-sm" onclick="handleLogout()" aria-label="退出登录">退出</button>
                 </div>
             </header>
             
             <!-- 页面内容 -->
             <div class="page-content">
                 <!-- 数据看板页面 -->
-                <section class="page-section active" id="page-dashboard">
-                    <!-- 题目筛选器 -->
-                    <div class="filter-bar" style="background: var(--bg-white); padding: 16px 20px; border-radius: var(--radius-lg); margin-bottom: 20px; box-shadow: var(--shadow); display: flex; align-items: center; gap: 12px;">
-                        <span style="font-weight: 500; color: var(--text-sub);">📋 题目筛选：</span>
-                        <select id="questionFilter" class="form-select" style="width: 300px;" onchange="onQuestionFilterChange()">
-                            <option value="all">全部题目</option>
-                        </select>
-                        <span id="currentQuestionLabel" style="color: var(--text-light); font-size: 13px; margin-left: auto;"></span>
+                <section class="page-section active" id="page-dashboard" aria-labelledby="pageTitle">
+                    <!-- 顶部 -->
+                    <div class="db-header">
+                        <h2 class="db-title">数据看板</h2>
+                        <div class="db-actions">
+                            <select id="questionFilter" class="db-select" onchange="onQuestionFilterChange()">
+                                <option value="all">全部题目</option>
+                            </select>
+                            <button class="db-btn" onclick="refreshData()" title="刷新数据">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>
+                            </button>
+                        </div>
                     </div>
                     
-                    <!-- 关键指标 -->
-                    <div class="stats-row">
-                        <div class="stat-card">
-                            <div class="stat-header">
-                                <div class="stat-icon">📊</div>
-                                <div class="stat-trend up">↑ 今日</div>
+                    <!-- 核心指标 - 突出显示 -->
+                    <div class="db-main">
+                        <!-- 总反馈数 -->
+                        <div class="kpi-card kpi-blue">
+                            <div class="kpi-header">
+                                <div class="kpi-icon">
+                                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                                    </svg>
+                                </div>
+                                <div class="kpi-meta">
+                                    <span class="kpi-today">今日 <strong id="statTodayFeedbacks">0</strong></span>
+                                </div>
                             </div>
-                            <div class="stat-value" id="statTotalFeedbacks">0</div>
-                            <div class="stat-label">总反馈数</div>
-                            <div class="stat-footer">
-                                <span class="stat-today-label">今日新增</span>
-                                <span class="stat-today-value" id="statTodayFeedbacks">0</span>
+                            <div class="kpi-body">
+                                <div class="kpi-value" data-target="0" id="statTotalFeedbacks">0</div>
+                                <div class="kpi-label">反馈总数</div>
                             </div>
+                            <div class="kpi-hint">用户完成的对比反馈</div>
                         </div>
-                        <div class="stat-card">
-                            <div class="stat-header">
-                                <div class="stat-icon">🤖</div>
-                                <div class="stat-trend up">↑ AI</div>
+                        
+                        <!-- 参与意愿 -->
+                        <div class="kpi-card kpi-green">
+                            <div class="kpi-header">
+                                <div class="kpi-icon">
+                                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                                        <polyline points="22 4 12 14 9 11"/>
+                                    </svg>
+                                </div>
+                                <div class="kpi-meta">
+                                    <span class="kpi-today">意愿率 <strong id="statWillingRate">-</strong></span>
+                                </div>
                             </div>
-                            <div class="stat-value" id="statPreferAi">0</div>
-                            <div class="stat-label">倾向上岸仓答案</div>
-                            <div class="stat-footer">
-                                <span class="stat-today-label">今日新增</span>
-                                <span class="stat-today-value" id="statTodayAi">0</span>
+                            <div class="kpi-body">
+                                <div class="kpi-value" data-target="0" id="statWilling">0</div>
+                                <div class="kpi-label">愿意参与训练</div>
                             </div>
+                            <div class="kpi-hint">想体验AI批改的用户</div>
                         </div>
-                        <div class="stat-card">
-                            <div class="stat-header">
-                                <div class="stat-icon">✍️</div>
-                                <div class="stat-trend up">↑ 批改</div>
+                    </div>
+                    
+                    <!-- 详细指标 -->
+                    <div class="db-details">
+                        <div class="detail-row">
+                            <div class="detail-box">
+                                <div class="detail-icon detail-icon-blue">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                                    </svg>
+                                </div>
+                                <div class="detail-info">
+                                    <span class="detail-label">倾向上岸仓答案</span>
+                                    <span class="detail-value" data-target="0" id="statPreferAi">0</span>
+                                </div>
+                                <span class="detail-tag">今日 <span id="statTodayAi">0</span></span>
                             </div>
-                            <div class="stat-value" id="statPreferShangancang">0</div>
-                            <div class="stat-label">倾向上岸仓批改</div>
-                            <div class="stat-footer">
-                                <span class="stat-today-label">今日新增</span>
-                                <span class="stat-today-value" id="statTodayShangancang">0</span>
-                            </div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-header">
-                                <div class="stat-icon">🌟</div>
-                                <div class="stat-trend up">↑ 意愿</div>
-                            </div>
-                            <div class="stat-value" id="statWilling">0</div>
-                            <div class="stat-label">很想+愿意体验</div>
-                            <div class="stat-footer">
-                                <span class="stat-today-label">今日新增</span>
-                                <span class="stat-today-value" id="statTodayWilling">0</span>
+                            <div class="detail-box">
+                                <div class="detail-icon detail-icon-teal">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                                    </svg>
+                                </div>
+                                <div class="detail-info">
+                                    <span class="detail-label">倾向上岸仓批改</span>
+                                    <span class="detail-value" data-target="0" id="statPreferShangancang">0</span>
+                                </div>
+                                <span class="detail-tag">今日 <span id="statTodayShangancang">0</span></span>
                             </div>
                         </div>
                     </div>
                     
                     <!-- 图表区域 -->
-                    <div class="charts-row">
-                        <div class="chart-card">
-                            <div class="chart-header">
-                                <div>
-                                    <div class="chart-title">答案倾向</div>
-                                    <div class="chart-subtitle">用户选择的答案来源分布</div>
+                    <div class="db-charts">
+                        <div class="chart-panel">
+                            <div class="chart-head">
+                                <div class="chart-tabs">
+                                    <button class="tab active" data-chart="answer" onclick="switchChart('answer')">答案偏好</button>
+                                    <button class="tab" data-chart="review" onclick="switchChart('review')">批改偏好</button>
+                                    <button class="tab" data-chart="willingness" onclick="switchChart('willingness')">参与意愿</button>
                                 </div>
-                            </div>
-                            <div class="chart-body">
-                                <canvas id="answerSourceChart"></canvas>
-                            </div>
-                        </div>
-                        <div class="chart-card">
-                            <div class="chart-header">
-                                <div>
-                                    <div class="chart-title">批改倾向</div>
-                                    <div class="chart-subtitle">A=上岸仓, B=粉笔</div>
-                                </div>
-                            </div>
-                            <div class="chart-body">
-                                <canvas id="reviewSourceChart"></canvas>
-                            </div>
-                        </div>
-                        <div class="chart-card">
-                            <div class="chart-header">
-                                <div>
-                                    <div class="chart-title">参与意愿分布</div>
-                                    <div class="chart-subtitle">用户参与训练意愿</div>
-                                </div>
-                                <select class="chart-filter" id="scoreFilter" onchange="updateWillingnessChart()">
-                                    <option value="all">全部用户</option>
+                                <select id="scoreFilter" class="chart-filter-sm" onchange="updateWillingnessChart()" style="display:none;">
+                                    <option value="all">全部</option>
                                     <option value="below_55">55分以下</option>
                                     <option value="above_55">55分以上</option>
                                 </select>
                             </div>
                             <div class="chart-body">
-                                <canvas id="willingnessChart"></canvas>
+                                <canvas id="answerSourceChart"></canvas>
+                                <canvas id="reviewSourceChart" style="display:none;"></canvas>
+                                <canvas id="willingnessChart" style="display:none;"></canvas>
                             </div>
                         </div>
-                    </div>
-                    
-                    <!-- 近期反馈趋势 -->
-                    <div class="table-card">
-                        <div class="table-header">
-                            <div class="table-title">📈 近7天反馈趋势</div>
-                        </div>
-                        <div style="padding: 20px;">
-                            <div style="height: 250px;">
+                        <div class="trend-panel">
+                            <div class="trend-head">近7天反馈趋势</div>
+                            <div class="trend-body">
                                 <canvas id="trendChart"></canvas>
                             </div>
                         </div>
                     </div>
+                    
+                    <span id="currentQuestionLabel" aria-live="polite" style="display:none;"></span>
                 </section>
                 
                 <!-- 题目管理页面 -->
@@ -1711,37 +3075,66 @@
                 <button class="modal-close" onclick="closeModal('reviewModal')">×</button>
             </div>
             <div class="modal-body" style="padding: 0; display: flex; flex-direction: column; height: calc(100% - 120px);">
-                <!-- 批改风格切换 - 2个Tab -->
-                <div style="padding: 16px 20px; border-bottom: 1px solid var(--border); background: var(--bg-main);">
-                    <div style="display: flex; gap: 10px;">
-                        <button class="btn btn-primary" id="reviewTabSG" onclick="switchReviewTab('shangancang')">上岸仓批改</button>
-                        <button class="btn btn-outline" id="reviewTabFB" onclick="switchReviewTab('fenbi')">粉笔批改</button>
+                <!-- 使用说明 -->
+                <details class="help-guide" style="border-bottom: 1px solid var(--border); padding: 0;">
+                    <summary style="padding: 10px 20px; cursor: pointer; font-size: 13px; display: flex; align-items: center; gap: 6px; font-weight: 500;">
+                        <span>📖</span>
+                        <span>使用说明</span>
+                        <span style="font-size: 11px; color: var(--text-light); margin-left: auto;">点击展开/收起</span>
+                    </summary>
+                    <div style="padding: 12px 20px; font-size: 13px; color: var(--text-sub); line-height: 1.8; border-top: 1px solid var(--border); background: #fff;">
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;">
+                            <div>
+                                <div style="font-weight: 600; color: var(--text-main); margin-bottom: 4px; padding-left: 8px; border-left: 2px solid var(--primary);">基础配置</div>
+                                <ul style="margin: 0; padding-left: 16px; margin-top: 8px;">
+                                    <li>填写题目总分和答案得分</li>
+                                    <li>填写要点统计（完全得分/部分得分/遗漏）</li>
+                                    <li>填写整体评价和提升方向</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <div style="font-weight: 600; color: var(--text-main); margin-bottom: 4px; padding-left: 8px; border-left: 2px solid var(--success);">高级配置</div>
+                                <ul style="margin: 0; padding-left: 16px; margin-top: 8px;">
+                                    <li><strong style="color: var(--config-highlight);">得分点高亮</strong>：在用户作答中标注得分点</li>
+                                    <li><strong style="color: var(--config-diagnosis);">详细点评</strong>：添加遗漏要点和部分得分要点的分析</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div style="margin-top: 12px; padding: 8px 12px; background: rgba(59, 130, 246, 0.05); border-radius: 6px; border-left: 3px solid var(--primary);">
+                            <strong>快捷键</strong>：Ctrl+S 保存配置 | Esc 关闭弹窗
+                        </div>
+                    </div>
+                </details>
+                
+                <!-- 批改风格切换 -->
+                <div style="padding: 12px 20px; border-bottom: 1px solid var(--border); background: linear-gradient(180deg, #fff 0%, var(--bg-main) 100%);">
+                    <div style="display: flex; gap: 8px;">
+                        <button class="btn btn-primary btn-sm" id="reviewTabSG" onclick="switchReviewTab('shangancang')">上岸仓批改</button>
+                        <button class="btn btn-outline btn-sm" id="reviewTabFB" onclick="switchReviewTab('fenbi')">粉笔批改</button>
                     </div>
                 </div>
                 
                 <!-- 主内容区域 -->
                 <div style="flex: 1; display: flex; overflow: hidden;">
-                    <!-- 左侧：用户作答（固定） -->
-                    <div style="width: 320px; flex-shrink: 0; border-right: 1px solid var(--border); background: #fafbfc; display: flex; flex-direction: column;">
-                        <div style="padding: 12px 16px; border-bottom: 1px solid var(--border); background: #fff;">
-                            <div style="display: flex; align-items: center; gap: 8px;">
-                                <span style="font-size: 16px;">📄</span>
-                                <span style="font-weight: 600; color: var(--text-main);">用户作答</span>
-                            </div>
+                    <!-- 左侧：用户作答 -->
+                    <div style="width: 280px; flex-shrink: 0; border-right: 1px solid var(--border); background: linear-gradient(180deg, #fafbfc 0%, #f8fafc 100%); display: flex; flex-direction: column;">
+                        <div style="padding: 10px 16px; border-bottom: 1px solid var(--border); background: #fff; font-weight: 600; font-size: 13px; color: var(--text-main); display: flex; align-items: center; gap: 6px;">
+                            <span style="width: 3px; height: 14px; background: var(--primary); border-radius: 2px;"></span>
+                            用户作答
                         </div>
                         <div id="sgUserAnswerText" class="user-answer-preview">暂无用户作答</div>
                         <div id="fbUserAnswerText" class="user-answer-preview" style="display: none;">暂无用户作答</div>
                     </div>
                     
-                    <!-- 右侧：配置项（可滚动） -->
-                    <div style="flex: 1; overflow-y: auto; padding: 20px;">
+                    <!-- 右侧：配置项 -->
+                    <div style="flex: 1; overflow-y: auto; padding: 16px;">
                         <!-- ==================== 上岸仓批改配置 ==================== -->
                         <div id="shangancangForm">
-                            <!-- 基本信息区 -->
+                            <!-- 核心配置 - 默认展开 -->
                             <div class="config-section">
                                 <div class="config-section-header" onclick="toggleConfigSection(this)">
                                     <span class="config-section-icon">📊</span>
-                                    <span class="config-section-title">基本信息</span>
+                                    <span class="config-section-title">得分配置</span>
                                     <span class="config-section-toggle">▼</span>
                                 </div>
                                 <div class="config-section-content">
@@ -1756,44 +3149,10 @@
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="form-label">📋 要点描述文案</label>
-                                        <input type="text" class="form-input" id="sgPointsDescription" placeholder="例如：本题共 5 个要点，要点分 15 分">
+                                        <label class="form-label">要点描述</label>
+                                        <input type="text" class="form-input" id="sgPointsDescription" placeholder="本题共 5 个要点，要点分 15 分">
                                     </div>
-                                </div>
-                            </div>
-                            
-                            <!-- 得分点高亮区 -->
-                            <div class="config-section">
-                                <div class="config-section-header" onclick="toggleConfigSection(this)">
-                                    <span class="config-section-icon">✨</span>
-                                    <span class="config-section-title">得分点高亮</span>
-                                    <span class="config-section-toggle">▼</span>
-                                </div>
-                                <div class="config-section-content">
-                                    <div style="display: flex; justify-content: flex-end; margin-bottom: 12px;">
-                                        <button class="btn btn-outline btn-sm" onclick="addSgHighlight()">+ 添加得分点</button>
-                                    </div>
-                                    <div id="sgHighlightsContainer" style="display: flex; flex-direction: column; gap: 8px;"></div>
-                                </div>
-                            </div>
-                            
-                            <!-- 要点统计区 -->
-                            <div class="config-section">
-                                <div class="config-section-header" onclick="toggleConfigSection(this)">
-                                    <span class="config-section-icon">📈</span>
-                                    <span class="config-section-title">要点统计</span>
-                                    <span class="config-section-toggle">▼</span>
-                                </div>
-                                <div class="config-section-content">
-                                    <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px;">
-                                        <div>
-                                            <label class="form-label-sm">要点个数</label>
-                                            <input type="number" class="form-input" id="kpTotal" value="0" min="0">
-                                        </div>
-                                        <div>
-                                            <label class="form-label-sm">要点分</label>
-                                            <input type="number" class="form-input" id="kpPointScore" value="0" min="0">
-                                        </div>
+                                    <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-top: 12px;">
                                         <div>
                                             <label class="form-label-sm">完全得分</label>
                                             <input type="number" class="form-input" id="kpFullyScored" value="0" min="0">
@@ -1803,14 +3162,22 @@
                                             <input type="number" class="form-input" id="kpPartiallyScored" value="0" min="0">
                                         </div>
                                         <div>
-                                            <label class="form-label-sm">遗落个数</label>
+                                            <label class="form-label-sm">遗漏</label>
                                             <input type="number" class="form-input" id="kpMissing" value="0" min="0">
+                                        </div>
+                                        <div>
+                                            <label class="form-label-sm">要点数</label>
+                                            <input type="number" class="form-input" id="kpTotal" value="0" min="0">
+                                        </div>
+                                        <div>
+                                            <label class="form-label-sm">要点分</label>
+                                            <input type="number" class="form-input" id="kpPointScore" value="0" min="0">
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             
-                            <!-- 整体评价区 -->
+                            <!-- 整体评价 -->
                             <div class="config-section">
                                 <div class="config-section-header" onclick="toggleConfigSection(this)">
                                     <span class="config-section-icon">💬</span>
@@ -1819,37 +3186,37 @@
                                 </div>
                                 <div class="config-section-content">
                                     <div class="form-group">
-                                        <label class="form-label">📝 本次得分与表现</label>
-                                        <textarea class="form-textarea" id="performanceSummary" placeholder="描述本次作答的整体表现..." style="min-height: 80px;"></textarea>
+                                        <label class="form-label">本次表现</label>
+                                        <textarea class="form-textarea" id="performanceSummary" placeholder="描述本次作答的整体表现..." style="min-height: 60px;"></textarea>
                                     </div>
                                     <div class="form-group">
-                                        <label class="form-label">🎯 下一步提升方向</label>
-                                        <textarea class="form-textarea" id="nextSteps" placeholder="给出下一步的学习建议..." style="min-height: 80px;"></textarea>
+                                        <label class="form-label">提升方向</label>
+                                        <textarea class="form-textarea" id="nextSteps" placeholder="给出下一步的学习建议..." style="min-height: 60px;"></textarea>
                                     </div>
                                 </div>
                             </div>
                             
-                            <!-- 详细点评区 -->
-                            <div class="config-section">
+                            <!-- 详细点评 - 高级配置 -->
+                            <div class="config-section collapsed">
                                 <div class="config-section-header" onclick="toggleConfigSection(this)">
                                     <span class="config-section-icon">📋</span>
                                     <span class="config-section-title">详细点评</span>
+                                    <span class="config-section-badge">高级</span>
                                     <span class="config-section-toggle">▼</span>
                                 </div>
                                 <div class="config-section-content">
-                                    <!-- 遗漏要点 -->
                                     <div class="sub-section">
                                         <div class="sub-section-header">
-                                            <span>❌ 遗漏要点</span>
+                                            <span>遗漏要点</span>
                                             <button class="btn btn-outline btn-sm" onclick="addMissingPoint()">+ 添加</button>
                                         </div>
                                         <div id="missingPointsTable" class="data-table">
                                             <table>
                                                 <thead>
                                                     <tr>
-                                                        <th style="width: 20%;">要点标题</th>
-                                                        <th style="width: 35%;">原因分析</th>
-                                                        <th style="width: 35%;">改进建议</th>
+                                                        <th style="width: 20%;">要点</th>
+                                                        <th style="width: 35%;">原因</th>
+                                                        <th style="width: 35%;">建议</th>
                                                         <th style="width: 10%;">操作</th>
                                                     </tr>
                                                 </thead>
@@ -1857,20 +3224,18 @@
                                             </table>
                                         </div>
                                     </div>
-                                    
-                                    <!-- 部分得分要点 -->
                                     <div class="sub-section">
                                         <div class="sub-section-header">
-                                            <span>⚠️ 部分得分要点</span>
+                                            <span>部分得分要点</span>
                                             <button class="btn btn-outline btn-sm" onclick="addPartialPoint()">+ 添加</button>
                                         </div>
                                         <div id="partialPointsTable" class="data-table">
                                             <table>
                                                 <thead>
                                                     <tr>
-                                                        <th style="width: 20%;">要点标题</th>
-                                                        <th style="width: 35%;">原因分析</th>
-                                                        <th style="width: 35%;">改进建议</th>
+                                                        <th style="width: 20%;">要点</th>
+                                                        <th style="width: 35%;">原因</th>
+                                                        <th style="width: 35%;">建议</th>
                                                         <th style="width: 10%;">操作</th>
                                                     </tr>
                                                 </thead>
@@ -1878,23 +3243,37 @@
                                             </table>
                                         </div>
                                     </div>
-                                    
-                                    <!-- 作答逻辑 -->
-                                    <div class="form-group" style="margin-top: 16px;">
-                                        <label class="form-label">🔍 作答逻辑评价</label>
-                                        <textarea class="form-textarea" id="logicAnalysis" placeholder="评价答案的逻辑结构、条理清晰度..." style="min-height: 100px;"></textarea>
+                                    <div class="form-group" style="margin-top: 12px;">
+                                        <label class="form-label">作答逻辑评价</label>
+                                        <textarea class="form-textarea" id="logicAnalysis" placeholder="评价答案的逻辑结构..." style="min-height: 80px;"></textarea>
                                     </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 得分点高亮 - 高级配置 -->
+                            <div class="config-section collapsed">
+                                <div class="config-section-header" onclick="toggleConfigSection(this)">
+                                    <span class="config-section-icon">✨</span>
+                                    <span class="config-section-title">得分点高亮</span>
+                                    <span class="config-section-badge">高级</span>
+                                    <span class="config-section-toggle">▼</span>
+                                </div>
+                                <div class="config-section-content">
+                                    <div style="display: flex; justify-content: flex-end; margin-bottom: 12px;">
+                                        <button class="btn btn-outline btn-sm" onclick="addSgHighlight()">+ 添加得分点</button>
+                                    </div>
+                                    <div id="sgHighlightsContainer" style="display: flex; flex-direction: column; gap: 8px;"></div>
                                 </div>
                             </div>
                         </div>
                         
                         <!-- ==================== 粉笔批改配置 ==================== -->
                         <div id="fenbiForm" style="display: none;">
-                            <!-- 基本信息区 -->
+                            <!-- 得分配置 -->
                             <div class="config-section">
                                 <div class="config-section-header" onclick="toggleConfigSection(this)">
                                     <span class="config-section-icon">📊</span>
-                                    <span class="config-section-title">基本信息</span>
+                                    <span class="config-section-title">得分配置</span>
                                     <span class="config-section-toggle">▼</span>
                                 </div>
                                 <div class="config-section-content">
@@ -1911,22 +3290,7 @@
                                 </div>
                             </div>
                             
-                            <!-- 得分点高亮区 -->
-                            <div class="config-section">
-                                <div class="config-section-header" onclick="toggleConfigSection(this)">
-                                    <span class="config-section-icon">✨</span>
-                                    <span class="config-section-title">得分点高亮</span>
-                                    <span class="config-section-toggle">▼</span>
-                                </div>
-                                <div class="config-section-content">
-                                    <div style="display: flex; justify-content: flex-end; margin-bottom: 12px;">
-                                        <button class="btn btn-outline btn-sm" onclick="addHighlight()">+ 添加得分点</button>
-                                    </div>
-                                    <div id="highlightsContainer" style="display: flex; flex-direction: column; gap: 8px;"></div>
-                                </div>
-                            </div>
-                            
-                            <!-- 优缺点诊断区 -->
+                            <!-- 优缺点诊断 -->
                             <div class="config-section">
                                 <div class="config-section-header" onclick="toggleConfigSection(this)">
                                     <span class="config-section-icon">🔍</span>
@@ -1945,9 +3309,8 @@
                                                 <button type="button" class="toolbar-btn" onclick="execFormat('fbDiagnosis', 'insertUnorderedList')" title="列表">•≡</button>
                                                 <button type="button" class="toolbar-btn" onclick="execFormat('fbDiagnosis', 'formatBlock', 'h4')" title="标题">H</button>
                                                 <span class="toolbar-divider"></span>
-                                                <button type="button" class="toolbar-btn color-btn" onclick="execForeColor('fbDiagnosis', '#ff6a3c')" title="橙色"><span style="color:#ff6a3c;font-weight:bold;">A</span></button>
-                                                <button type="button" class="toolbar-btn color-btn" onclick="execForeColor('fbDiagnosis', '#4285f4')" title="蓝色"><span style="color:#4285f4;font-weight:bold;">A</span></button>
-                                                <button type="button" class="toolbar-btn color-btn" onclick="execForeColor('fbDiagnosis', '#52c41a')" title="绿色"><span style="color:#52c41a;font-weight:bold;">A</span></button>
+                                                <button type="button" class="toolbar-btn color-btn" onclick="execForeColor('fbDiagnosis', '#0891b2')" title="青色"><span style="color:#0891b2;font-weight:bold;">A</span></button>
+                                                <button type="button" class="toolbar-btn color-btn" onclick="execForeColor('fbDiagnosis', '#06b6d4')" title="浅青"><span style="color:#06b6d4;font-weight:bold;">A</span></button>
                                                 <span class="toolbar-divider"></span>
                                                 <button type="button" class="toolbar-btn" onclick="execFormat('fbDiagnosis', 'removeFormat')" title="清除格式">✕</button>
                                             </div>
@@ -1957,7 +3320,7 @@
                                 </div>
                             </div>
                             
-                            <!-- 得分分析区 -->
+                            <!-- 得分分析 -->
                             <div class="config-section">
                                 <div class="config-section-header" onclick="toggleConfigSection(this)">
                                     <span class="config-section-icon">📊</span>
@@ -1972,7 +3335,7 @@
                                 </div>
                             </div>
                             
-                            <!-- 答题演示区 -->
+                            <!-- 答题演示 -->
                             <div class="config-section">
                                 <div class="config-section-header" onclick="toggleConfigSection(this)">
                                     <span class="config-section-icon">📖</span>
@@ -1992,9 +3355,8 @@
                                                 <button type="button" class="toolbar-btn" onclick="execFormat('fbAnswerDemo', 'formatBlock', 'h4')" title="标题">H</button>
                                                 <button type="button" class="toolbar-btn" onclick="insertStepBlock('fbAnswerDemo')" title="步骤模板">📝</button>
                                                 <span class="toolbar-divider"></span>
-                                                <button type="button" class="toolbar-btn color-btn" onclick="execForeColor('fbAnswerDemo', '#ff6a3c')" title="橙色"><span style="color:#ff6a3c;font-weight:bold;">A</span></button>
-                                                <button type="button" class="toolbar-btn color-btn" onclick="execForeColor('fbAnswerDemo', '#4285f4')" title="蓝色"><span style="color:#4285f4;font-weight:bold;">A</span></button>
-                                                <button type="button" class="toolbar-btn color-btn" onclick="execForeColor('fbAnswerDemo', '#52c41a')" title="绿色"><span style="color:#52c41a;font-weight:bold;">A</span></button>
+                                                <button type="button" class="toolbar-btn color-btn" onclick="execForeColor('fbAnswerDemo', '#0891b2')" title="青色"><span style="color:#0891b2;font-weight:bold;">A</span></button>
+                                                <button type="button" class="toolbar-btn color-btn" onclick="execForeColor('fbAnswerDemo', '#06b6d4')" title="浅青"><span style="color:#06b6d4;font-weight:bold;">A</span></button>
                                                 <span class="toolbar-divider"></span>
                                                 <button type="button" class="toolbar-btn" onclick="execFormat('fbAnswerDemo', 'removeFormat')" title="清除格式">✕</button>
                                             </div>
@@ -2003,11 +3365,31 @@
                                     </div>
                                 </div>
                             </div>
+                            
+                            <!-- 得分点高亮 - 高级配置 -->
+                            <div class="config-section collapsed">
+                                <div class="config-section-header" onclick="toggleConfigSection(this)">
+                                    <span class="config-section-icon">✨</span>
+                                    <span class="config-section-title">得分点高亮</span>
+                                    <span class="config-section-badge">高级</span>
+                                    <span class="config-section-toggle">▼</span>
+                                </div>
+                                <div class="config-section-content">
+                                    <div style="display: flex; justify-content: flex-end; margin-bottom: 12px;">
+                                        <button class="btn btn-outline btn-sm" onclick="addHighlight()">+ 添加得分点</button>
+                                    </div>
+                                    <div id="highlightsContainer" style="display: flex; flex-direction: column; gap: 8px;"></div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer" style="background: linear-gradient(180deg, #fff 0%, var(--bg-main) 100%);">
+                <span style="font-size: 12px; color: var(--text-light); margin-right: auto; display: flex; align-items: center; gap: 6px;">
+                    <span style="width: 6px; height: 6px; background: var(--success); border-radius: 50%;"></span>
+                    Ctrl+S 保存 | Esc 关闭
+                </span>
                 <button class="btn btn-outline" onclick="closeModal('reviewModal')">取消</button>
                 <button class="btn btn-primary" onclick="saveReview()">保存配置</button>
             </div>
@@ -2356,7 +3738,10 @@ if (result.success) {
                     animateNumber('statPreferShangancang', detailedStats.summary.prefer_shangancang_review.total);
                     animateNumber('statTodayShangancang', detailedStats.summary.prefer_shangancang_review.today);
                     animateNumber('statWilling', detailedStats.summary.willing_to_experience.total);
-                    animateNumber('statTodayWilling', detailedStats.summary.willing_to_experience.today);
+                    
+                    const total = detailedStats.summary.total_feedbacks || 1;
+                    const willingRate = Math.round((detailedStats.summary.willing_to_experience.total / total) * 100);
+                    document.getElementById('statWillingRate').textContent = willingRate + '%';
                     
                     renderCharts();
                 }
@@ -2424,6 +3809,41 @@ if (result.success) {
                 label.textContent = `当前: ${selectedText}`;
             }
         }
+        
+        // 图表切换
+        function switchChart(chartName) {
+            document.querySelectorAll('.tab[data-chart]').forEach(tab => tab.classList.remove('active'));
+            document.querySelector(`.tab[data-chart="${chartName}"]`).classList.add('active');
+            
+            document.getElementById('answerSourceChart').style.display = chartName === 'answer' ? 'block' : 'none';
+            document.getElementById('reviewSourceChart').style.display = chartName === 'review' ? 'block' : 'none';
+            document.getElementById('willingnessChart').style.display = chartName === 'willingness' ? 'block' : 'none';
+            
+            document.getElementById('scoreFilter').style.display = chartName === 'willingness' ? 'block' : 'none';
+        }
+        
+        // ==================== 键盘快捷键 ====================
+        document.addEventListener('keydown', function(e) {
+            // Ctrl+S 保存配置
+            if (e.ctrlKey && e.key === 's') {
+                e.preventDefault();
+                const reviewModal = document.getElementById('reviewModal');
+                if (reviewModal && reviewModal.classList.contains('show')) {
+                    saveReview();
+                }
+            }
+            
+            // Esc 关闭弹窗
+            if (e.key === 'Escape') {
+                const modals = ['reviewModal', 'addQuestionModal', 'answerModal', 'uploadImageModal', 'addAdminModal', 'scoreAnalysisModal'];
+                modals.forEach(function(modalId) {
+                    const modal = document.getElementById(modalId);
+                    if (modal && modal.classList.contains('show')) {
+                        closeModal(modalId);
+                    }
+                });
+            }
+        });
         
         async function loadQuestions() {
             try {
@@ -2585,16 +4005,18 @@ if (result.success) {
                     labels: ['上岸仓', '粉笔'],
                     datasets: [{
                         data: [data['上岸仓'] || 0, data['粉笔'] || 0],
-                        backgroundColor: ['rgba(102, 126, 234, 0.8)', 'rgba(240, 147, 251, 0.8)'],
-                        borderColor: ['rgba(102, 126, 234, 1)', 'rgba(240, 147, 251, 1)'],
-                        borderWidth: 2
+                        backgroundColor: ['rgba(59, 130, 246, 0.85)', 'rgba(16, 185, 129, 0.85)'],
+                        borderColor: ['#fff', '#fff'],
+                        borderWidth: 2,
+                        hoverOffset: 4
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    cutout: '60%',
                     plugins: {
-                        legend: { position: 'bottom', labels: { padding: 15, font: { size: 12 } } },
+                        legend: { position: 'bottom', labels: { padding: 15, font: { size: 12 }, usePointStyle: true } },
                         tooltip: {
                             callbacks: {
                                 label: (ctx) => {
@@ -2621,15 +4043,18 @@ if (result.success) {
                     labels: ['上岸仓(A)', '粉笔(B)'],
                     datasets: [{
                         data: [data['上岸仓'] || 0, data['粉笔'] || 0],
-                        backgroundColor: ['rgba(102, 126, 234, 0.8)', 'rgba(240, 147, 251, 0.8)'],
-                        borderWidth: 2
+                        backgroundColor: ['rgba(59, 130, 246, 0.85)', 'rgba(16, 185, 129, 0.85)'],
+                        borderColor: ['#fff', '#fff'],
+                        borderWidth: 2,
+                        hoverOffset: 4
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    cutout: '60%',
                     plugins: {
-                        legend: { position: 'bottom', labels: { padding: 15, font: { size: 12 } } },
+                        legend: { position: 'bottom', labels: { padding: 15, font: { size: 12 }, usePointStyle: true } },
                         tooltip: {
                             callbacks: {
                                 label: (ctx) => {
@@ -2664,15 +4089,23 @@ if (result.success) {
                     labels: ['很想体验', '愿意尝试', '没兴趣'],
                     datasets: [{
                         data: [data['很想体验'] || 0, data['愿意尝试'] || 0, data['没兴趣'] || 0],
-                        backgroundColor: ['rgba(82, 196, 26, 0.8)', 'rgba(24, 144, 255, 0.8)', 'rgba(140, 140, 140, 0.8)'],
-                        borderRadius: 4
+                        backgroundColor: [
+                            'rgba(16, 185, 129, 0.85)',
+                            'rgba(59, 130, 246, 0.85)',
+                            'rgba(100, 116, 139, 0.85)'
+                        ],
+                        borderRadius: 6,
+                        borderSkipped: false
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: { legend: { display: false } },
-                    scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+                    scales: { 
+                        y: { beginAtZero: true, ticks: { stepSize: 1 }, grid: { color: 'rgba(0,0,0,0.05)' } },
+                        x: { grid: { display: false } }
+                    }
                 }
             });
         }
@@ -2688,10 +4121,15 @@ if (result.success) {
                     datasets: [{
                         label: '反馈数量',
                         data: trendData.map(d => d.count),
-                        borderColor: 'rgba(102, 126, 234, 1)',
-                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                        borderColor: 'rgba(59, 130, 246, 1)',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
                         fill: true,
-                        tension: 0.4
+                        tension: 0.4,
+                        pointBackgroundColor: 'rgba(59, 130, 246, 1)',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointRadius: 4,
+                        pointHoverRadius: 6
                     }]
                 },
                 options: {
@@ -2715,14 +4153,16 @@ if (result.success) {
                     labels: ['偏好 A', '偏好 B'],
                     datasets: [{
                         data: [stats['上岸仓'] || 0, stats['粉笔'] || 0],
-                        backgroundColor: ['rgba(102, 126, 234, 0.8)', 'rgba(240, 147, 251, 0.8)'],
-                        borderWidth: 2
+                        backgroundColor: ['rgba(59, 130, 246, 0.85)', 'rgba(16, 185, 129, 0.85)'],
+                        borderWidth: 2,
+                        borderColor: ['#fff', '#fff']
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: { legend: { position: 'bottom' } }
+                    cutout: '60%',
+                    plugins: { legend: { position: 'bottom', labels: { usePointStyle: true } } }
                 }
             });
         }
@@ -2738,15 +4178,25 @@ if (result.success) {
                     datasets: [{
                         label: '用户数',
                         data: [0, 0, 0, 0, 0],
-                        backgroundColor: 'rgba(102, 126, 234, 0.8)',
-                        borderRadius: 4
+                        backgroundColor: [
+                            'rgba(239, 68, 68, 0.75)',
+                            'rgba(245, 158, 11, 0.75)',
+                            'rgba(59, 130, 246, 0.75)',
+                            'rgba(16, 185, 129, 0.75)',
+                            'rgba(139, 92, 246, 0.75)'
+                        ],
+                        borderRadius: 6,
+                        borderSkipped: false
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: { legend: { display: false } },
-                    scales: { y: { beginAtZero: true } }
+                    scales: { 
+                        y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' } },
+                        x: { grid: { display: false } }
+                    }
                 }
             });
         }
