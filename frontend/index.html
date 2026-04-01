@@ -1391,7 +1391,7 @@
 
         /* ========== 第 5 页 ========== */
         #view5 {
-            background: radial-gradient(ellipse at 50% 0%, #f0fdf4 0%, #dcfce7 40%, #bbf7d0 100%);
+            background: radial-gradient(ellipse at 50% 0%, #f0f9ff 0%, #e0f2fe 50%, #bae6fd 100%);
             min-height: 100vh;
             display: none;
             flex-direction: column;
@@ -1410,7 +1410,7 @@
             transform: translateX(-50%);
             width: 300px;
             height: 300px;
-            background: radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.12) 0%, transparent 70%);
             pointer-events: none;
         }
         
@@ -1462,7 +1462,7 @@
         .ok-icon {
             width: 120px;
             height: 120px;
-            background: linear-gradient(135deg, #10b981 0%, #34d399 50%, #6ee7b7 100%);
+            background: linear-gradient(135deg, var(--primary) 0%, #818cf8 50%, var(--accent-green) 100%);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -1473,8 +1473,8 @@
             opacity: 0;
             animation: successIconIn 0.8s var(--ease-out-quart) 0.1s forwards;
             box-shadow: 
-                0 8px 40px rgba(16, 185, 129, 0.4),
-                0 0 0 0 rgba(16, 185, 129, 0.3);
+                0 8px 40px rgba(59, 130, 246, 0.35),
+                0 0 0 0 rgba(59, 130, 246, 0.3);
             position: relative;
         }
         
@@ -1483,7 +1483,7 @@
             position: absolute;
             inset: -8px;
             border-radius: 50%;
-            border: 3px solid rgba(16, 185, 129, 0.2);
+            border: 3px solid rgba(59, 130, 246, 0.2);
             animation: iconRing 1.5s ease-out 0.5s forwards;
             opacity: 0;
         }
@@ -1520,7 +1520,7 @@
             font-size: clamp(1.75rem, 6vw, 2.5rem);
             font-weight: 800;
             margin-bottom: 16px;
-            color: #065f46;
+            color: #1e3a5f;
             text-align: center;
             opacity: 0;
             animation: entranceFadeUp 0.5s var(--ease-out-quart) 0.3s forwards;
@@ -1529,7 +1529,7 @@
 
         .ok-txt {
             font-size: 1.125rem;
-            color: #047857;
+            color: #3b82f6;
             line-height: 1.8;
             margin-bottom: 40px;
             text-align: center;
@@ -1540,7 +1540,7 @@
         .ok-txt strong {
             font-size: 1.5rem;
             font-weight: 800;
-            background: linear-gradient(135deg, #10b981, #059669);
+            background: linear-gradient(135deg, var(--primary), var(--accent-green));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -1550,27 +1550,24 @@
             width: 100%;
             max-width: 320px;
             padding: 18px 32px;
-            background: white;
-            border: 2px solid #10b981;
+            background: linear-gradient(135deg, var(--primary) 0%, #818cf8 50%, var(--accent-green) 100%);
+            background-size: 200% 100%;
+            border: none;
             border-radius: 50px;
             font-size: 1rem;
             font-weight: 600;
-            color: #059669;
+            color: white;
             cursor: pointer;
             opacity: 0;
-            animation: entranceFadeUp 0.5s var(--ease-out-quart) 0.5s forwards;
+            animation: entranceFadeUp 0.5s var(--ease-out-quart) 0.5s forwards, btnGradient 3s linear infinite;
             transition: transform var(--duration-normal) var(--ease-out-quart),
-                        box-shadow var(--duration-normal) var(--ease-out-quart),
-                        background var(--duration-normal) var(--ease-out-quart),
-                        color var(--duration-normal) var(--ease-out-quart);
-            box-shadow: 0 4px 16px rgba(16, 185, 129, 0.15);
+                        box-shadow var(--duration-normal) var(--ease-out-quart);
+            box-shadow: 0 8px 32px rgba(59, 130, 246, 0.35);
         }
         
         .home-btn:hover {
-            background: #10b981;
-            color: white;
             transform: translateY(-3px);
-            box-shadow: 0 8px 28px rgba(16, 185, 129, 0.3);
+            box-shadow: 0 12px 40px rgba(59, 130, 246, 0.45);
         }
         
         .home-btn:active {
