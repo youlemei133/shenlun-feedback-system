@@ -3936,56 +3936,56 @@
             }
             
             .v2-bottom-fixed {
-                position: static;
-                background: none;
-                padding: var(--space-md) 0 0;
-            }
-            
-            /* 第4页 */
-            #view4 {
-                padding: var(--space-2xl);
-            }
-            
-            .q-card {
-                max-width: 700px;
-            }
-            
-            .mood-options {
-                gap: var(--space-xl);
-            }
-            
-            .mood-face {
-                width: 90px;
-                height: 90px;
-                font-size: 45px;
-            }
+            position: static;
+            background: none;
+            padding: var(--space-md) 0 0;
         }
         
-        /* 桌面 (1025px+) */
-        @media (min-width: 1025px) {
-            :root {
-                --space-md: 24px;
-                --space-lg: 36px;
-                --space-xl: 48px;
-                --space-2xl: 64px;
-                --space-3xl: 80px;
-            }
-            
-            body {
-                display: flex;
-                justify-content: center;
-            }
-            
-            .view {
-                max-width: 480px;
-                margin: 0 auto;
-                box-shadow: 0 0 60px rgba(0,0,0,0.1);
-            }
+        /* 第4页 */
+        #view4 {
+            padding: var(--space-2xl);
+        }
+        
+        .q-card {
+            max-width: 700px;
+        }
+        
+        .mood-options {
+            gap: var(--space-xl);
+        }
+        
+        .mood-face {
+            width: 90px;
+            height: 90px;
+        }
+    }
+    
+    /* 桌面 (1025px+) */
+    @media (min-width: 1025px) {
+        :root {
+            --space-md: 24px;
+            --space-lg: 36px;
+            --space-xl: 48px;
+            --space-2xl: 64px;
+            --space-3xl: 80px;
+        }
+        
+        body {
+            display: flex;
+            justify-content: center;
+        }
+        
+        .view {
+            max-width: 520px;
+            margin: 0 auto;
+            box-shadow: 0 0 60px rgba(0,0,0,0.1);
+        }
             
             #view1 {
                 border-radius: 24px;
                 margin: var(--space-lg);
                 min-height: calc(100vh - var(--space-2xl));
+                padding-bottom: 180px;
             }
             
             .v1-title-sub {
@@ -4001,7 +4001,7 @@
             }
             
             .v1-footer {
-                max-width: 480px;
+                max-width: 520px;
                 left: 50%;
                 transform: translateX(-50%);
                 border-radius: 0 0 24px 24px;
@@ -4021,6 +4021,12 @@
             
             .v2-bottom {
                 border-radius: 0 0 24px 24px;
+            }
+            
+            .v2-bottom-fixed {
+                position: static;
+                background: none;
+                padding: var(--space-md) 0 0;
             }
             
             /* 第3页 */
@@ -4047,6 +4053,7 @@
                 border-radius: 24px;
                 margin: var(--space-lg);
                 min-height: calc(100vh - var(--space-2xl));
+                max-width: 520px;
             }
             
             /* 弹窗桌面布局 */
@@ -4069,6 +4076,10 @@
         /* 大桌面 (1440px+) */
         @media (min-width: 1440px) {
             .view {
+                max-width: 520px;
+            }
+            
+            #view5 {
                 max-width: 520px;
             }
         }
