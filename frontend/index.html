@@ -1279,13 +1279,14 @@
         .ochk {
             width: 20px;
             height: 20px;
-            border: 2px solid #e9ecef;
+            border: 2px solid #cbd5e1;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
             margin-top: 2px;
+            background: rgba(255, 255, 255, 0.8);
             transition: border-color var(--duration-normal) var(--ease-out-quart),
                         background var(--duration-normal) var(--ease-out-quart);
         }
@@ -1362,8 +1363,11 @@
         }
 
         .mood-item.sel .mood-text {
-            color: var(--primary);
-            font-weight: 600;
+            background: linear-gradient(135deg, var(--primary), var(--accent-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
         }
 
         textarea {
@@ -4218,15 +4222,15 @@
         <div class="q-tit"><span class="trial-badge">审判 4</span>你是否愿意在后续训练中采用"批改 A"练习</div>
         <div class="mood-options">
             <div class="mood-item" data-mood="很想体验" role="radio" tabindex="0" aria-checked="false">
-                <div class="mood-face" aria-hidden="true"></div>
+                <div class="mood-face" aria-hidden="true">🤩</div>
                 <div class="mood-text">很想体验</div>
             </div>
             <div class="mood-item" data-mood="愿意尝试" role="radio" tabindex="0" aria-checked="false">
-                <div class="mood-face" aria-hidden="true"></div>
+                <div class="mood-face" aria-hidden="true">🙂</div>
                 <div class="mood-text">愿意尝试</div>
             </div>
             <div class="mood-item" data-mood="没兴趣" role="radio" tabindex="0" aria-checked="false">
-                <div class="mood-face" aria-hidden="true"></div>
+                <div class="mood-face" aria-hidden="true">😐</div>
                 <div class="mood-text">没兴趣</div>
             </div>
         </div>
@@ -4556,6 +4560,12 @@
         document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
         document.getElementById('view' + n).classList.add('active');
         window.scrollTo(0, 0);
+        
+        // 控制首页底部 footer 显示/隐藏
+        const footer = document.querySelector('.v1-footer');
+        if (footer) {
+            footer.style.display = (n === 1) ? 'block' : 'none';
+        }
     }
 
     // 检查登录
