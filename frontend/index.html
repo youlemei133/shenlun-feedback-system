@@ -4630,11 +4630,13 @@
 
     // 第 1 页按钮
     document.getElementById('btn-start').addEventListener('click', function() {
+        console.log('按钮点击触发');
         if (checkLogin()) {
+            console.log('已登录，跳转第2页');
             showView(2);
             loadQuestion();
         } else {
-            // 未登录，打开注册弹窗
+            console.log('未登录，打开注册弹窗');
             openRegisterModal();
         }
     });
