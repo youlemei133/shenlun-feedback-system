@@ -4654,8 +4654,8 @@
 
     // 第 2 页分屏调节
     let isDrag = false;
-    let startY = 0;
-    let startHeight = 0;
+    let resizeStartY = 0;
+    let resizeStartHeight = 0;
     const v2Resize = document.getElementById('v2Resize');
     const v2Content = document.getElementById('v2Content');
     const view2 = document.getElementById('view2');
@@ -4663,14 +4663,14 @@
 
     function handleResizeStart(clientY) {
         isDrag = true;
-        startY = clientY;
-        startHeight = v2Content.offsetHeight;
+        resizeStartY = clientY;
+        resizeStartHeight = v2Content.offsetHeight;
     }
 
     function handleResize(clientY) {
         if (!isDrag) return;
-        const deltaY = clientY - startY;
-        const newHeight = startHeight + deltaY;
+        const deltaY = clientY - resizeStartY;
+        const newHeight = resizeStartHeight + deltaY;
         const headerHeight = v2Header.offsetHeight;
         const totalHeight = view2.offsetHeight - headerHeight;
         const minHeight = totalHeight * 0.15;
