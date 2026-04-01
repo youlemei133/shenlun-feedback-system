@@ -1066,11 +1066,13 @@
             font-size: 40px;
             color: white;
             cursor: pointer;
-            z-index: 10001;
-            background: none;
+            z-index: 10002;
+            background: rgba(0, 0, 0, 0.5);
             border: none;
-            padding: 0;
+            padding: 10px;
             line-height: 1;
+            border-radius: 50%;
+            touch-action: manipulation;
         }
 
         .image-modal-hint {
@@ -5729,8 +5731,7 @@ function closeModal() {
 
     // 关闭图片放大弹窗
     function closeImageModal(event) {
-        if (event && event.target !== event.currentTarget) return;
-
+        // 直接关闭，不检查 target（关闭按钮需要始终工作）
         const modal = document.getElementById('imageModal');
         modal.classList.remove('show');
 
@@ -5832,10 +5833,31 @@ function closeModal() {
             }
         });
 
-        imageModal.addEventListener('touchend', function() {
+        imageModal.addEventListener('touchend', function(e) {
             initialPinchDistance = null;
             isDragging = false;
+            // 确保 touchend 后立即重置状态，不影响后续点击
         });
+        
+        // 点击背景关闭（排除关闭按钮和图片）
+        imageModal.addEventListener('click', function(e) {
+            if (e.target === imageModal) {
+                closeImageModal();
+            }
+        });
+        
+        // 关闭按钮单独处理
+        const closeBtn = document.querySelector('.image-modal-close');
+        if (closeBtn) {
+            closeBtn.addEventListener('touchend', function(e) {
+                e.stopPropagation();
+                closeImageModal();
+            });
+            closeBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                closeImageModal();
+            });
+        }
     }
 
     // 初始化检查
