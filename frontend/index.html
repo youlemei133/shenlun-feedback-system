@@ -2260,6 +2260,7 @@
             white-space: pre-line;
             word-wrap: break-word;
             overflow-wrap: break-word;
+            position: relative;
         }
 
         /* 移动端适配 */
@@ -3012,37 +3013,32 @@
             white-space: pre-line;
             word-wrap: break-word;
             overflow-wrap: break-word;
-        }
-        
-        .fb-highlight-wrapper {
-            display: inline-block;
             position: relative;
-            width: fit-content;
         }
         
-        .fb-highlight-word {
+        .fb-highlight-text {
+            display: inline;
             color: #14b8a6;
             font-weight: 600;
-            background: linear-gradient(to bottom, 
-                transparent 0%, 
-                transparent calc(100% - 8px), 
-                rgba(20, 184, 166, 0.15) calc(100% - 8px), 
-                rgba(20, 184, 166, 0.15) 100%
-            );
-            border-radius: 0 0 4px 4px;
-            padding-bottom: 2px;
         }
         
-        .fb-score-label {
+        .fb-highlight-underline {
             position: absolute;
-            left: 100%;
-            bottom: -4px;
+            background: rgba(20, 184, 166, 0.15);
+            border-radius: 0 0 4px 4px;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .fb-highlight-score {
+            position: absolute;
             font-size: 12px;
             color: #14b8a6;
             font-weight: 600;
             line-height: 1;
             white-space: nowrap;
-            margin-left: 4px;
+            pointer-events: none;
+            z-index: 1;
         }
         
         .fb-score-card {
@@ -5261,8 +5257,7 @@ if (isFenbi) {
             const escapedText = escapeHtml(h.text);
             const regex = new RegExp(escapeRegExp(escapedText), 'g');
             myAnswerHtml = myAnswerHtml.replace(regex, 
-                '<span class="fb-highlight-wrapper"><span class="fb-highlight-word">' + escapedText + 
-                '</span><span class="fb-score-label">' + h.score + '分</span></span>');
+                '<span class="fb-highlight-text" data-score="' + h.score + '">' + escapedText + '</span>');
         }
     });
     myAnswerHtml += '</p>';
@@ -5322,8 +5317,7 @@ if (isFenbi) {
             const escapedText = escapeHtml(h.text);
             const regex = new RegExp(escapeRegExp(escapedText), 'g');
             sgMyAnswerHtml = sgMyAnswerHtml.replace(regex, 
-                '<span class="fb-highlight-wrapper"><span class="fb-highlight-word">' + escapedText + 
-                '</span><span class="fb-score-label">' + h.score + '分</span></span>');
+                '<span class="fb-highlight-text" data-score="' + h.score + '">' + escapedText + '</span>');
         }
     });
     sgMyAnswerHtml += '</p>';
@@ -5423,6 +5417,8 @@ if (isFenbi) {
 }
 
 resetModalAnimations();
+
+setTimeout(renderAllHighlights, 50);
 }
 
 function escapeHtml(text) {
@@ -5435,6 +5431,52 @@ return div.innerHTML;
 function escapeRegExp(string) {
 return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
+
+function renderHighlights(containerId) {
+const container = document.getElementById(containerId);
+if (!container) return;
+
+container.querySelectorAll('.fb-highlight-underline, .fb-highlight-score').forEach(el => el.remove());
+
+const highlights = container.querySelectorAll('.fb-highlight-text');
+highlights.forEach(el => {
+const score = el.dataset.score;
+const rects = el.getClientRects();
+const containerRect = container.getBoundingClientRect();
+
+for (let i = 0; i < rects.length; i++) {
+const rect = rects[i];
+const underline = document.createElement('div');
+underline.className = 'fb-highlight-underline';
+underline.style.left = (rect.left - containerRect.left) + 'px';
+underline.style.top = (rect.bottom - containerRect.top - 6) + 'px';
+underline.style.width = rect.width + 'px';
+underline.style.height = '6px';
+container.appendChild(underline);
+}
+
+if (rects.length > 0 && score) {
+const lastRect = rects[rects.length - 1];
+const badge = document.createElement('span');
+badge.className = 'fb-highlight-score';
+badge.textContent = score + '分';
+badge.style.left = (lastRect.right - containerRect.left + 2) + 'px';
+badge.style.top = (lastRect.bottom - containerRect.top + 2) + 'px';
+container.appendChild(badge);
+}
+});
+}
+
+function renderAllHighlights() {
+renderHighlights('fbMyAnswerContent');
+renderHighlights('sgMyAnswerContent');
+}
+
+let highlightResizeTimer;
+window.addEventListener('resize', function() {
+clearTimeout(highlightResizeTimer);
+highlightResizeTimer = setTimeout(renderAllHighlights, 100);
+});
 
 function toggleFbPanel(el) {
         const content = el.nextElementSibling;
