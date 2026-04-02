@@ -143,7 +143,7 @@ class AnswerReview(Base):
     #     "diagnosis": "优缺点诊断（富文本）"
     #   },
     #   "score_analysis": [
-    #     {"title": "...", "score": 0.5, "max_score": 3, "items": [...]}
+    #     {"content": "...", "score": 0.5, "max_score": 3, "detail": "..."}
     #   ],
     #   "answer_demo": "答题演示（富文本）"
     # }

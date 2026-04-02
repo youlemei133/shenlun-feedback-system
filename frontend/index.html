@@ -1685,6 +1685,7 @@
             display: flex;
             flex-direction: column;
             box-shadow: 0 -10px 40px rgba(0,0,0,0.15);
+            box-sizing: border-box;
         }
 
         .modal-panel::-webkit-scrollbar {
@@ -1724,7 +1725,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 16px 12px;
+            padding: 0 20px 12px;
             position: relative;
             background: #fff;
             flex-shrink: 0;
@@ -1773,12 +1774,14 @@
         }
 
         .modal-b {
-            padding: 12px 16px 20px;
+            padding: 12px 20px 20px;
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
             scrollbar-width: none;
             -ms-overflow-style: none;
             flex: 1;
+            min-width: 0;
+            width: 100%;
         }
 
         .modal-b::-webkit-scrollbar {
@@ -3097,86 +3100,19 @@
             margin-bottom: 12px;
         }
         
-        .fb-analysis-section {
-            margin: 20px 0;
-        }
-        
-        .fb-analysis-title {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 14px;
-            color: var(--text-main);
-        }
-        
-        .fb-analysis-title .fb-analysis-score {
-            color: #14b8a6;
-            font-weight: 700;
-            margin: 0 4px;
-        }
-        
-        .fb-analysis-cards {
-            position: relative;
-            padding-left: 28px;
-        }
-        
-        .fb-analysis-cards::before {
-            content: '';
-            position: absolute;
-            left: 12px;
-            top: 0;
-            bottom: 0;
-            width: 2px;
-            background: #e2e8f0;
-            border-radius: 1px;
-        }
-        
         .fb-blue-card {
             background: #fff;
             border-radius: 14px;
             padding: 16px 18px;
             margin: 12px 0;
-            position: relative;
             border: 1px solid #e2e8f0;
             transition: all var(--duration-normal) var(--ease-out-quart);
-        }
-        
-        .fb-blue-card::before {
-            content: '';
-            position: absolute;
-            left: -22px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 12px;
-            height: 12px;
-            background: white;
-            border: 3px solid #14b8a6;
-            border-radius: 50%;
-            transition: all var(--duration-normal) var(--ease-out-quart);
-        }
-        
-        .fb-blue-card:last-child::after {
-            content: '';
-            position: absolute;
-            left: -16px;
-            top: calc(50% + 10px);
-            width: 10px;
-            height: 100px;
-            background: white;
-        }
-        
-        .fb-blue-card {
             cursor: pointer;
         }
         
         .fb-blue-card:hover {
-            transform: translateX(4px);
             border-color: #99f6e4;
             box-shadow: 0 4px 12px rgba(20, 184, 166, 0.1);
-        }
-        
-        .fb-blue-card:hover::before {
-            background: #f0fdfa;
-            border-color: #2dd4bf;
         }
         
         .fb-blue-card:hover .fb-card-arrow {
@@ -3191,10 +3127,32 @@
             font-size: 15px;
             line-height: 1.8;
             color: var(--text-main);
+            padding: 12px 24px 24px;
         }
         
-        #scoreAnalysisModal .modal-b p {
+        .sc-detail-content {
+            word-wrap: break-word;
+            word-break: break-word;
+            overflow-wrap: break-word;
+            white-space: normal;
+            width: 100%;
+            max-width: calc(100% - 8px);
+            box-sizing: border-box;
+            hyphens: auto;
+        }
+        
+        .sc-detail-content * {
+            max-width: 100%;
+            word-wrap: break-word;
+            word-break: break-word;
+            overflow-wrap: break-word;
+        }
+        
+        .sc-detail-content p {
             margin-bottom: 12px;
+            word-wrap: break-word;
+            word-break: break-word;
+            overflow-wrap: break-word;
         }
         
         #scoreAnalysisModal .modal-b h4 {
@@ -3208,10 +3166,14 @@
         #scoreAnalysisModal .modal-b ol {
             margin-left: 20px;
             margin-bottom: 12px;
+            padding-left: 0;
+            max-width: 100%;
         }
         
         #scoreAnalysisModal .modal-b li {
             margin-bottom: 6px;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
         
         #scoreAnalysisModal .modal-b strong {
@@ -3269,11 +3231,6 @@
         
         .fb-card-arrow:hover svg {
             stroke: #14b8a6;
-        }
-        
-        .fb-analysis-score {
-            color: #14b8a6;
-            font-weight: 700;
         }
         
         @media (max-width: 480px) {
@@ -3350,11 +3307,6 @@
         
         .fb-card-arrow:hover svg {
             stroke: var(--primary);
-        }
-        
-        .fb-analysis-score {
-            color: var(--primary);
-            font-weight: 600;
         }
         
         .answer-list {
@@ -5284,22 +5236,13 @@ if (isFenbi) {
     const scoreAnalysis = fenbiData.score_analysis || [];
     let analysisHtml = '';
     scoreAnalysis.forEach(function(item, idx) {
-        analysisHtml += '<div class="fb-analysis-section">';
-        analysisHtml += '<div class="fb-analysis-title">' + (idx + 1) + '.' + escapeHtml(item.title) + '<span class="fb-analysis-score">' + item.score + '</span><span>/</span><span style="color:#999">' + item.max_score + '分</span></div>';
-        if (item.items && item.items.length > 0) {
-            analysisHtml += '<div class="fb-analysis-cards">';
-            item.items.forEach(function(subItem, subIdx) {
-                var detailContent = subItem.detail || '';
-                analysisHtml += '<div class="fb-blue-card" onclick="openScoreAnalysisDetail(\'' + encodeURIComponent(detailContent) + '\')">';
-                analysisHtml += '<div class="fb-card-content">' + escapeHtml(subItem.content) + '</div>';
-                analysisHtml += '<div class="fb-card-footer">';
-                analysisHtml += '<span class="fb-card-score">' + subItem.score + '<span>/' + subItem.max_score + '分</span></span>';
-                analysisHtml += '<div class="fb-card-arrow"><svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 18l6-6-6-6"/></svg></div>';
-                analysisHtml += '</div>';
-                analysisHtml += '</div>';
-            });
-            analysisHtml += '</div>';
-        }
+        var detailContent = item.detail || '';
+        analysisHtml += '<div class="fb-blue-card" onclick="openScoreAnalysisDetail(\'' + encodeURIComponent(detailContent) + '\')">';
+        analysisHtml += '<div class="fb-card-content">' + escapeHtml(item.content) + '</div>';
+        analysisHtml += '<div class="fb-card-footer">';
+        analysisHtml += '<span class="fb-card-score">' + item.score + '<span>/' + item.max_score + '分</span></span>';
+        analysisHtml += '<div class="fb-card-arrow"><svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 18l6-6-6-6"/></svg></div>';
+        analysisHtml += '</div>';
         analysisHtml += '</div>';
     });
     document.getElementById('fbScoreAnalysisContent').innerHTML = analysisHtml || '暂无得分分析';
@@ -5514,7 +5457,7 @@ function toggleFbPanel(el) {
         const modalBody = document.getElementById('scoreAnalysisModalBody');
         
         if (detail && detail.trim() !== '') {
-            modalBody.innerHTML = detail;
+            modalBody.innerHTML = '<div class="sc-detail-content">' + detail + '</div>';
         } else {
             modalBody.innerHTML = '<div style="text-align:center;color:#999;padding:30px;">暂无详细分析</div>';
         }

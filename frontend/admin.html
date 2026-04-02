@@ -4730,8 +4730,15 @@ if (result.success) {
                 // 优缺点诊断
                 setRichContent('fbDiagnosis', fenbiData.my_answer?.diagnosis || '');
                 
-                // 得分分析
-                fbScoreAnalysis = fenbiData.score_analysis || [];
+                // 得分分析（兼容旧数据格式）
+                const rawScoreAnalysis = fenbiData.score_analysis || [];
+                fbScoreAnalysis = rawScoreAnalysis.map(item => {
+                    if (item.content) {
+                        return { content: item.content, score: item.score, max_score: item.max_score, detail: item.detail };
+                    } else {
+                        return { content: item.title || '', score: item.score, max_score: item.max_score, detail: '' };
+                    }
+                });
                 renderScoreAnalysis();
                 
                 // 答题演示
@@ -4876,16 +4883,11 @@ if (result.success) {
             } else {
                 // 粉笔批改数据
                 const filteredHighlights = fbHighlights.filter(h => h.text.trim());
-                const filteredScoreAnalysis = fbScoreAnalysis.filter(s => s.title.trim()).map(s => ({
-                    title: s.title,
+                const filteredScoreAnalysis = fbScoreAnalysis.filter(s => s.content.trim()).map(s => ({
+                    content: s.content,
                     score: s.score || 0,
                     max_score: s.max_score || 0,
-                    items: (s.items || []).filter(item => item.content.trim()).map(item => ({
-                        content: item.content,
-                        score: item.score || 0,
-                        max_score: item.max_score || 0,
-                        detail: item.detail || ''
-                    }))
+                    detail: s.detail || ''
                 }));
                 
                 data.question_total_score = parseInt(document.getElementById('fbQuestionTotalScore').value) || 15;
@@ -4981,109 +4983,74 @@ function removeSgHighlight(index) {
         function renderScoreAnalysis() {
             const container = document.getElementById('scoreAnalysisContainer');
             if (fbScoreAnalysis.length === 0) {
-                container.innerHTML = '<div style="color: var(--text-light); padding: 10px;">暂无得分分析，点击上方按钮添加分析维度</div>';
+                container.innerHTML = '<div style="color: var(--text-light); padding: 10px;">暂无得分分析，点击上方按钮添加分析卡片</div>';
                 return;
             }
             
             container.innerHTML = fbScoreAnalysis.map((s, i) => `
-                <div style="border: 1px solid var(--border); border-radius: 8px; padding: 16px; background: var(--bg-white);">
-                    <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 12px;">
-                        <input type="text" class="form-input" value="${s.title || ''}" onchange="fbScoreAnalysis[${i}].title = this.value" placeholder="维度名称（如：设备成本方面）" style="flex: 2;">
-                        <input type="number" class="form-input" value="${s.score || 0}" onchange="fbScoreAnalysis[${i}].score = parseFloat(this.value) || 0" step="0.5" style="flex: 1; min-width: 80px;">
-                        <span style="color: var(--text-light);">/</span>
-                        <input type="number" class="form-input" value="${s.max_score || 0}" onchange="fbScoreAnalysis[${i}].max_score = parseFloat(this.value) || 0" style="flex: 1; min-width: 80px;">
-                        <span style="color: var(--text-light);">分</span>
-                        <button class="btn btn-danger btn-sm" onclick="removeScoreAnalysis(${i})">删除维度</button>
-                    </div>
-                    <div style="margin-bottom: 8px;">
-                        <button class="btn btn-outline btn-sm" onclick="addScoreAnalysisItem(${i})">+ 添加得分项</button>
-                    </div>
-                    <div id="scoreAnalysisItems${i}" style="display: flex; flex-direction: column; gap: 8px;">
-                        ${renderScoreAnalysisItems(i)}
-                    </div>
-                </div>
-            `).join('');
-        }
-        
-        function renderScoreAnalysisItems(parentIndex) {
-            const items = fbScoreAnalysis[parentIndex].items || [];
-            if (items.length === 0) return '';
-            
-            return items.map((item, j) => `
                 <div style="display: flex; flex-direction: column; gap: 8px; padding: 12px; background: #e8f0fe; border-radius: 8px;">
                     <div style="display: flex; gap: 8px; align-items: flex-start;">
-                        <textarea class="form-textarea" onchange="fbScoreAnalysis[${parentIndex}].items[${j}].content = this.value" placeholder="得分项内容（简短，显示在卡片上）" style="flex: 3; min-height: 50px;">${item.content || ''}</textarea>
-                        <div style="display: flex; gap: 4px; align-items: center;">
-                            <input type="number" class="form-input" value="${item.score || 0}" onchange="fbScoreAnalysis[${parentIndex}].items[${j}].score = parseFloat(this.value) || 0" step="0.5" style="width: 60px;">
-                            <span style="color: var(--text-light);">/</span>
-                            <input type="number" class="form-input" value="${item.max_score || 0}" onchange="fbScoreAnalysis[${parentIndex}].items[${j}].max_score = parseFloat(this.value) || 0" style="width: 60px;">
+                        <textarea class="form-textarea" onchange="fbScoreAnalysis[${i}].content = this.value" placeholder="卡片内容（如：1.创业就业机会多。乡村各类资源便宜...）" style="flex: 3; min-height: 80px;">${s.content || ''}</textarea>
+                        <div style="display: flex; flex-direction: column; gap: 4px;">
+                            <div style="display: flex; gap: 4px; align-items: center;">
+                                <input type="number" class="form-input" value="${s.score || 0}" onchange="fbScoreAnalysis[${i}].score = parseFloat(this.value) || 0" step="0.5" style="width: 60px;">
+                                <span style="color: var(--text-light);">/</span>
+                                <input type="number" class="form-input" value="${s.max_score || 0}" onchange="fbScoreAnalysis[${i}].max_score = parseFloat(this.value) || 0" style="width: 60px;">
+                                <button class="btn btn-danger btn-sm" onclick="removeScoreAnalysis(${i})">×</button>
+                            </div>
                         </div>
-                        <button class="btn btn-danger btn-sm" onclick="removeScoreAnalysisItem(${parentIndex}, ${j})">×</button>
                     </div>
                     <div style="margin-top: 4px;">
                         <div style="font-size: 12px; color: var(--text-light); margin-bottom: 6px;">详细分析内容（点击卡片后显示）</div>
                         <div class="rich-editor">
                             <div class="rich-editor-toolbar">
-                                <button type="button" class="toolbar-btn" onclick="execItemDetail(${parentIndex}, ${j}, 'bold')" title="加粗"><b>B</b></button>
-                                <button type="button" class="toolbar-btn" onclick="execItemDetail(${parentIndex}, ${j}, 'italic')" title="斜体"><i>I</i></button>
-                                <button type="button" class="toolbar-btn" onclick="execItemDetail(${parentIndex}, ${j}, 'underline')" title="下划线"><u>U</u></button>
+                                <button type="button" class="toolbar-btn" onclick="execScoreAnalysisDetail(${i}, 'bold')" title="加粗"><b>B</b></button>
+                                <button type="button" class="toolbar-btn" onclick="execScoreAnalysisDetail(${i}, 'italic')" title="斜体"><i>I</i></button>
+                                <button type="button" class="toolbar-btn" onclick="execScoreAnalysisDetail(${i}, 'underline')" title="下划线"><u>U</u></button>
                                 <span class="toolbar-divider"></span>
-                                <button type="button" class="toolbar-btn" onclick="execItemDetail(${parentIndex}, ${j}, 'insertUnorderedList')" title="列表">•≡</button>
+                                <button type="button" class="toolbar-btn" onclick="execScoreAnalysisDetail(${i}, 'insertUnorderedList')" title="列表">•≡</button>
                                 <span class="toolbar-divider"></span>
-                                <button type="button" class="toolbar-btn color-btn" onclick="execItemDetailColor(${parentIndex}, ${j}, '#ff6a3c')" title="橙色"><span style="color:#ff6a3c;font-weight:bold;">A</span></button>
-                                <button type="button" class="toolbar-btn color-btn" onclick="execItemDetailColor(${parentIndex}, ${j}, '#4285f4')" title="蓝色"><span style="color:#4285f4;font-weight:bold;">A</span></button>
-                                <button type="button" class="toolbar-btn" onclick="execItemDetail(${parentIndex}, ${j}, 'removeFormat')" title="清除格式">✕</button>
+                                <button type="button" class="toolbar-btn color-btn" onclick="execScoreAnalysisDetailColor(${i}, '#ff6a3c')" title="橙色"><span style="color:#ff6a3c;font-weight:bold;">A</span></button>
+                                <button type="button" class="toolbar-btn color-btn" onclick="execScoreAnalysisDetailColor(${i}, '#4285f4')" title="蓝色"><span style="color:#4285f4;font-weight:bold;">A</span></button>
+                                <button type="button" class="toolbar-btn" onclick="execScoreAnalysisDetail(${i}, 'removeFormat')" title="清除格式">✕</button>
                             </div>
-                            <div class="rich-editor-content" id="detail_${parentIndex}_${j}" contenteditable="true" placeholder="输入详细分析..." onblur="saveItemDetail(${parentIndex}, ${j})" style="min-height: 60px;">${item.detail || ''}</div>
+                            <div class="rich-editor-content" id="detail_${i}" contenteditable="true" placeholder="输入详细分析..." onblur="saveScoreAnalysisDetail(${i})" style="min-height: 60px;">${s.detail || ''}</div>
                         </div>
                     </div>
                 </div>
             `).join('');
         }
         
-        function execItemDetail(parentIndex, itemIndex, command) {
-            const editor = document.getElementById(`detail_${parentIndex}_${itemIndex}`);
+        function execScoreAnalysisDetail(index, command) {
+            const editor = document.getElementById(`detail_${index}`);
             if (!editor) return;
             editor.focus();
             document.execCommand(command, false, null);
         }
         
-        function execItemDetailColor(parentIndex, itemIndex, color) {
-            const editor = document.getElementById(`detail_${parentIndex}_${itemIndex}`);
+        function execScoreAnalysisDetailColor(index, color) {
+            const editor = document.getElementById(`detail_${index}`);
             if (!editor) return;
             editor.focus();
             document.execCommand('foreColor', false, color);
             document.execCommand('bold', false, null);
         }
         
-        function saveItemDetail(parentIndex, itemIndex) {
-            const editor = document.getElementById(`detail_${parentIndex}_${itemIndex}`);
+        function saveScoreAnalysisDetail(index) {
+            const editor = document.getElementById(`detail_${index}`);
             if (!editor) return;
-            if (fbScoreAnalysis[parentIndex] && fbScoreAnalysis[parentIndex].items && fbScoreAnalysis[parentIndex].items[itemIndex]) {
-                fbScoreAnalysis[parentIndex].items[itemIndex].detail = editor.innerHTML;
+            if (fbScoreAnalysis[index]) {
+                fbScoreAnalysis[index].detail = editor.innerHTML;
             }
         }
         
         function addScoreAnalysis() {
-            fbScoreAnalysis.push({ title: '', score: 0, max_score: 0, items: [] });
+            fbScoreAnalysis.push({ content: '', score: 0, max_score: 0, detail: '' });
             renderScoreAnalysis();
         }
         
         function removeScoreAnalysis(index) {
             fbScoreAnalysis.splice(index, 1);
-            renderScoreAnalysis();
-        }
-        
-        function addScoreAnalysisItem(parentIndex) {
-            if (!fbScoreAnalysis[parentIndex].items) {
-                fbScoreAnalysis[parentIndex].items = [];
-            }
-            fbScoreAnalysis[parentIndex].items.push({ content: '', score: 0, max_score: 0, detail: '' });
-            renderScoreAnalysis();
-        }
-        
-        function removeScoreAnalysisItem(parentIndex, itemIndex) {
-            fbScoreAnalysis[parentIndex].items.splice(itemIndex, 1);
             renderScoreAnalysis();
         }
         
