@@ -4867,26 +4867,16 @@
     const ansB = document.getElementById('ansB');
     const btnP2 = document.getElementById('btn-p2');
 
-    // 更新第3步和第4步的文案
-    function updatePreferText(answer) {
-        const preferText3 = document.getElementById('preferText3');
-        const preferText4 = document.getElementById('preferText4');
-        if (preferText3) preferText3.textContent = '批改 ' + answer;
-        if (preferText4) preferText4.textContent = '批改 ' + answer;
-    }
-
     ansA.addEventListener('click', function() {
         ansA.classList.add('sel'); ansB.classList.remove('sel');
         selectedAnswer = 'A';
         btnP2.disabled = false; btnP2.style.opacity = '1';
-        updatePreferText('A');
     });
 
     ansB.addEventListener('click', function() {
         ansB.classList.add('sel'); ansA.classList.remove('sel');
         selectedAnswer = 'B';
         btnP2.disabled = false; btnP2.style.opacity = '1';
-        updatePreferText('B');
     });
 
     btnP2.addEventListener('click', function(e) {
@@ -5482,17 +5472,28 @@ function closeModal() {
     const styleA = document.getElementById('styleA');
     const styleB = document.getElementById('styleB');
     const btnP3 = document.getElementById('btn-p3');
+    
+    // 根据批改方式更新第3步和第4步文案
+    function updatePreferTextStyle(style) {
+        const preferText3 = document.getElementById('preferText3');
+        const preferText4 = document.getElementById('preferText4');
+        const displayText = style === 'shangancang' ? '批改 A' : '批改 B';
+        if (preferText3) preferText3.textContent = displayText;
+        if (preferText4) preferText4.textContent = displayText;
+    }
 
     styleA.addEventListener('click', function() {
         styleA.classList.add('sel'); styleB.classList.remove('sel');
         selectedStyle = 'shangancang';  // 批改A = 上岸仓批改
         btnP3.disabled = false; btnP3.style.opacity = '1';
+        updatePreferTextStyle('shangancang');
     });
 
     styleB.addEventListener('click', function() {
         styleB.classList.add('sel'); styleA.classList.remove('sel');
         selectedStyle = 'fenbi';  // 批改B = 粉笔批改
         btnP3.disabled = false; btnP3.style.opacity = '1';
+        updatePreferTextStyle('fenbi');
     });
 
     btnP3.addEventListener('click', function(e) {
@@ -5564,10 +5565,11 @@ function closeModal() {
             });
         } else if (!multiSelected) {
             e.preventDefault();
+            const displayStyle = selectedStyle === 'shangancang' ? '批改 A' : '批改 B';
             showToast({
                 type: 'warning',
                 title: '还没选原因',
-                message: '请选择你更认可批改 ' + selectedAnswer + ' 的原因~',
+                message: '请选择你更认可' + displayStyle + '的原因~',
                 btnText: '好的'
             });
         } else if (!moodSelected) {
