@@ -5468,8 +5468,15 @@ container.appendChild(badge);
 }
 
 function renderAllHighlights() {
-renderHighlights('fbMyAnswerContent');
-renderHighlights('sgMyAnswerContent');
+const sgContainer = document.getElementById('sgMyAnswerContent');
+const fbContainer = document.getElementById('fbMyAnswerContent');
+
+if (sgContainer && sgContainer.offsetParent !== null) {
+    renderHighlights('sgMyAnswerContent');
+}
+if (fbContainer && fbContainer.offsetParent !== null) {
+    renderHighlights('fbMyAnswerContent');
+}
 }
 
 let highlightResizeTimer;
