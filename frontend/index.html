@@ -5471,12 +5471,18 @@ function renderAllHighlights() {
 const sgContainer = document.getElementById('sgMyAnswerContent');
 const fbContainer = document.getElementById('fbMyAnswerContent');
 
-if (sgContainer && sgContainer.offsetParent !== null) {
+if (sgContainer && isVisible(sgContainer)) {
     renderHighlights('sgMyAnswerContent');
 }
-if (fbContainer && fbContainer.offsetParent !== null) {
+if (fbContainer && isVisible(fbContainer)) {
     renderHighlights('fbMyAnswerContent');
 }
+}
+
+function isVisible(el) {
+if (!el) return false;
+const rect = el.getBoundingClientRect();
+return rect.width > 0 && rect.height > 0;
 }
 
 let highlightResizeTimer;
