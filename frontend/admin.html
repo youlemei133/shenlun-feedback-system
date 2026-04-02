@@ -2853,10 +2853,11 @@
                                         <th>申论分数</th>
                                         <th>反馈数</th>
                                         <th>注册时间</th>
+                                        <th>操作</th>
                                     </tr>
                                 </thead>
                                 <tbody id="usersTable">
-                                    <tr><td colspan="6" class="loading">加载中</td></tr>
+                                    <tr><td colspan="7" class="loading">加载中</td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -3966,7 +3967,7 @@ if (result.success) {
             const tbody = document.getElementById('usersTable');
             
             if (users.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6" class="empty-state"><div class="empty-icon">👥</div><div class="empty-text">暂无用户数据</div></td></tr>';
+                tbody.innerHTML = '<tr><td colspan="7" class="empty-state"><div class="empty-icon">👥</div><div class="empty-text">暂无用户数据</div></td></tr>';
                 return;
             }
             
@@ -3978,6 +3979,9 @@ if (result.success) {
                     <td><span class="status-badge ${parseFloat(u.score) >= 60 ? 'status-active' : 'status-pending'}">${u.score}分</span></td>
                     <td>${u.feedback_count || 0}</td>
                     <td>${u.created_at}</td>
+                    <td>
+                        <button class="btn btn-danger btn-sm" onclick="deleteUser(${u.id}, '${u.nickname}')">删除</button>
+                    </td>
                 </tr>
             `).join('');
             
@@ -4294,6 +4298,31 @@ if (result.success) {
                 u.phone.includes(keyword)
             );
             renderUsersTable(filtered);
+        }
+        
+        async function deleteUser(userId, nickname) {
+            if (!confirm(`确定删除用户 "${nickname}"？此操作不可恢复！`)) {
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE}/admin/users/${userId}`, {
+                    method: 'DELETE',
+                    credentials: 'include'
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showToast('用户删除成功', 'success');
+                    loadUsers();
+                } else {
+                    showToast(result.message || '删除失败', 'error');
+                }
+            } catch (error) {
+                console.error('删除用户失败:', error);
+                showToast('删除失败', 'error');
+            }
         }
         
         // ==================== 题目管理 ====================

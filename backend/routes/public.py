@@ -112,3 +112,17 @@ def get_public_stats():
         return success({'stats': stats})
     except AppException as e:
         return error(e.message)
+
+@public_bp.route('/api/user/verify', methods=['GET'])
+def verify_user():
+    """验证用户是否存在"""
+    user_id = request.args.get('user_id')
+    if not user_id:
+        return error('user_id 参数必填')
+    
+    try:
+        user_id = int(user_id)
+        exists = UserService.verify_user(user_id)
+        return success({'exists': exists, 'user_id': user_id})
+    except (ValueError, AppException) as e:
+        return error('无效的 user_id')

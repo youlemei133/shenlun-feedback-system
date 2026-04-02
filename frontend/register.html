@@ -346,11 +346,26 @@
             }
         });
         
-        window.addEventListener('load', () => {
+        window.addEventListener('load', async () => {
             const userId = localStorage.getItem('shenlun_user_id');
             if (userId) {
-                // 已注册用户，直接跳转到主页开始评判
-                window.location.href = '/';
+                // API 验证用户是否真实存在
+                try {
+                    const response = await fetch(`${API_BASE}/user/verify?user_id=${userId}`);
+                    const result = await response.json();
+                    
+                    if (result.success && result.data.exists) {
+                        // 已注册且后端验证通过，直接跳转到主页
+                        window.location.href = '/';
+                    } else {
+                        // 后端无此用户，清除本地存储
+                        localStorage.removeItem('shenlun_user_id');
+                        localStorage.removeItem('shenlun_user');
+                    }
+                } catch (error) {
+                    console.error('验证用户失败:', error);
+                    // 网络错误时不跳转，让用户留在注册页
+                }
             }
         });
     </script>

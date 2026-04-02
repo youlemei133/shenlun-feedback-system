@@ -24,3 +24,14 @@ class UserService:
     def get_all_with_feedback_count():
         """获取所有用户及反馈数"""
         return UserRepository.get_all_with_feedback_count()
+    
+    @staticmethod
+    def verify_user(user_id: int) -> bool:
+        """验证用户是否存在"""
+        user = UserRepository.get_by_id(user_id)
+        return user is not None
+    
+    @staticmethod
+    def delete_user(user_id: int) -> bool:
+        """删除用户"""
+        return UserRepository.delete(user_id)

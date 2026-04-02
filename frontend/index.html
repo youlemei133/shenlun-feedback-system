@@ -4710,18 +4710,35 @@
         }
     }
 
-    // 检查登录
-    function checkLogin() {
+    // 检查登录（带 API 验证）
+    async function checkLogin() {
         const userId = localStorage.getItem('shenlun_user_id');
         if (!userId) {
-            // 不自动跳转，让用户在封面页选择
             return false;
         }
-        const user = JSON.parse(localStorage.getItem('shenlun_user'));
-        if (user) {
-            document.getElementById('userCount').textContent = user.id || '1,079';
+        
+        // API 验证用户是否真实存在
+        try {
+            const response = await fetch(`${API_BASE}/user/verify?user_id=${userId}`);
+            const result = await response.json();
+            
+            if (!result.success || !result.data.exists) {
+                // 后端无此用户，清除本地存储
+                localStorage.removeItem('shenlun_user_id');
+                localStorage.removeItem('shenlun_user');
+                return false;
+            }
+            
+            const user = JSON.parse(localStorage.getItem('shenlun_user'));
+            if (user) {
+                document.getElementById('userCount').textContent = user.id || '1,079';
+            }
+            return true;
+        } catch (error) {
+            console.error('验证用户失败:', error);
+            // 网络错误时，保留本地状态但不跳转
+            return false;
         }
-        return true;
     }
 
     // 加载题目（自动选择反馈数最少的题目）
@@ -4786,8 +4803,9 @@
     }
 
     // 第 1 页按钮
-    document.getElementById('btn-start').addEventListener('click', function() {
-        if (checkLogin()) {
+    document.getElementById('btn-start').addEventListener('click', async function() {
+        const isLoggedIn = await checkLogin();
+        if (isLoggedIn) {
             showView(2);
             loadQuestion();
         } else {

@@ -156,6 +156,16 @@ def get_users():
     except AppException as e:
         return error(e.message)
 
+@admin_bp.route('/users/<int:user_id>', methods=['DELETE'])
+@login_required
+def delete_user(user_id):
+    """删除用户"""
+    try:
+        UserService.delete_user(user_id)
+        return success({'message': '删除成功'})
+    except AppException as e:
+        return error(e.message)
+
 # ==================== 统计 ====================
 
 @admin_bp.route('/stats', methods=['GET'])
