@@ -4318,7 +4318,7 @@
 <!-- 第 4 页 -->
 <div class="view" id="view4">
     <div class="q-card cbx" role="group" aria-label="选择认可批改的原因">
-        <div class="q-tit"><span class="trial-badge">审判 3</span>你更认可"批改 A"的原因是？（可多选）</div>
+        <div class="q-tit"><span class="trial-badge">审判 3</span>你更认可"<span id="preferText3">批改 A</span>"的原因是？（可多选）</div>
         <div class="opt" role="checkbox" tabindex="0" aria-checked="false">
             <div class="ochk" aria-hidden="true"></div>
             <div class="otxt">条理清晰，逻辑简明</div>
@@ -4344,7 +4344,7 @@
         </div>
     </div>
     <div class="q-card" role="radiogroup" aria-label="参与意愿选择">
-        <div class="q-tit"><span class="trial-badge">审判 4</span>你是否愿意在后续训练中采用"批改 A"练习</div>
+        <div class="q-tit"><span class="trial-badge">审判 4</span>你是否愿意在后续训练中采用"<span id="preferText4">批改 A</span>"练习</div>
         <div class="mood-options">
             <div class="mood-item" data-mood="很想体验" role="radio" tabindex="0" aria-checked="false">
                 <div class="mood-face mood-high" aria-hidden="true">
@@ -4867,16 +4867,26 @@
     const ansB = document.getElementById('ansB');
     const btnP2 = document.getElementById('btn-p2');
 
+    // 更新第3步和第4步的文案
+    function updatePreferText(answer) {
+        const preferText3 = document.getElementById('preferText3');
+        const preferText4 = document.getElementById('preferText4');
+        if (preferText3) preferText3.textContent = '批改 ' + answer;
+        if (preferText4) preferText4.textContent = '批改 ' + answer;
+    }
+
     ansA.addEventListener('click', function() {
         ansA.classList.add('sel'); ansB.classList.remove('sel');
         selectedAnswer = 'A';
         btnP2.disabled = false; btnP2.style.opacity = '1';
+        updatePreferText('A');
     });
 
     ansB.addEventListener('click', function() {
         ansB.classList.add('sel'); ansA.classList.remove('sel');
         selectedAnswer = 'B';
         btnP2.disabled = false; btnP2.style.opacity = '1';
+        updatePreferText('B');
     });
 
     btnP2.addEventListener('click', function(e) {
@@ -5557,7 +5567,7 @@ function closeModal() {
             showToast({
                 type: 'warning',
                 title: '还没选原因',
-                message: '请选择你更认可批改 A 的原因~',
+                message: '请选择你更认可批改 ' + selectedAnswer + ' 的原因~',
                 btnText: '好的'
             });
         } else if (!moodSelected) {
