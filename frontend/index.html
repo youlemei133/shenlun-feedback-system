@@ -5464,7 +5464,7 @@ const badge = document.createElement('span');
 badge.className = 'fb-highlight-score';
 badge.textContent = score + '分';
 badge.style.left = (lastRect.right - containerRect.left + 2) + 'px';
-badge.style.top = (lastRect.bottom - containerRect.top + 2) + 'px';
+badge.style.top = (lastRect.bottom - containerRect.top - 4) + 'px';
 container.appendChild(badge);
 }
 });
