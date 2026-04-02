@@ -5046,6 +5046,9 @@ if (reviewContent) {
     reviewContent.style.display = 'block';
 }
 
+// 渲染高亮（批改A在动画结束后才可见）
+setTimeout(renderAllHighlights, 50);
+
 // 重置动画
 resetModalAnimations();
 }
